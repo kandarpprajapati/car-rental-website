@@ -1,15 +1,12 @@
 import {
   Badge,
   Box,
-  Button,
-  Card,
   Flex,
   Grid,
   Heading,
   IconButton,
   Inset,
   Link,
-  Select,
   Separator,
   Strong,
   Text,
@@ -38,6 +35,15 @@ import {
 import { Label } from "@radix-ui/react-label";
 import * as ToggleGroup from "@radix-ui/react-toggle-group";
 import { useState } from "react";
+
+import { Card } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+} from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
 
 const TempLayout = ({ focusable = true }) => {
   const tabIndex = focusable ? undefined : -1;
@@ -144,17 +150,17 @@ const TempLayout = ({ focusable = true }) => {
             </Text>
           </Label>
 
-          <Select.Root defaultValue="Lighter" size="2">
-            <Select.Trigger tabIndex={tabIndex} variant="soft" />
-            <Select.Content
+          <Select>
+            <SelectTrigger tabIndex={tabIndex} variant="soft" />
+            <SelectContent
               variant="soft"
               container={portalContainer}
               position="popper"
             >
-              <Select.Item value="Lighter">Lighter</Select.Item>
-              <Select.Item value="Darker">Darker</Select.Item>
-            </Select.Content>
-          </Select.Root>
+              <SelectItem value="Lighter">Lighter</SelectItem>
+              <SelectItem value="Darker">Darker</SelectItem>
+            </SelectContent>
+          </Select>
         </Flex>
 
         <Flex direction="column">
@@ -164,29 +170,23 @@ const TempLayout = ({ focusable = true }) => {
             </Text>
           </Label>
 
-          <Select.Root defaultValue="30" size="2">
-            <Select.Trigger tabIndex={tabIndex} variant="soft" />
-            <Select.Content
+          <Select>
+            <SelectTrigger tabIndex={tabIndex} variant="soft" />
+            <SelectContent
               variant="soft"
               container={portalContainer}
               position="popper"
             >
               {Array.from({ length: 17 }, (_, i) => (
-                <Select.Item key={i} value={String(i + 24)}>
+                <SelectItem key={i} value={String(i + 24)}>
                   {i + 24}
-                </Select.Item>
+                </SelectItem>
               ))}
-            </Select.Content>
-          </Select.Root>
+            </SelectContent>
+          </Select>
         </Flex>
 
-        <Button
-          tabIndex={tabIndex}
-          size="2"
-          variant="solid"
-          color="gray"
-          highContrast
-        >
+        <Button tabIndex={tabIndex} highContrast>
           Add to cart
         </Button>
       </Flex>
