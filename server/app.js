@@ -3,7 +3,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const authRoutes = require("./routes/authRoutes");
-require("dotenv").config();
+const productRoutes = require("./routes/productRoutes");
 
 const app = express();
 
@@ -12,5 +12,6 @@ app.use(bodyParser.json());
 
 // Routes
 app.use("/api/auth", authRoutes);
+app.use("/api/product", productRoutes);
 
 module.exports = app;
