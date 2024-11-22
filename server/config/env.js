@@ -9,4 +9,5 @@ module.exports = {
   DB_NAME: process.env.DB_NAME,
   COLLECTION: process.env.COLLECTION,
   JWT_SECRET: process.env.JWT_SECRET,
+  STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
 };
