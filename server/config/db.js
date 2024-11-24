@@ -1,26 +1,20 @@
 // config/db.js
 
-const { MongoClient } = require("mongodb");
-const { MONGO_URL, DB_NAME } = require("./env");
+const mongoose = require("mongoose");
+const { MONGO_URL } = require("./env");
 
 if (!MONGO_URL) {
   throw new Error("MongoDB URI is not defined in the environment variables.");
 }
 
-const client = new MongoClient(MONGO_URL);
-
 const connectDB = async () => {
   try {
-    await client.connect();
-    console.log("Connected to MongoDB!");
-  } catch (err) {
-    console.error("MongoDB connection error:", err);
-    process.exit(1);
+    await mongoose.connect(MONGO_URL);
+    console.log("MongoDB connected successfully!");
+  } catch (error) {
+    console.error("MongoDB connection error:", error);
+    process.exit(1); // Exit the process if connection fails
   }
 };
 
-const getDB = () => {
-  return client.db(DB_NAME); // Returns the connected database
-};
-
-module.exports = { connectDB, getDB };
+module.exports = connectDB;

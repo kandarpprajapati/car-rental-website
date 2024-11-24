@@ -1,72 +1,151 @@
 // controllers/authController.js
 
 const bcrypt = require("bcryptjs");
-const { getDB } = require("../config/db");
 const { generateToken } = require("../config/jwt");
+const User = require("../models/User");
 
+// Register function
 const register = async (req, res) => {
-  const { username, password } = req.body;
-
-  if (!username || !password) {
-    return res
-      .status(400)
-      .json({ error: "Username and password are required." });
-  }
+  const { username, password, email } = req.body;
 
   try {
-    const db = getDB();
-    const users = db.collection("users");
-
-    // Check if user already exists
-    const existingUser = await users.findOne({ username });
-    if (existingUser) {
-      return res.status(400).json({ error: "User already exists." });
+    // Check for required fields
+    if (!username || !password || !email) {
+      return res.status(400).json({ error: "All fields are required." });
     }
 
-    // Hash password
-    const hashedPassword = await bcrypt.hash(password, 10);
+    // Check if the user already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res
+        .status(400)
+        .json({ error: "User with this email already exists." });
+    }
 
-    // Insert new user
-    await users.insertOne({ username, password: hashedPassword });
-    res.status(201).json({ message: "User registered successfully." });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Internal server error." });
+    // Create a new user instance
+    const user = new User({
+      username,
+      email,
+      password: await bcrypt.hash(password, 16), // Hash password before saving
+    });
+
+    // Save the user to the database (Mongoose handles validation and schema constraints)
+    await user.save();
+
+    res.status(201).json({ message: "User created successfully!", user });
+  } catch (error) {
+    console.error("Error creating user:", error);
+    res
+      .status(500)
+      .json({ error: "Internal server error. Please try again later." });
   }
 };
 
 const login = async (req, res) => {
-  const { username, password } = req.body;
-
-  if (!username || !password) {
-    return res
-      .status(400)
-      .json({ error: "Username and password are required." });
-  }
+  const { emailOrUsername, password } = req.body;
 
   try {
-    const db = getDB();
-    const users = db.collection("users");
-
-    // Find user
-    const user = await users.findOne({ username });
-    if (!user) {
-      return res.status(400).json({ error: "Invalid username or password." });
+    // Check if email and password are provided
+    if (!emailOrUsername || !password) {
+      return res.status(400).json({ error: "All fields are required." });
     }
 
-    // Check password
+    // Check if user exists
+    const user = await User.findOne({
+      $or: [{ email: emailOrUsername }, { username: emailOrUsername }],
+    });
+
+    if (!user) return res.status(400).json({ error: "Invalid credentials." });
+
+    // Compare the password with the stored hashed password
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(400).json({ error: "Invalid username or password." });
+    if (!isMatch || !user) {
+      return res.status(400).json({ error: "Invalid credentials." });
     }
 
     // Generate JWT token
-    const token = generateToken({ id: user._id, username: user.username });
+    const token = generateToken({
+      userId: user._id,
+      username: user.username,
+      email: user.email,
+      role: user.role,
+    });
 
-    res.status(200).json({ message: "Login successful.", token });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Internal server error." });
+    res.status(200).json({ message: "Login successful", token });
+  } catch (error) {
+    console.error("Error logging in:", error);
+    res
+      .status(500)
+      .json({ error: "Internal server error. Please try again later." });
+  }
+};
+
+const getUserById = async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    // Find the user by ID
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found." });
+    }
+
+    res.status(200).json(user);
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    res
+      .status(500)
+      .json({ error: "Internal server error. Please try again later." });
+  }
+};
+
+const updateUser = async (req, res) => {
+  const { userId } = req.params;
+  const { username, email, password } = req.body;
+
+  try {
+    // Check if user exists
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found." });
+    }
+
+    // Update the user's details
+    if (username) user.username = username;
+    if (email) user.email = email;
+    if (password) user.password = await bcrypt.hash(password, 16); // Hash password before saving
+
+    // Save the updated user
+    await user.save();
+
+    res.status(200).json({ message: "User updated successfully!", user });
+  } catch (error) {
+    console.error("Error updating user:", error);
+    res
+      .status(500)
+      .json({ error: "Internal server error. Please try again later." });
+  }
+};
+
+const deleteUser = async (req, res) => {
+  const userInfo = req.user;
+
+  try {
+    // Check if user exists
+    const user = await User.findById(userInfo.userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found." });
+    }
+
+    // Delete the user
+    await user.deleteOne();
+
+    res.status(200).json({ message: "User deleted successfully." });
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    res
+      .status(500)
+      .json({ error: "Internal server error. Please try again later." });
   }
 };
 
@@ -78,4 +157,11 @@ const profile = async (req, res) => {
   });
 };
 
-module.exports = { register, login, profile };
+module.exports = {
+  register,
+  login,
+  getUserById,
+  updateUser,
+  deleteUser,
+  profile,
+};
