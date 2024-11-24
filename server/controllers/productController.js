@@ -1,193 +1,183 @@
 // controllers/productController.js
 
-const { ObjectId } = require("mongodb");
-const { getDB } = require("../config/db");
+const Product = require("../models/Product");
 
 const createProduct = async (req, res) => {
-  const { name, description, price, category, stock } = req.body;
-
-  // Validate required fields
-  if (!name || !price || !category) {
-    return res.status(400).json({
-      error: "Name, price, and category are required fields.",
-    });
-  }
+  const { name, description, pricePerHour, availability, imageUrl } = req.body;
 
   try {
-    const db = getDB();
-    const products = db.collection("products");
+    // Check for required fields
+    if (!name || !description || !pricePerHour) {
+      return res
+        .status(400)
+        .json({ error: "Name, description, and price are required." });
+    }
 
-    const newProduct = {
+    // Create new product instance
+    const product = new Product({
       name,
-      description: description || "",
-      price: parseFloat(price),
-      category,
-      stock: stock || 0, // Default stock to 0 if not provided
-      createdAt: new Date(),
-    };
-
-    const result = await products.insertOne(newProduct);
-
-    res.status(201).json({
-      message: "Product created successfully.",
-      productId: result.insertedId,
+      description,
+      pricePerHour,
+      availability,
+      imageUrl,
     });
+
+    // Validate the product against the schema
+    await product.validate();
+
+    // Save the product to the database
+    await product.save();
+
+    res.status(201).json({ message: "Product created successfully!", product });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Failed to create product." });
+    console.error("Error creating product:", error);
+
+    // Handle validation errors
+    if (error.name === "ValidationError") {
+      return res.status(400).json({
+        error: "Product validation failed !",
+      });
+    }
+
+    return res
+      .status(500)
+      .json({ error: "Internal server error. Please try again later." });
   }
 };
 
 const getAllProducts = async (req, res) => {
-  const { page = 1, limit = 10, category, search } = req.query;
+  const { page = 1, limit = 10, search = "", minPrice, maxPrice } = req.query;
 
   try {
-    const db = getDB();
-    const products = db.collection("products");
+    // Parse page and limit to integers
+    const pageNumber = parseInt(page);
+    const limitNumber = parseInt(limit);
 
-    const query = {};
-    if (category) query.category = category;
-    if (search) query.name = { $regex: search, $options: "i" }; // Case-insensitive search
+    // Handle invalid page or limit
+    if (pageNumber < 1 || limitNumber < 1) {
+      return res
+        .status(400)
+        .json({ error: "Page and limit must be greater than 0." });
+    }
 
-    const options = {
-      skip: (page - 1) * limit,
-      limit: parseInt(limit),
-    };
+    // Apply search and filter
+    const filterQuery = applySearchAndFilters(search, minPrice, maxPrice);
 
-    const productList = await products.find(query, options).toArray();
-    const totalProducts = await products.countDocuments(query);
+    // Get products with pagination and filters
+    const products = await Product.find(filterQuery)
+      .skip((pageNumber - 1) * limitNumber) // Skip based on page
+      .limit(limitNumber) // Limit based on the requested limit
+      .exec();
 
+    // Get the total count of products matching the filters
+    const totalProducts = await Product.countDocuments(filterQuery);
+
+    // Calculate total pages
+    const totalPages = Math.ceil(totalProducts / limitNumber);
+
+    // Return paginated products
     res.status(200).json({
-      total: totalProducts,
-      page: parseInt(page),
-      limit: parseInt(limit),
-      products: productList,
+      products,
+      pagination: {
+        totalProducts,
+        totalPages,
+        currentPage: pageNumber,
+        limit: limitNumber,
+      },
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Failed to fetch products" });
+    console.error("Error fetching products:", error);
+    res
+      .status(500)
+      .json({ error: "Internal server error. Please try again later." });
   }
 };
 
 const getProductById = async (req, res) => {
-  const { id } = req.params;
+  const { productId } = req.params;
 
   try {
-    const db = getDB();
-    const products = db.collection("products");
-
-    const product = await products.findOne({
-      _id: ObjectId.createFromHexString(id),
-    });
+    const product = await Product.findById(productId);
 
     if (!product) {
-      return res.status(404).json({ error: "Product not found" });
+      return res.status(404).json({ error: "Product not found." });
     }
 
     res.status(200).json(product);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Failed to fetch product" });
+    console.error("Error fetching product:", error);
+    res
+      .status(500)
+      .json({ error: "Internal server error. Please try again later." });
   }
 };
 
 const updateProduct = async (req, res) => {
-  const { id } = req.params;
-  const updates = req.body; // Ensure validation for fields before updating
+  const { productId } = req.params;
+  const { name, description, pricePerHour, availability, imageUrl } = req.body;
 
   try {
-    const db = getDB();
-    const products = db.collection("products");
-
-    const result = await products.updateOne(
-      { _id: ObjectId.createFromHexString(id) },
-      { $set: updates }
+    // Find and update the product
+    const updatedProduct = await Product.findByIdAndUpdate(
+      productId,
+      { name, description, pricePerHour, availability, imageUrl },
+      { new: true } // Return the updated product
     );
 
-    if (result.matchedCount === 0) {
-      return res.status(404).json({ error: "Product not found" });
+    if (!updatedProduct) {
+      return res.status(404).json({ error: "Product not found." });
     }
 
-    res.status(200).json({ message: "Product updated successfully" });
+    res
+      .status(200)
+      .json({ message: "Product updated successfully!", updatedProduct });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Failed to update product" });
+    console.error("Error updating product:", error);
+    res
+      .status(500)
+      .json({ error: "Internal server error. Please try again later." });
   }
 };
 
 const deleteProduct = async (req, res) => {
-  const { id } = req.params;
+  const { productId } = req.params;
 
   try {
-    const db = getDB();
-    const products = db.collection("products");
+    const deletedProduct = await Product.findByIdAndDelete(productId);
 
-    const result = await products.deleteOne({
-      _id: ObjectId.createFromHexString(id),
-    });
-
-    if (result.deletedCount === 0) {
-      return res.status(404).json({ error: "Product not found" });
+    if (!deletedProduct) {
+      return res.status(404).json({ error: "Product not found." });
     }
 
-    res.status(200).json({ message: "Product deleted successfully" });
+    res.status(200).json({ message: "Product deleted successfully!" });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Failed to delete product" });
+    console.error("Error deleting product:", error);
+    res
+      .status(500)
+      .json({ error: "Internal server error. Please try again later." });
   }
 };
 
-const filterProducts = async (req, res) => {
-  const { minPrice, maxPrice, category } = req.query;
+const applySearchAndFilters = (search, minPrice, maxPrice) => {
+  // Start with an empty query
+  let filterQuery = {};
 
-  try {
-    const db = getDB();
-    const products = db.collection("products");
-
-    const query = {};
-
-    if (minPrice || maxPrice) {
-      query.price = {};
-      if (minPrice) query.price.$gte = parseFloat(minPrice);
-      if (maxPrice) query.price.$lte = parseFloat(maxPrice);
-    }
-
-    if (category) query.category = category;
-
-    const filteredProducts = await products.find(query).toArray();
-
-    res.status(200).json(filteredProducts);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Failed to filter products" });
-  }
-};
-
-const searchProducts = async (req, res) => {
-  const { keyword } = req.query;
-
-  if (!keyword) {
-    return res.status(400).json({ error: "Keyword is required" });
+  // Apply search query if provided
+  if (search) {
+    filterQuery.$or = [
+      { name: { $regex: search, $options: "i" } }, // Case-insensitive search on name
+      { description: { $regex: search, $options: "i" } }, // Case-insensitive search on description
+    ];
   }
 
-  try {
-    const db = getDB();
-    const products = db.collection("products");
-
-    const results = await products
-      .find({
-        $or: [
-          { name: { $regex: keyword, $options: "i" } },
-          { description: { $regex: keyword, $options: "i" } },
-        ],
-      })
-      .toArray();
-
-    res.status(200).json(results);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Failed to search products" });
+  // Apply price filters if provided
+  if (minPrice || maxPrice) {
+    filterQuery.pricePerHour = {};
+    if (minPrice) filterQuery.pricePerHour.$gte = parseFloat(minPrice);
+    if (maxPrice) filterQuery.pricePerHour.$lte = parseFloat(maxPrice);
   }
+
+  return filterQuery;
 };
 
 module.exports = {
@@ -196,6 +186,66 @@ module.exports = {
   getProductById,
   updateProduct,
   deleteProduct,
-  filterProducts,
-  searchProducts,
 };
+
+// const filterProducts = async (req, res) => {
+//   const { minPrice, maxPrice, availability } = req.query;
+
+//   try {
+//     const filter = {};
+
+//     // Filter by price range
+//     if (minPrice || maxPrice) {
+//       filter.pricePerHour = {};
+//       if (minPrice) filter.pricePerHour.$gte = parseFloat(minPrice);
+//       if (maxPrice) filter.pricePerHour.$lte = parseFloat(maxPrice);
+//     }
+
+//     // Filter by availability
+//     if (availability !== undefined) {
+//       filter.availability = availability === "true";
+//     }
+
+//     const products = await Product.find(filter);
+
+//     if (!products.length) {
+//       return res
+//         .status(404)
+//         .json({ message: "No products found based on the filter." });
+//     }
+
+//     res.status(200).json(products);
+//   } catch (error) {
+//     console.error("Error filtering products:", error);
+//     res
+//       .status(500)
+//       .json({ error: "Internal server error. Please try again later." });
+//   }
+// };
+
+// const searchProducts = async (req, res) => {
+//   const { keyword } = req.query;
+
+//   if (!keyword) {
+//     return res.status(400).json({ error: "Keyword is required" });
+//   }
+
+//   try {
+//     const db = getDB();
+//     const products = db.collection("products");
+
+//     const results = await products
+//       .find({
+//         $or: [
+//           { name: { $regex: keyword, $options: "i" } },
+//           { description: { $regex: keyword, $options: "i" } },
+//         ],
+//       })
+//       .toArray();
+
+//     res.status(200).json(results);
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: "Failed to search products" });
+//   }
+// };
