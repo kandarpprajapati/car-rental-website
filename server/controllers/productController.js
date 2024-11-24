@@ -65,6 +65,7 @@ const getAllProducts = async (req, res) => {
 
     // Get products with pagination and filters
     const products = await Product.find(filterQuery)
+      .sort({ createdAt: -1 }) // Sort by creation date, most recent first
       .skip((pageNumber - 1) * limitNumber) // Skip based on page
       .limit(limitNumber) // Limit based on the requested limit
       .exec();
