@@ -18,8 +18,8 @@ const bookingSchema = new mongoose.Schema({
   totalPrice: { type: Number, required: true }, // Total calculated price for the booking
   paymentStatus: {
     type: String,
-    enum: ["Pending", "Paid", "Failed"], // Payment status
-    default: "Pending",
+    enum: ["pending", "paid", "failed"], // Payment status
+    default: "pending",
   },
   createdAt: { type: Date, default: Date.now }, // Timestamp for booking creation
 });
