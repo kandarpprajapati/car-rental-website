@@ -5,7 +5,7 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <header className="bg-white shadow-md">
+    <header className="bg-white shadow-md text-primary">
       <nav className="container mx-auto px-4 py-4 flex items-center justify-between">
         {/* Left Navigation Links (Hidden on Mobile) */}
         <div className="hidden md:flex space-x-6">

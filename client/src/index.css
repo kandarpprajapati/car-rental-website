@@ -5,8 +5,9 @@
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --primary-forground: 209 73% 16%;
-    --secondary-foreground: #1f2023;
+    --gray-background: 0 0% 50.2%;
+    --primary-foreground: #002f6c;
+    --secondary-foreground: #ff671f;
   }
 }
 

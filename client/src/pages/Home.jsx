@@ -1,27 +1,71 @@
+import { MapPinned } from "lucide-react";
 import React from "react";
-import CarImage from "../../public/car-images/van.jpg";
+import CarImage from "../../public/car-images/van.png";
 
 const Home = () => {
+  const cars = new Array(9).fill({
+    title: "Muutto ja Kuljetus",
+    price: "€39.99/hr",
+    image: CarImage, // Replace with your actual image path
+  });
+
   return (
-    <div className="relative bg-orange-500 rounded-lg shadow-md overflow-hidden max-w-7xl mx-auto mt-8">
-      {/* Image Section */}
-      <div className="relative">
+    <div className="max-w-screen-2xl mx-auto px-3 lg:px-2 xl:px-0">
+      <div className="relative bg-secondary rounded-3xl md:rounded-[100px] shadow-md overflow-hidden mt-8 flex justify-center items-center lg:mx-auto">
+        {/* Image Section */}
         <img
           src={CarImage} // Replace with your car image
           alt="Car"
-          className="w-full object-cover"
+          className="w-full object-cover max-h-[800px] max-w-5xl"
         />
       </div>
 
       {/* Content Section */}
-      <div className="absolute inset-0 flex flex-col justify-center items-center text-white text-center">
-        {/* <h1 className="text-3xl font-bold uppercase tracking-wider">
-          Helsinki
-        </h1>
-        <p className="text-lg mt-2">
-          Luotettavat palvelut <br /> Edulliseen hintaan.
-        </p> */}
-      </div>
+      <section className="bg-blue-900 py-12">
+        <div className="text-center text-white mb-8">
+          <MapPinned className="text-secondary mx-auto mb-4" size={50} />
+          <h2 className="text-2xl font-bold uppercase tracking-wide text-secondary">
+            Helsinki
+          </h2>
+          <p className="mt-2 text-primary text-xl uppercase tracking-widest">
+            Luotettavat palvelut <br /> Edulliseen hintaan.
+          </p>
+        </div>
+        <div className="mx-auto p-6 md:p-14 bg-primary rounded-2xl md:rounded-[50px]">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            {cars.map((card, index) => (
+              <div
+                key={index}
+                className="bg-background rounded-lg overflow-hidden shadow-md hover:shadow-lg transform transition duration-300 ease-in-out p-4"
+              >
+                {/* Image Section */}
+                <div className="bg-gray p-4 flex justify-center rounded-lg">
+                  <img
+                    src={card.image}
+                    alt={card.title}
+                    className="h-52 w-auto object-cover"
+                  />
+                </div>
+
+                {/* Content Section */}
+                <div className="p-4 text-center">
+                  <h3 className="text-primary text-lg font-semibold mb-2 uppercase">
+                    {card.title}
+                  </h3>
+                  <div className="flex justify-between items-center">
+                    <span className="text-secondary text-lg font-bold">
+                      {card.price}
+                    </span>
+                    <button className="bg-secondary text-background text-sm py-1 px-4 rounded-full hover:bg-secondary">
+                      + Add
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
     </div>
   );
 };
