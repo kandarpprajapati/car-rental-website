@@ -12,7 +12,7 @@ const Home = () => {
 
   return (
     <div className="max-w-screen-2xl mx-auto px-3 lg:px-2 xl:px-0">
-      <div className="relative bg-secondary rounded-3xl md:rounded-[100px] shadow-md overflow-hidden mt-8 flex justify-center items-center lg:mx-auto">
+      <div className="relative rounded-3xl md:rounded-[100px] shadow-md overflow-hidden mt-8 flex justify-center items-center lg:mx-auto bg-radial-gradient">
         {/* Image Section */}
         <img
           src={CarImage} // Replace with your car image

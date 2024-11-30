@@ -2,6 +2,10 @@
 export default {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
+    backgroundImage: {
+      "radial-gradient":
+        "radial-gradient(circle at 50% 50%, var(--secondary-foreground), #e6a485, var(--secondary-foreground))",
+    },
     extend: {
       borderRadius: {
         lg: "var(--radius)",
