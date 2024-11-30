@@ -1,6 +1,7 @@
 import { MapPinned } from "lucide-react";
 import React from "react";
 import CarImage from "../../public/car-images/van.png";
+import CarDetailsDialog from "./homepage/CarDetailsDialog.jsx";
 
 const Home = () => {
   const cars = new Array(9).fill({
@@ -21,18 +22,18 @@ const Home = () => {
       </div>
 
       {/* Content Section */}
-      <section className="bg-blue-900 py-12">
+      <section className="bg-background py-12">
         <div className="text-center text-white mb-8">
           <MapPinned className="text-secondary mx-auto mb-4" size={50} />
-          <h2 className="text-2xl font-bold uppercase tracking-wide text-secondary">
+          <h2 className="text-2xl font-bold uppercase tracking-wide text-secondary-foreground">
             Helsinki
           </h2>
-          <p className="mt-2 text-primary text-xl uppercase tracking-widest">
+          <p className="mt-2 text-primary-foreground text-4xl uppercase tracking-widest">
             Luotettavat palvelut <br /> Edulliseen hintaan.
           </p>
         </div>
-        <div className="mx-auto p-6 md:p-14 bg-primary rounded-2xl md:rounded-[50px]">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        <div className="mx-auto p-6 md:p-14 bg-primary-foreground rounded-2xl md:rounded-[50px]">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {cars.map((card, index) => (
               <div
                 key={index}
@@ -48,17 +49,18 @@ const Home = () => {
                 </div>
 
                 {/* Content Section */}
-                <div className="p-4 text-center">
-                  <h3 className="text-primary text-lg font-semibold mb-2 uppercase">
+                <div className="p-4">
+                  <h3 className="text-primary-foreground text-lg font-semibold mb-20 uppercase">
                     {card.title}
                   </h3>
                   <div className="flex justify-between items-center">
                     <span className="text-secondary text-lg font-bold">
                       {card.price}
                     </span>
-                    <button className="bg-secondary text-background text-sm py-1 px-4 rounded-full hover:bg-secondary">
+                    {/* <button className="bg-secondary-foreground text-background text-sm py-1 px-4 rounded-full hover:bg-secondary">
                       + Add
-                    </button>
+                    </button> */}
+                    <CarDetailsDialog />
                   </div>
                 </div>
               </div>
