@@ -6,7 +6,7 @@ import CarDetailsDialog from "./homepage/CarDetailsDialog.jsx";
 const Home = () => {
   const cars = new Array(9).fill({
     title: "Muutto ja Kuljetus",
-    price: "€39.99/hr",
+    price: "€39.99",
     image: CarImage, // Replace with your actual image path
   });
 
@@ -55,7 +55,7 @@ const Home = () => {
                   </h3>
                   <div className="flex justify-between items-center">
                     <span className="text-secondary text-lg font-bold">
-                      {card.price}
+                      {card.price} {"/"} <sup>hr</sup>
                     </span>
                     {/* <button className="bg-secondary-foreground text-background text-sm py-1 px-4 rounded-full hover:bg-secondary">
                       + Add
