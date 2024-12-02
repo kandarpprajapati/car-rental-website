@@ -16,6 +16,8 @@ import { useState } from "react";
 import CarImage from "../../../public/car-images/van.png";
 import { Minus, Plus } from "lucide-react";
 import { DialogDescription } from "../../components/ui/dialog";
+import { RadioCard, RadioCardItem } from "../../components/ui/radiocards";
+import { Flex, Text } from "@radix-ui/themes";
 
 const CarDetailsDialog = ({
   title = "ABC",
@@ -59,6 +61,36 @@ const CarDetailsDialog = ({
                 { value: "option2", label: "Option 2" },
               ]}
             />
+
+            <RadioCard defaultValue="1" columns={{ initial: "1", sm: "3" }}>
+              <RadioCardItem value="1">
+                <Flex
+                  direction="column"
+                  width="100%"
+                  className="border px-3 py-2 rounded-lg active:border-secondary-foreground ml-2"
+                >
+                  <Text weight="bold">10-11 AM</Text>
+                </Flex>
+              </RadioCardItem>
+              <RadioCardItem value="2">
+                <Flex
+                  direction="column"
+                  width="100%"
+                  className="border px-3 py-2 rounded-lg active:border-secondary-foreground ml-2"
+                >
+                  <Text weight="bold">11-12 PM</Text>
+                </Flex>
+              </RadioCardItem>
+              <RadioCardItem value="3">
+                <Flex
+                  direction="column"
+                  width="100%"
+                  className="border px-3 py-2 rounded-lg active:border-secondary-foreground ml-2"
+                >
+                  <Text weight="bold">12-01 PM</Text>
+                </Flex>
+              </RadioCardItem>
+            </RadioCard>
           </div>
 
           {/* Counter */}
