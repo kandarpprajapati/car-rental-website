@@ -3,9 +3,10 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import HomepageLayout from "./pages/homepage/HomepageLayout.jsx";
 import MainLayout from "./MainLayout.jsx";
+import CheckOutForm from "./pages/checkoutform/index.jsx";
 import Home from "./pages/Home.jsx";
+import HomepageLayout from "./pages/homepage/HomepageLayout.jsx";
 
 const router = createBrowserRouter([
   {
@@ -21,8 +22,8 @@ const router = createBrowserRouter([
         element: <HomepageLayout />, // Child layout (e.g., Homepage)
       },
       {
-        path: "about",
-        element: <div>About Us Content</div>, // Another child route
+        path: "checkout",
+        element: <CheckOutForm />, // Another child route
       },
     ],
   },
