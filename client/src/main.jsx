@@ -4,9 +4,9 @@ import "./index.css";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import MainLayout from "./MainLayout.jsx";
+import AuthForm from "./pages/auth/AuthForm.jsx";
 import CheckOutForm from "./pages/checkoutform/index.jsx";
 import Home from "./pages/Home.jsx";
-import HomepageLayout from "./pages/homepage/HomepageLayout.jsx";
 
 const router = createBrowserRouter([
   {
@@ -18,8 +18,8 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "home",
-        element: <HomepageLayout />, // Child layout (e.g., Homepage)
+        path: "auth",
+        element: <AuthForm />, // Child layout (e.g., Homepage)
       },
       {
         path: "checkout",
