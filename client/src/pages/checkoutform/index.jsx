@@ -13,8 +13,17 @@ import {
   FormSubmit,
 } from "../../components/ui/form";
 import { Input } from "../../components/ui/input";
+import { getFormData } from "@/lib/getFormData";
 
 const CheckOutForm = () => {
+  const placeOrder = (event) => {
+    event.preventDefault();
+
+    const formData = getFormData(event.target);
+
+    console.log(formData); // Process your form data here
+  };
+
   return (
     <div className="w-full py-10 flex justify-center items-center">
       <div className="w-[90%] max-w-[600px] bg-background shadow-xl rounded-lg p-6 flex-col justify-center items-center">
@@ -22,13 +31,17 @@ const CheckOutForm = () => {
           Checkout
         </h1>
         {/* <p className="text-sm text-gray-500 mb-6">Pnix.fi</p> */}
-        <Form className="w-full">
+        <Form className="w-full" onSubmit={placeOrder}>
           {/* Customer Phone */}
           <FormField name="phone">
             <FormLabel>Customer *</FormLabel>
             <div className="flex items-center space-x-2">
               <FormControl asChild>
-                <select className="border border-input rounded-md p-2" required>
+                <select
+                  className="border border-input rounded-md p-2"
+                  required
+                  name="phonecode"
+                >
                   <option>+358</option>
                   <option>+91</option>
                   <option>+1</option>
@@ -66,22 +79,6 @@ const CheckOutForm = () => {
             <FormLabel>Delivery To *</FormLabel>
             <FormControl asChild>
               <Input type="text" placeholder="Your answer" required />
-            </FormControl>
-          </FormField>
-
-          {/* Move Date */}
-          <FormField name="moveDate" className="mt-4">
-            <FormLabel>Move Date *</FormLabel>
-            <FormControl asChild>
-              <Input type="date" placeholder="Select a date" required />
-            </FormControl>
-          </FormField>
-
-          {/* Move Time */}
-          <FormField name="moveTime" className="mt-4">
-            <FormLabel>Move Time *</FormLabel>
-            <FormControl asChild>
-              <Input type="time" placeholder="--:--" required />
             </FormControl>
           </FormField>
 

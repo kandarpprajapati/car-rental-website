@@ -9,9 +9,18 @@ import {
 } from "../../components/ui/form";
 import { Input } from "../../components/ui/input";
 import { useState } from "react";
+import { getFormData } from "@/lib/getFormData";
 
 const AuthForm = () => {
   const [isLogin, setIsLogin] = useState(true); // Toggle between login and signup
+
+  const submit = (event) => {
+    event.preventDefault();
+
+    const formData = getFormData(event.target);
+
+    console.log(formData); // Process your form data here
+  };
 
   return (
     <div className="w-full min-h-screen flex flex-col items-center justify-center bg-gray-50 py-10">
@@ -19,7 +28,7 @@ const AuthForm = () => {
         <h1 className="text-3xl font-bold text-primary-foreground mb-6">
           {isLogin ? "Login" : "Signup"}
         </h1>
-        <Form>
+        <Form onSubmit={submit}>
           {/* Email */}
           <FormField name="email">
             <FormLabel>Email *</FormLabel>

@@ -61,13 +61,18 @@ const CarDetailsDialog = ({
                 { value: "option2", label: "Option 2" },
               ]}
             />
+          </div>
 
+          <div className="mt-4">
+            <label className="text-sm font-medium text-gray-700">
+              Select time:
+            </label>
             <RadioCard defaultValue="1" columns={{ initial: "1", sm: "3" }}>
               <RadioCardItem value="1">
                 <Flex
                   direction="column"
                   width="100%"
-                  className="border px-3 py-2 rounded-lg active:border-secondary-foreground ml-2"
+                  className="border px-3 py-2 rounded-lg active:border-secondary-foreground"
                 >
                   <Text weight="bold">10-11 AM</Text>
                 </Flex>
@@ -91,30 +96,6 @@ const CarDetailsDialog = ({
                 </Flex>
               </RadioCardItem>
             </RadioCard>
-          </div>
-
-          {/* Counter */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center justify-center">
-              <label className="text-sm font-medium">Quantity</label>
-              <label className="text-sm font-medium ml-2">{`(${counter} HOUR)`}</label>
-            </div>
-            <div className="flex items-center space-x-4 border border-gray rounded-md">
-              <button
-                disabled={counter === 1}
-                onClick={() => counter > 1 && setCounter(counter - 1)}
-                className="bg-zinc-200 p-2  rounded hover:bg-zinc-300 disabled:bg-zinc-100"
-              >
-                <Minus size={14} />
-              </button>
-              <span>{counter}</span>
-              <button
-                onClick={() => counter >= 1 && setCounter(counter + 1)}
-                className="bg-zinc-200 p-2  rounded hover:bg-zinc-300"
-              >
-                <Plus size={14} />
-              </button>
-            </div>
           </div>
 
           {/* Checkbox */}

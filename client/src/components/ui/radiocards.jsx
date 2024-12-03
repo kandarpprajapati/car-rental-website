@@ -1,7 +1,7 @@
-import * as RadioCardPrimitive from "@radix-ui/react-radio-group";
+import { RadioCards } from "@radix-ui/themes";
 
-const RadioCard = RadioCardPrimitive.Root;
+const RadioCard = RadioCards.Root;
 
-const RadioCardItem = RadioCardPrimitive.Item;
+const RadioCardItem = RadioCards.Item;
 
 export { RadioCard, RadioCardItem };
