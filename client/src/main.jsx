@@ -8,6 +8,8 @@ import AuthForm from "./pages/auth/AuthForm.jsx";
 import CheckOutForm from "./pages/checkoutform/index.jsx";
 import Home from "./pages/Home.jsx";
 
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -29,8 +31,12 @@ const router = createBrowserRouter([
   },
 ]);
 
+const queryClient = new QueryClient();
+
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+    </QueryClientProvider>
   </StrictMode>
 );

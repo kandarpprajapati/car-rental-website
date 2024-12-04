@@ -10,14 +10,24 @@ import {
 import { Input } from "../../components/ui/input";
 import { useState } from "react";
 import { getFormData } from "@/lib/getFormData";
+import { useAuthHook } from "../../hooks/useAuthHook";
+import { useQueryClient } from "@tanstack/react-query";
 
 const AuthForm = () => {
   const [isLogin, setIsLogin] = useState(true); // Toggle between login and signup
+
+  const queryClient = useQueryClient();
+  const { mutateAsync, error, isPending } = useAuthHook();
 
   const submit = (event) => {
     event.preventDefault();
 
     const formData = getFormData(event.target);
+
+    mutateAsync({
+      url: "http://localhost:1102/api/auth/login",
+      data: formData,
+    });
 
     console.log(formData); // Process your form data here
   };
