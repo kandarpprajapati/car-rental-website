@@ -1,15 +1,15 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 
 export function useAuthHook() {
   return useMutation({
     mutationFn: async ({ url, data }) => {
       console.log(url, data);
-      await fetch(url, {
+      return await fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: "include", // Allows cookies or credentials
+        // credentials: "include", // Allows cookies or credentials
         body: JSON.stringify({
           emailOrUsername: data.email,
           password: data.password,

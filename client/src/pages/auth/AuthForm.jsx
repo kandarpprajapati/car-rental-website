@@ -1,3 +1,5 @@
+import { getFormData } from "@/lib/getFormData";
+import { useState } from "react";
 import { Button } from "../../components/ui/button";
 import {
   Form,
@@ -8,15 +10,11 @@ import {
   FormSubmit,
 } from "../../components/ui/form";
 import { Input } from "../../components/ui/input";
-import { useState } from "react";
-import { getFormData } from "@/lib/getFormData";
 import { useAuthHook } from "../../hooks/useAuthHook";
-import { useQueryClient } from "@tanstack/react-query";
 
 const AuthForm = () => {
   const [isLogin, setIsLogin] = useState(true); // Toggle between login and signup
 
-  const queryClient = useQueryClient();
   const { mutateAsync, error, isPending } = useAuthHook();
 
   const submit = (event) => {

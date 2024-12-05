@@ -8,23 +8,15 @@ import {
 } from "@/components/ui/dialog";
 
 import { Button } from "@/components/ui/button";
-import { RadioGroup } from "../../components/ui/radio-group";
 import { Checkbox } from "../../components/ui/checkbox";
+import { RadioGroup } from "../../components/ui/radio-group";
 import { TextArea } from "../../components/ui/textarea";
-import { useState } from "react";
 
-import CarImage from "../../../public/car-images/van.png";
-import { Minus, Plus } from "lucide-react";
+import { Flex, Text } from "@radix-ui/themes";
 import { DialogDescription } from "../../components/ui/dialog";
 import { RadioCard, RadioCardItem } from "../../components/ui/radiocards";
-import { Flex, Text } from "@radix-ui/themes";
 
-const CarDetailsDialog = ({
-  title = "ABC",
-  description = "This is a description inside the dialog.",
-}) => {
-  const [counter, setCounter] = useState(1);
-
+const CarDetailsDialog = ({ product }) => {
   return (
     <Dialog>
       <DialogTrigger>
@@ -37,19 +29,19 @@ const CarDetailsDialog = ({
           <DialogTitle className="text-primary-foreground">
             Car Details
           </DialogTitle>
-          <DialogDescription>ABC</DialogDescription>
+          <DialogDescription>{`${product.title}'s details`}</DialogDescription>
         </DialogHeader>
         <div className="w-full grid gap-4 py-4">
           {/* Image before title */}
           <div className="flex flex-col items-center">
             <img
-              src={CarImage} // Replace with the actual image path
+              src={product.imageUrl} // Replace with the actual image path
               alt="Dialog illustration"
               className="w-28 h-28 mb-4 object-cover rounded-full" // Style as needed
             />
           </div>
-          <h2 className="text-lg font-semibold">{title}</h2>
-          <p className="text-gray-600">{description}</p>
+          <h2 className="text-lg font-semibold">{product.title}</h2>
+          <p className="text-gray-600">{product.description}</p>
           <div className="mt-4">
             {/* <label className="text-sm font-medium text-gray-700">
               Choose an option:

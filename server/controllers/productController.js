@@ -3,11 +3,28 @@
 const Product = require("../models/Product");
 
 const createProduct = async (req, res) => {
-  const { name, description, pricePerHour, availability, imageUrl } = req.body;
+  const {
+    name,
+    description,
+    pricePerHour,
+    oldPrice,
+    category,
+    availability,
+    extraHelperPrice,
+    imageUrl,
+  } = req.body;
 
   try {
     // Check for required fields
-    if (!name || !description || !pricePerHour) {
+    if (
+      !name ||
+      !description ||
+      !pricePerHour ||
+      !oldPrice ||
+      !category ||
+      !availability ||
+      !extraHelperPrice
+    ) {
       return res
         .status(400)
         .json({ error: "Name, description, and price are required." });
@@ -18,7 +35,10 @@ const createProduct = async (req, res) => {
       name,
       description,
       pricePerHour,
+      oldPrice,
+      category,
       availability,
+      extraHelperPrice,
       imageUrl,
     });
 
@@ -46,7 +66,14 @@ const createProduct = async (req, res) => {
 };
 
 const getAllProducts = async (req, res) => {
-  const { page = 1, limit = 10, search = "", minPrice, maxPrice } = req.query;
+  const {
+    page = 1,
+    limit = 10,
+    search = "",
+    category,
+    minPrice,
+    maxPrice,
+  } = req.query;
 
   try {
     // Parse page and limit to integers
@@ -61,7 +88,12 @@ const getAllProducts = async (req, res) => {
     }
 
     // Apply search and filter
-    const filterQuery = applySearchAndFilters(search, minPrice, maxPrice);
+    const filterQuery = applySearchAndFilters(
+      search,
+      category,
+      minPrice,
+      maxPrice
+    );
 
     // Get products with pagination and filters
     const products = await Product.find(filterQuery)
@@ -159,7 +191,7 @@ const deleteProduct = async (req, res) => {
   }
 };
 
-const applySearchAndFilters = (search, minPrice, maxPrice) => {
+const applySearchAndFilters = (search, category, minPrice, maxPrice) => {
   // Start with an empty query
   let filterQuery = {};
 
@@ -169,6 +201,10 @@ const applySearchAndFilters = (search, minPrice, maxPrice) => {
       { name: { $regex: search, $options: "i" } }, // Case-insensitive search on name
       { description: { $regex: search, $options: "i" } }, // Case-insensitive search on description
     ];
+  }
+
+  if (category) {
+    filterQuery.$or = [{ category: { $regex: category, $options: "i" } }];
   }
 
   // Apply price filters if provided
