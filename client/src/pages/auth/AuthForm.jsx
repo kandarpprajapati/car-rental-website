@@ -11,21 +11,31 @@ import {
 } from "../../components/ui/form";
 import { Input } from "../../components/ui/input";
 import { useAuthHook } from "../../hooks/useAuthHook";
+import { useNavigate } from "react-router-dom";
 
 const AuthForm = () => {
   const [isLogin, setIsLogin] = useState(true); // Toggle between login and signup
 
   const { mutateAsync, error, isPending } = useAuthHook();
 
+  const navigate = useNavigate();
+
   const submit = (event) => {
     event.preventDefault();
 
     const formData = getFormData(event.target);
 
-    mutateAsync({
-      url: "http://localhost:1102/api/auth/login",
-      data: formData,
-    });
+    mutateAsync(
+      {
+        url: "auth/login",
+        data: formData,
+      },
+      {
+        onSuccess: () => {
+          navigate("/");
+        },
+      }
+    );
 
     console.log(formData); // Process your form data here
   };

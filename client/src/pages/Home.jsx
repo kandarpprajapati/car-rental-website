@@ -8,7 +8,7 @@ import { useState } from "react";
 const Home = () => {
   const [products, setProducts] = useState([]);
 
-  const { data, isLoading, isFetching } = useGetProducts();
+  const { data, isLoading, isFetching, error } = useGetProducts();
 
   const loading = isLoading || isFetching;
 
@@ -42,6 +42,8 @@ const Home = () => {
         </div>
         <div className="mx-auto p-6 md:p-14 bg-primary-foreground rounded-2xl md:rounded-[50px]">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {loading && <p>Loading products...</p>}
+            {error && <p>Error fetching products: {error.message}</p>}
             {!loading &&
               products.length > 0 &&
               products.map((product, index) => (
