@@ -28,6 +28,27 @@
   }
 }
 
+@layer utilities {
+  .scrollbar::-webkit-scrollbar {
+    width: 15px;
+  }
+
+  .scrollbar::-webkit-scrollbar-track {
+    border-radius: 100vh;
+    background: #ffffff;
+  }
+
+  .scrollbar::-webkit-scrollbar-thumb {
+    background: #cccccc;
+    border-radius: 100vh;
+    border: 3px solid #cccccc;
+  }
+
+  .scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #818386;
+  }
+}
+
 /* // :root,
 // .light,
 // .light-theme,

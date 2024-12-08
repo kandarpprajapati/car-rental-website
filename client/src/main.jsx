@@ -31,7 +31,14 @@ const router = createBrowserRouter([
   },
 ]);
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false, // Prevent refetch on tab focus
+      staleTime: 5 * 60 * 1000, // Set data as fresh for 5 minutes
+    },
+  },
+});
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
