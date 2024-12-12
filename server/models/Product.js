@@ -7,10 +7,19 @@ const productSchema = new mongoose.Schema({
   description: { type: String, required: true }, // product description
   pricePerHour: { type: Number, required: true }, // Price per hour
   category: { type: String, required: true },
-  availability: {
-    type: Boolean,
-    default: true, // Indicates if the product is currently available
-  },
+  availableTimes: [
+    {
+      start: { type: String, required: true }, // Start time (e.g., "10:00 AM")
+      end: { type: String, required: true }, // End time (e.g., "11:00 AM")
+    },
+  ],
+  occupiedTimes: [
+    {
+      date: { type: String, required: true }, // Date (e.g., "YYYY-MM-DD")
+      start: { type: String, required: true }, // Start time (e.g., "10:00 AM")
+      end: { type: String, required: true }, // End time (e.g., "11:00 AM")
+    },
+  ],
   extraHelperPrice: { type: Number },
   imageUrl: { type: String }, // URL for the product's image
   createdAt: { type: Date, default: Date.now }, // Timestamp for when the product was added

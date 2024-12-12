@@ -9,7 +9,8 @@ const createProduct = async (req, res) => {
     pricePerHour,
     oldPrice,
     category,
-    availability,
+    availableTimes,
+    occupiedTimes,
     extraHelperPrice,
     imageUrl,
   } = req.body;
@@ -22,7 +23,8 @@ const createProduct = async (req, res) => {
       !pricePerHour ||
       !oldPrice ||
       !category ||
-      !availability ||
+      !availableTimes ||
+      !occupiedTimes ||
       !extraHelperPrice
     ) {
       return res
@@ -37,7 +39,8 @@ const createProduct = async (req, res) => {
       pricePerHour,
       oldPrice,
       category,
-      availability,
+      availableTimes,
+      occupiedTimes,
       extraHelperPrice,
       imageUrl,
     });
@@ -147,13 +150,27 @@ const getProductById = async (req, res) => {
 
 const updateProduct = async (req, res) => {
   const { productId } = req.params;
-  const { name, description, pricePerHour, availability, imageUrl } = req.body;
+  const {
+    name,
+    description,
+    pricePerHour,
+    availableTimes,
+    occupiedTimes,
+    imageUrl,
+  } = req.body;
 
   try {
     // Find and update the product
     const updatedProduct = await Product.findByIdAndUpdate(
       productId,
-      { name, description, pricePerHour, availability, imageUrl },
+      {
+        name,
+        description,
+        pricePerHour,
+        availableTimes,
+        occupiedTimes,
+        imageUrl,
+      },
       { new: true } // Return the updated product
     );
 

@@ -25,6 +25,14 @@ import { getFormData } from "@/lib/getFormData";
 
 const CarDetailsDialog = ({ product }) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [selectedDate, setSelectedDate] = useState("");
+  console.log(product);
+
+  const isTimeOccupied = (start, end, date) => {
+    return product.occupiedTimes.some(
+      (time) => time.date === date && time.start === start && time.end === end
+    );
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -96,37 +104,31 @@ const CarDetailsDialog = ({ product }) => {
               <FormLabel>Select Time</FormLabel>
               <RadioCard
                 name="time"
-                defaultValue="1"
+                defaultValue=""
                 columns={{ initial: "1", sm: "3" }}
-                required
               >
-                <RadioCardItem value="1">
-                  <Flex
-                    direction="column"
-                    width="100%"
-                    className="border px-3 py-2 rounded-lg active:border-secondary-foreground data-[state=checked]:bg-secondary-foreground"
-                  >
-                    <Text weight="bold">10-11 AM</Text>
-                  </Flex>
-                </RadioCardItem>
-                <RadioCardItem value="2">
-                  <Flex
-                    direction="column"
-                    width="100%"
-                    className="border px-3 py-2 rounded-lg active:border-secondary-foreground ml-2 data-[state=checked]:border-secondary-foreground"
-                  >
-                    <Text weight="bold">11-12 PM</Text>
-                  </Flex>
-                </RadioCardItem>
-                <RadioCardItem value="3">
-                  <Flex
-                    direction="column"
-                    width="100%"
-                    className="border px-3 py-2 rounded-lg active:border-secondary-foreground ml-2 data-[state=checked]:border-secondary-foreground"
-                  >
-                    <Text weight="bold">12-01 PM</Text>
-                  </Flex>
-                </RadioCardItem>
+                {product.availableTimes.map(({ start, end, _id }) => {
+                  const disabled = isTimeOccupied(start, end, selectedDate);
+                  return (
+                    <RadioCardItem
+                      key={_id}
+                      value={`${start}-${end}`}
+                      disabled={disabled}
+                    >
+                      <div
+                        className={`border px-3 py-2 rounded-lg ${
+                          disabled
+                            ? "bg-gray-200 cursor-not-allowed"
+                            : "active:border-secondary-foreground"
+                        }`}
+                      >
+                        <Text weight="bold">
+                          {start}-{end} {parseInt(start, 10) < 12 ? "AM" : "PM"}
+                        </Text>
+                      </div>
+                    </RadioCardItem>
+                  );
+                })}
               </RadioCard>
             </FormField>
 
