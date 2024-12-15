@@ -76,7 +76,7 @@ const CarDetailsDialog = ({ product }) => {
             </div>
             <h2 className="text-lg font-semibold">{product.title}</h2>
             {/* Description with "Read More" */}
-            <p className="text-gray-600">
+            <p className="text-gray-600 text-justify">
               {isExpanded
                 ? product.description
                 : truncateDescription(product.description, 20)}

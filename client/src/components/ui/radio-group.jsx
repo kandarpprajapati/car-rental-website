@@ -35,11 +35,9 @@ const RadioGroup = React.forwardRef(
           {/* Price Section */}
           {option.price && (
             <div className="text-right">
-              <Text className="text-sm font-semibold text-gray-900">
-                {option.price}
-              </Text>
+              <Text className="text-sm font-semibold">{option.price}</Text>
               {option.discountPrice && (
-                <Text className="text-xs line-through text-gray-400">
+                <Text className="text-xs line-through text-gray ml-1">
                   {option.discountPrice}
                 </Text>
               )}
