@@ -96,8 +96,18 @@ const CarDetailsDialog = ({ product }) => {
             <RadioGroup
               name="options"
               options={[
-                { value: "option1", label: "Option 1" },
-                { value: "option2", label: "Option 2" },
+                {
+                  value: "option1",
+                  label: "Option 1",
+                  price: "45,00 €",
+                  discountPrice: "60,00 €",
+                },
+                {
+                  value: "option2",
+                  label: "Option 2",
+                  price: "50,00 €",
+                  discountPrice: "70,00 €",
+                },
               ]}
             />
             {/* </FormField> */}
@@ -150,7 +160,7 @@ const CarDetailsDialog = ({ product }) => {
             {/* Helper Checkbox */}
             <FormField name="helper">
               <FormControl asChild>
-                <Checkbox label="Extra Helper" />
+                <Checkbox label="Extra Helper" price="+ 20,00 €" />
               </FormControl>
             </FormField>
 
