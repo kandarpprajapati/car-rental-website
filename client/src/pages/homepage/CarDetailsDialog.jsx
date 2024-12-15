@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { TextArea } from "@/components/ui/textarea";
+import { RadioGroup } from "@/components/ui/radio-group";
 import { RadioCard, RadioCardItem } from "@/components/ui/radiocards";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Flex, Text } from "@radix-ui/themes";
@@ -65,7 +66,7 @@ const CarDetailsDialog = ({ product }) => {
           <DialogTitle className="text-primary-foreground">
             Car Details
           </DialogTitle>
-          <p>{`${product.title}'s details`}</p>
+          <p>{product.name}</p>
         </DialogHeader>
         <Form onSubmit={handleSubmit}>
           <div className="grid gap-4 py-4">
@@ -81,12 +82,25 @@ const CarDetailsDialog = ({ product }) => {
                 : truncateDescription(product.description, 20)}
               <button
                 type="button"
-                className="text-primary-foreground hover:underline"
+                className="text-primary-foreground font-semibold hover:underline"
                 onClick={() => setIsExpanded(!isExpanded)}
               >
                 {isExpanded ? "Show Less" : "Read More"}
               </button>
             </p>
+
+            {/* <FormField> */}
+            {/* <label className="text-sm font-medium text-gray-700">
+              Choose an option:
+            </label> */}
+            <RadioGroup
+              name="options"
+              options={[
+                { value: "option1", label: "Option 1" },
+                { value: "option2", label: "Option 2" },
+              ]}
+            />
+            {/* </FormField> */}
 
             {/* Date Field */}
             <FormField name="date">
@@ -114,6 +128,7 @@ const CarDetailsDialog = ({ product }) => {
                       key={_id}
                       value={`${start}-${end}`}
                       disabled={disabled}
+                      className="mr-2"
                     >
                       <div
                         className={`border px-3 py-2 rounded-lg ${
