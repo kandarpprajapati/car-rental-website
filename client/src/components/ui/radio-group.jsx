@@ -9,10 +9,11 @@ const Radio = RadioPrimitive.Root;
 const RadioItem = RadioPrimitive.Item;
 
 const RadioGroup = React.forwardRef(
-  ({ className, options, name, ...props }, ref) => (
+  ({ className, options, name, required, ...props }, ref) => (
     <Radio
       ref={ref}
       name={name}
+      required={required}
       className={cn("flex flex-col space-y-2", className)}
       {...props}
     >
@@ -20,6 +21,7 @@ const RadioGroup = React.forwardRef(
         <RadioItem
           key={index}
           value={option.value}
+          required={required}
           className={cn(
             "flex items-center justify-between cursor-pointer group",
             "w-full p-3 transition hover:bg-gray-50",

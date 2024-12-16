@@ -21,13 +21,14 @@ import { RadioGroup } from "@/components/ui/radio-group";
 import { RadioCard, RadioCardItem } from "@/components/ui/radiocards";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Flex, Text } from "@radix-ui/themes";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getFormData } from "@/lib/getFormData";
+import useFormStore from "@/store/formStore";
 
 const CarDetailsDialog = ({ product }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [selectedDate, setSelectedDate] = useState("");
-  console.log(product);
+  const { formData, updateFormData, getFullFormData } = useFormStore();
 
   const isTimeOccupied = (start, end, date) => {
     return product.occupiedTimes.some(
@@ -39,10 +40,16 @@ const CarDetailsDialog = ({ product }) => {
     event.preventDefault();
     const formData = getFormData(event.target);
 
-    console.log(formData);
+    // Explicitly convert "on" to true/false for the checkbox
+    formData.helper = formData.helper === "on" ? true : false;
 
-    // Add booking API call here
+    // Update Zustand store with the current form values
+    updateFormData(formData);
   };
+
+  useEffect(() => {
+    console.log(getFullFormData());
+  }, [formData]);
 
   // Truncate description to a specific word limit
   const truncateDescription = (text, wordLimit) => {
@@ -89,28 +96,30 @@ const CarDetailsDialog = ({ product }) => {
               </button>
             </p>
 
-            {/* <FormField> */}
-            {/* <label className="text-sm font-medium text-gray-700">
-              Choose an option:
-            </label> */}
-            <RadioGroup
-              name="options"
-              options={[
-                {
-                  value: "option1",
-                  label: "Option 1",
-                  price: "45,00 €",
-                  discountPrice: "60,00 €",
-                },
-                {
-                  value: "option2",
-                  label: "Option 2",
-                  price: "50,00 €",
-                  discountPrice: "70,00 €",
-                },
-              ]}
-            />
-            {/* </FormField> */}
+            <FormField name="options">
+              <FormControl asChild>
+                <RadioGroup
+                  options={[
+                    {
+                      value: "option1",
+                      label: "Option 1",
+                      price: "45,00 €",
+                      discountPrice: "60,00 €",
+                    },
+                    {
+                      value: "option2",
+                      label: "Option 2",
+                      price: "50,00 €",
+                      discountPrice: "70,00 €",
+                    },
+                  ]}
+                  required
+                />
+              </FormControl>
+              <FormMessage match="valueMissing" className="text-red-800">
+                Please select a option
+              </FormMessage>
+            </FormField>
 
             {/* Date Field */}
             <FormField name="date">
@@ -160,7 +169,13 @@ const CarDetailsDialog = ({ product }) => {
             {/* Helper Checkbox */}
             <FormField name="helper">
               <FormControl asChild>
-                <Checkbox label="Extra Helper" price="+ 20,00 €" />
+                <Checkbox
+                  label="Extra Helper"
+                  price="+ 20,00 €"
+                  onCheckedChange={(value) =>
+                    updateFormData({ helper: value === true })
+                  }
+                />
               </FormControl>
             </FormField>
 
