@@ -1,9 +1,5 @@
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-} from "@/components/ui/select";
+import { getFormData } from "@/lib/getFormData";
+import useFormStore from "@/store/formStore";
 import { Button } from "../../components/ui/button";
 import {
   Form,
@@ -13,15 +9,22 @@ import {
   FormSubmit,
 } from "../../components/ui/form";
 import { Input } from "../../components/ui/input";
-import { getFormData } from "@/lib/getFormData";
+import { useCreateBooking } from "../../hooks/bookings/useCreateBooking";
 
 const CheckOutForm = () => {
+  const { mutateAsync } = useCreateBooking();
+  const { formData, updateFormData, getFullFormData } = useFormStore();
+
   const placeOrder = (event) => {
     event.preventDefault();
 
-    const formData = getFormData(event.target);
+    const newFormData = getFormData(event.target);
+
+    updateFormData({ ...getFullFormData(), ...newFormData });
 
     console.log(formData); // Process your form data here
+
+    mutateAsync(formData);
   };
 
   return (

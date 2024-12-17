@@ -24,11 +24,13 @@ import { Flex, Text } from "@radix-ui/themes";
 import { useEffect, useState } from "react";
 import { getFormData } from "@/lib/getFormData";
 import useFormStore from "@/store/formStore";
+import { useNavigate } from "react-router-dom";
 
 const CarDetailsDialog = ({ product }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [selectedDate, setSelectedDate] = useState("");
   const { formData, updateFormData, getFullFormData } = useFormStore();
+  const navigate = useNavigate();
 
   const isTimeOccupied = (start, end, date) => {
     return product.occupiedTimes.some(
@@ -45,6 +47,8 @@ const CarDetailsDialog = ({ product }) => {
 
     // Update Zustand store with the current form values
     updateFormData(formData);
+
+    navigate("/checkout");
   };
 
   useEffect(() => {
