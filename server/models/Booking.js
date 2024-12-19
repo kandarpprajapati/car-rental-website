@@ -13,9 +13,15 @@ const bookingSchema = new mongoose.Schema({
     ref: "User", // Reference to the User schema
     required: true,
   },
-  startTime: { type: Date, required: true }, // Booking start date and time
-  endTime: { type: Date, required: true }, // Booking end date and time
+  time: { type: String, required: true }, // Booking time
+  date: { type: Date, required: true },
   totalPrice: { type: Number, required: true }, // Total calculated price for the booking
+  deliveryFrom: { type: String, required: true },
+  deliveryTo: { type: String, required: true },
+  helper: { type: String },
+  options: { type: String, required: true },
+  phone: { type: String, required: true },
+  spacialRequirement: { type: String, required: true },
   paymentStatus: {
     type: String,
     enum: ["pending", "paid", "failed"], // Payment status

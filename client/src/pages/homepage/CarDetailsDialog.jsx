@@ -46,7 +46,7 @@ const CarDetailsDialog = ({ product }) => {
     formData.helper = formData.helper === "on" ? true : false;
 
     // Update Zustand store with the current form values
-    updateFormData(formData);
+    updateFormData({ ...formData, productId: product._id });
 
     navigate("/checkout");
   };

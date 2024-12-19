@@ -2,40 +2,64 @@ const Product = require("../models/Product");
 const Booking = require("../models/Booking");
 
 const createBooking = async (req, res) => {
-  const { productId, startTime, endTime } = req.body;
+  const {
+    productId,
+    time,
+    date,
+    helper,
+    options,
+    specialRequirements,
+    phonecode,
+    phone,
+    deliveryFrom,
+    deliveryTo,
+  } = req.body;
 
   const userId = req.user.userId; // Assumes user info is available via JWT middleware
 
-  if (!userId) return res.status(400).json({ error: "Please login again." });
+  if (!userId) {
+    return res.status(400).json({ error: "Please login again." });
+  }
 
   try {
     // Validate inputs
-    if (!productId || !startTime || !endTime) {
+    if (
+      !productId ||
+      !time ||
+      !date ||
+      !phone ||
+      !deliveryFrom ||
+      !deliveryTo ||
+      !options
+    ) {
       return res.status(400).json({ error: "All fields are required." });
     }
 
-    // Check if product exists and is available
+    // Check if product exists
     const product = await Product.findById(productId);
-    if (!product || !product.availability) {
-      return res.status(404).json({ error: "Product not available." });
+    if (!product) {
+      return res.status(404).json({ error: "Product not found." });
     }
 
-    // Calculate total price
-    const hours = Math.ceil(
-      (new Date(endTime) - new Date(startTime)) / (1000 * 60 * 60)
-    );
-    if (hours <= 0) {
-      return res.status(400).json({ error: "Invalid booking duration." });
-    }
-    const totalPrice = hours * product.pricePerHour;
+    // Calculate total price (example logic, customizable)
+    const basePrice = product.pricePerHour; // Assuming the Product model has a `pricePerHour` field
+    const helperCost = helper ? 20 : 0; // Example cost for helper
+    const totalPrice = basePrice + helperCost;
 
     // Create a new booking
     const booking = new Booking({
       productId,
       userId,
-      startTime: new Date(startTime),
-      endTime: new Date(endTime),
+      time,
+      date: new Date(date),
       totalPrice,
+      deliveryFrom,
+      deliveryTo,
+      helper: helper ? "Yes" : "No",
+      options,
+      phone: `${phonecode} ${phone}`,
+      spacialRequirement: specialRequirements,
+      paymentStatus: "pending", // Default to pending
     });
 
     await booking.save();
