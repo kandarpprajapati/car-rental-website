@@ -1,7 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
 import apiClient from "../../config/apiClient";
+import useFormStore from "../../store/formStore";
 
 export function useCreateBooking() {
+  const { resetFormData } = useFormStore();
+
   return useMutation({
     mutationFn: async (data) => {
       const response = await apiClient.post(
@@ -20,6 +23,7 @@ export function useCreateBooking() {
     },
     onSuccess: (data) => {
       console.log("Booking successful:", data);
+      resetFormData();
       // You can add any side effects here, like navigating to another page
     },
   });
