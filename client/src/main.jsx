@@ -9,6 +9,7 @@ import CheckOutForm from "./pages/checkoutform/index.jsx";
 import Home from "./pages/Home.jsx";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Toaster } from "react-hot-toast";
 
 const router = createBrowserRouter([
   {
@@ -43,6 +44,7 @@ const queryClient = new QueryClient({
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
+      <Toaster />
       <RouterProvider router={router} />
     </QueryClientProvider>
   </StrictMode>

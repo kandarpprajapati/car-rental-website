@@ -1,6 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import apiClient from "../../config/apiClient";
 import useFormStore from "../../store/formStore";
+import toast from "react-hot-toast";
 
 export function useCreateBooking() {
   const { resetFormData } = useFormStore();
@@ -23,6 +24,7 @@ export function useCreateBooking() {
     },
     onSuccess: (data) => {
       console.log("Booking successful:", data);
+      toast.success(data.message);
       resetFormData();
       // You can add any side effects here, like navigating to another page
     },

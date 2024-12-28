@@ -35,10 +35,10 @@ const Navbar = () => {
             MENU
           </NavLink>
           <a
-            href="#finnish"
+            href="/auth"
             className="text-blue-800 font-semibold hover:text-orange-500 transition"
           >
-            FINNISH
+            LOGIN
           </a>
         </div>
 

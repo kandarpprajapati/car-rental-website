@@ -13,18 +13,20 @@ import { useCreateBooking } from "../../hooks/bookings/useCreateBooking";
 
 const CheckOutForm = () => {
   const { mutateAsync } = useCreateBooking();
-  const { formData, updateFormData, getFullFormData } = useFormStore();
+  const { updateFormData, getFullFormData } = useFormStore();
 
-  const placeOrder = (event) => {
+  const placeOrder = async (event) => {
     event.preventDefault();
 
     const newFormData = getFormData(event.target);
 
-    updateFormData({ ...getFullFormData(), ...newFormData });
+    const completeFormData = { ...getFullFormData(), ...newFormData };
 
-    console.log(formData); // Process your form data here
+    updateFormData(completeFormData);
 
-    mutateAsync(formData);
+    console.log(completeFormData); // Process your form data here
+
+    await mutateAsync(completeFormData);
   };
 
   return (
