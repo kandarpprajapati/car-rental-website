@@ -13,6 +13,7 @@ import {
 } from "../../components/ui/form";
 import { Input } from "../../components/ui/input";
 import { useAuthHook } from "../../hooks/useAuthHook";
+import toast from "react-hot-toast";
 
 const AuthForm = () => {
   const [isLogin, setIsLogin] = useState(true); // Toggle between login and signup
@@ -26,19 +27,49 @@ const AuthForm = () => {
 
     const formData = getFormData(event.target);
 
-    mutateAsync(
-      {
-        url: "auth/login",
-        data: formData,
-      },
-      {
-        onSuccess: () => {
-          navigate("/");
-        },
+    // Check if confirmPassword exists in formData
+    if (formData.confirmPassword) {
+      // Check if password matches confirmPassword
+      if (formData.password !== formData.confirmPassword) {
+        toast.error("Password and Confirm Password do not match!");
+        return;
       }
-    );
 
-    console.log(formData); // Process your form data here
+      console.log(formData);
+
+      // Call the auth/register API
+      mutateAsync(
+        {
+          url: "auth/register",
+          data: {
+            email: formData.email,
+            password: formData.password,
+            username: formData.email.split("@")[0],
+          },
+        },
+        {
+          onSuccess: () => {
+            navigate("/");
+          },
+        }
+      );
+    } else {
+      // Call the auth/login API
+      mutateAsync(
+        {
+          url: "auth/login",
+          data: {
+            emailOrUsername: formData.email,
+            password: formData.password,
+          },
+        },
+        {
+          onSuccess: () => {
+            navigate("/");
+          },
+        }
+      );
+    }
   };
 
   const googleLogin = useGoogleLogin({
