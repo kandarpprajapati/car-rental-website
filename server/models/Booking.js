@@ -13,7 +13,7 @@ const bookingSchema = new mongoose.Schema({
     ref: "User", // Reference to the User schema
     required: true,
   },
-  time: { type: String, required: true }, // Booking time
+  time: { type: [String], required: true }, // Booking time
   date: { type: Date, required: true },
   totalPrice: { type: Number, required: true }, // Total calculated price for the booking
   deliveryFrom: { type: String, required: true },

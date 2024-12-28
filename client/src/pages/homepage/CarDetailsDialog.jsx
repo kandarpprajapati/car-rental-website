@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -18,10 +19,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { TextArea } from "@/components/ui/textarea";
 import { RadioGroup } from "@/components/ui/radio-group";
-import { RadioCard, RadioCardItem } from "@/components/ui/radiocards";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Flex, Text } from "@radix-ui/themes";
-import { useEffect, useState } from "react";
+import { Text } from "@radix-ui/themes";
 import { getFormData } from "@/lib/getFormData";
 import useFormStore from "@/store/formStore";
 import { useNavigate } from "react-router-dom";
@@ -29,6 +28,7 @@ import { useNavigate } from "react-router-dom";
 const CarDetailsDialog = ({ product }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [selectedDate, setSelectedDate] = useState("");
+  const [selectedTimes, setSelectedTimes] = useState([]); // Track multiple selected times
   const { formData, updateFormData, getFullFormData } = useFormStore();
   const navigate = useNavigate();
 
@@ -38,15 +38,28 @@ const CarDetailsDialog = ({ product }) => {
     );
   };
 
+  const handleTimeSelection = (time) => {
+    setSelectedTimes((prev) =>
+      prev.includes(time) ? prev.filter((t) => t !== time) : [...prev, time]
+    );
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const formData = getFormData(event.target);
 
-    // Explicitly convert "on" to true/false for the checkbox
     formData.helper = formData.helper === "on" ? true : false;
 
-    // Update Zustand store with the current form values
-    updateFormData({ ...formData, productId: product._id });
+    // Add selected times to the form data
+    const updatedFormData = {
+      ...formData,
+      productId: product._id,
+      time: selectedTimes, // Include the selected times
+    };
+
+    console.log(updatedFormData);
+
+    updateFormData(updatedFormData);
 
     navigate("/checkout");
   };
@@ -55,7 +68,6 @@ const CarDetailsDialog = ({ product }) => {
     console.log(getFullFormData());
   }, [formData]);
 
-  // Truncate description to a specific word limit
   const truncateDescription = (text, wordLimit) => {
     const words = text.split(" ");
     if (words.length > wordLimit) {
@@ -129,7 +141,11 @@ const CarDetailsDialog = ({ product }) => {
             <FormField name="date">
               <FormLabel>Select Date</FormLabel>
               <FormControl asChild>
-                <Input type="date" required />
+                <Input
+                  type="date"
+                  required
+                  onChange={(e) => setSelectedDate(e.target.value)}
+                />
               </FormControl>
               <FormMessage match="valueMissing" className="text-red-800">
                 Please select a date
@@ -138,36 +154,39 @@ const CarDetailsDialog = ({ product }) => {
 
             {/* Time Selection */}
             <FormField name="time">
-              <FormLabel>Select Time</FormLabel>
-              <RadioCard
-                name="time"
-                defaultValue=""
-                columns={{ initial: "1", sm: "3" }}
-              >
+              <FormLabel>Select Times</FormLabel>
+              <div className="grid grid-cols-3 gap-2">
                 {product.availableTimes.map(({ start, end, _id }) => {
+                  const value = `${start}-${end}`;
                   const disabled = isTimeOccupied(start, end, selectedDate);
+
                   return (
-                    <RadioCardItem
-                      key={_id}
-                      value={`${start}-${end}`}
-                      disabled={disabled}
-                      className="mr-2"
-                    >
-                      <div
-                        className={`border px-3 py-2 rounded-lg ${
+                    <div key={_id}>
+                      <label
+                        className={`flex flex-col items-center border p-2 rounded-lg cursor-pointer ${
                           disabled
-                            ? "bg-gray-200 cursor-not-allowed"
-                            : "active:border-secondary-foreground"
+                            ? "bg-gray text-white cursor-not-allowed"
+                            : selectedTimes.includes(value)
+                            ? "bg-secondary-foreground border-secondary text-white" // Highlight selected
+                            : ""
                         }`}
                       >
+                        <input
+                          type="checkbox"
+                          className="hidden"
+                          value={value}
+                          disabled={disabled}
+                          onChange={() => handleTimeSelection(value)}
+                          checked={selectedTimes.includes(value)}
+                        />
                         <Text weight="bold">
                           {start}-{end} {parseInt(start, 10) < 12 ? "AM" : "PM"}
                         </Text>
-                      </div>
-                    </RadioCardItem>
+                      </label>
+                    </div>
                   );
                 })}
-              </RadioCard>
+              </div>
             </FormField>
 
             {/* Helper Checkbox */}

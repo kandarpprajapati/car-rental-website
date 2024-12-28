@@ -4,8 +4,8 @@ const Booking = require("../models/Booking");
 const createBooking = async (req, res) => {
   const {
     productId,
-    time,
-    date,
+    time, // Array of selected time slots (e.g., ["10:00-11:00", "11:00-12:00"])
+    date, // Booking date (e.g., "2024-12-28")
     helper,
     options,
     specialRequirements,
@@ -22,29 +22,48 @@ const createBooking = async (req, res) => {
   }
 
   try {
-    // Validate inputs
+    // Validate required inputs
     if (
       !productId ||
       !time ||
+      !Array.isArray(time) ||
+      time.length === 0 ||
       !date ||
       !phone ||
       !deliveryFrom ||
-      !deliveryTo ||
-      !options
+      !deliveryTo
     ) {
       return res.status(400).json({ error: "All fields are required." });
     }
 
-    // Check if product exists
+    // Find the product
     const product = await Product.findById(productId);
     if (!product) {
       return res.status(404).json({ error: "Product not found." });
     }
 
+    // Validate that selected times are available
+    const unavailableTimes = time.filter((slot) =>
+      product.occupiedTimes.some(
+        (occupied) =>
+          occupied.date === date &&
+          occupied.start === slot.split("-")[0] &&
+          occupied.end === slot.split("-")[1]
+      )
+    );
+
+    if (unavailableTimes.length > 0) {
+      return res.status(400).json({
+        error: `The following times are already occupied: ${unavailableTimes.join(
+          ", "
+        )}.`,
+      });
+    }
+
     // Calculate total price (example logic, customizable)
     const basePrice = product.pricePerHour; // Assuming the Product model has a `pricePerHour` field
     const helperCost = helper ? 20 : 0; // Example cost for helper
-    const totalPrice = basePrice + helperCost;
+    const totalPrice = basePrice * time.length + helperCost; // Price per selected time slot
 
     // Create a new booking
     const booking = new Booking({
@@ -64,8 +83,43 @@ const createBooking = async (req, res) => {
 
     await booking.save();
 
-    // Mark product as unavailable
-    product.availability = false;
+    // Move selected times from availableTimes to occupiedTimes
+    const updatedAvailableTimes = product.availableTimes.filter(
+      ({ start, end }) =>
+        !time.some((slot) => {
+          const [slotStart, slotEnd] = slot.split("-");
+          return slotStart === start && slotEnd === end;
+        })
+    );
+
+    // Find the next consecutive times and add them to the occupiedTimes
+    const newOccupiedTimes = [];
+    time.forEach((slot) => {
+      const [start, end] = slot.split("-");
+      newOccupiedTimes.push({ date, start, end });
+
+      // Add the next time slot (if exists) to the occupiedTimes
+      const nextStart = parseInt(end.split(":")[0]) + 1; // Assuming 1-hour slots, add the next hour
+      const nextEnd = `${nextStart}:00`;
+      const nextSlot = `${end}-${nextEnd}`;
+      const [nextStartHour, nextEndHour] = nextSlot.split("-");
+
+      if (
+        !product.occupiedTimes.some(
+          (occupied) =>
+            occupied.date === date &&
+            occupied.start === nextStartHour &&
+            occupied.end === nextEndHour
+        )
+      ) {
+        newOccupiedTimes.push({ date, start: nextStartHour, end: nextEndHour });
+      }
+    });
+
+    product.availableTimes = updatedAvailableTimes;
+    product.occupiedTimes = [...product.occupiedTimes, ...newOccupiedTimes];
+
+    // Save the updated product
     await product.save();
 
     res.status(201).json({
