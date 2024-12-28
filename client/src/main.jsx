@@ -8,8 +8,12 @@ import AuthForm from "./pages/auth/AuthForm.jsx";
 import CheckOutForm from "./pages/checkoutform/index.jsx";
 import Home from "./pages/Home.jsx";
 
+import { GoogleOAuthProvider } from "@react-oauth/google";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "react-hot-toast";
+
+const clientId =
+  "104963589596-b25efa1tqlp5iij0c86gbsoft9evlima.apps.googleusercontent.com";
 
 const router = createBrowserRouter([
   {
@@ -43,9 +47,11 @@ const queryClient = new QueryClient({
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <Toaster />
-      <RouterProvider router={router} />
-    </QueryClientProvider>
+    <GoogleOAuthProvider clientId={clientId}>
+      <QueryClientProvider client={queryClient}>
+        <Toaster />
+        <RouterProvider router={router} />
+      </QueryClientProvider>
+    </GoogleOAuthProvider>
   </StrictMode>
 );

@@ -1,5 +1,7 @@
 import { getFormData } from "@/lib/getFormData";
+import { useGoogleLogin } from "@react-oauth/google";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "../../components/ui/button";
 import {
   Form,
@@ -11,7 +13,6 @@ import {
 } from "../../components/ui/form";
 import { Input } from "../../components/ui/input";
 import { useAuthHook } from "../../hooks/useAuthHook";
-import { useNavigate } from "react-router-dom";
 
 const AuthForm = () => {
   const [isLogin, setIsLogin] = useState(true); // Toggle between login and signup
@@ -39,6 +40,38 @@ const AuthForm = () => {
 
     console.log(formData); // Process your form data here
   };
+
+  const googleLogin = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      try {
+        const response = await fetch(
+          "https://www.googleapis.com/oauth2/v3/userinfo",
+          {
+            headers: {
+              Authorization: `Bearer ${tokenResponse.access_token}`,
+            },
+          }
+        );
+
+        const data = await response.json();
+
+        localStorage.setItem("user", JSON.stringify(data));
+        console.log("User Data:", data);
+
+        navigate("/");
+
+        // Here you can handle the user data, e.g., store it in state, context, or local storage.
+        // You can also redirect the user to a different page.
+      } catch (error) {
+        console.error("Error fetching user info:", error);
+        // Handle error appropriately, e.g., display an error message to the user.
+      }
+    },
+    onError: (error) => {
+      console.error("Login Failed:", error);
+      // Handle login error, e.g., display an error message to the user.
+    },
+  });
 
   return (
     <div className="w-full min-h-screen flex flex-col items-center justify-center bg-gray-50 py-10">
@@ -111,7 +144,8 @@ const AuthForm = () => {
           {/* Google Login Button */}
           <Button
             variant="secondaryoutline"
-            className="w-full mt-4 flex justify-center items-center gap-2 "
+            className="w-full mt-4 flex justify-center items-center gap-2"
+            onClick={googleLogin}
           >
             <img
               src="https://banner2.cleanpng.com/20181108/vqy/kisspng-youtube-google-logo-google-images-google-account-consulting-crm-the-1-recommended-crm-for-g-suite-1713925083723.webp"
