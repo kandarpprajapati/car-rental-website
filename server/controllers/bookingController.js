@@ -98,14 +98,21 @@ const createBooking = async (req, res) => {
       const [start, end] = slot.split("-");
       newOccupiedTimes.push({ date, start, end });
 
-      // Add the next time slot (if exists) to the occupiedTimes
-      const nextStart = parseInt(end.split(":")[0]) + 1; // Assuming 1-hour slots, add the next hour
-      const nextEnd = `${nextStart}:00`;
-      const nextSlot = `${end}-${nextEnd}`;
+      // Add the next time slot (if it exists) to the occupiedTimes
+      const nextStart = parseInt(end); // Get the ending hour as an integer
+      const nextEnd = nextStart + 1; // Calculate the next hour
+      const nextSlot = `${end}-${nextEnd}`; // Format the next time slot
       const [nextStartHour, nextEndHour] = nextSlot.split("-");
 
+      // Avoid duplicates in occupiedTimes
       if (
         !product.occupiedTimes.some(
+          (occupied) =>
+            occupied.date === date &&
+            occupied.start === nextStartHour &&
+            occupied.end === nextEndHour
+        ) &&
+        !newOccupiedTimes.some(
           (occupied) =>
             occupied.date === date &&
             occupied.start === nextStartHour &&
@@ -116,7 +123,7 @@ const createBooking = async (req, res) => {
       }
     });
 
-    product.availableTimes = updatedAvailableTimes;
+    // Update only the occupiedTimes
     product.occupiedTimes = [...product.occupiedTimes, ...newOccupiedTimes];
 
     // Save the updated product

@@ -105,6 +105,30 @@ const getAllProducts = async (req, res) => {
       .limit(limitNumber) // Limit based on the requested limit
       .exec();
 
+    // Add the `disabled` field to availableTimes
+    const updatedProducts = products.map((product) => {
+      const { availableTimes, occupiedTimes } = product;
+
+      const updatedAvailableTimes = (availableTimes || []).map((time) => {
+        const isDisabled = (occupiedTimes || []).some((occupied) => {
+          // Ensure all comparisons are string-based for consistent matching
+          return occupied.start === time.start && occupied.end === time.end;
+        });
+
+        return {
+          _id: time._id,
+          start: time.start,
+          end: time.end,
+          disabled: isDisabled,
+        };
+      });
+
+      return {
+        ...product.toObject(),
+        availableTimes: updatedAvailableTimes,
+      };
+    });
+
     // Get the total count of products matching the filters
     const totalProducts = await Product.countDocuments(filterQuery);
 
@@ -113,7 +137,7 @@ const getAllProducts = async (req, res) => {
 
     // Return paginated products
     res.status(200).json({
-      products,
+      products: updatedProducts,
       pagination: {
         totalProducts,
         totalPages,

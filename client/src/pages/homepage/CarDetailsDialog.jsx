@@ -26,18 +26,14 @@ import useFormStore from "@/store/formStore";
 import { useNavigate } from "react-router-dom";
 
 const CarDetailsDialog = ({ product }) => {
+  console.log(product);
   const [isExpanded, setIsExpanded] = useState(false);
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedTimes, setSelectedTimes] = useState([]); // Track multiple selected times
   const { formData, updateFormData, getFullFormData } = useFormStore();
   const navigate = useNavigate();
 
-  const isTimeOccupied = (start, end, date) => {
-    return product.occupiedTimes.some(
-      (time) => time.date === date && time.start === start && time.end === end
-    );
-  };
-
+  // Handle time selection
   const handleTimeSelection = (time) => {
     setSelectedTimes((prev) =>
       prev.includes(time) ? prev.filter((t) => t !== time) : [...prev, time]
@@ -63,10 +59,6 @@ const CarDetailsDialog = ({ product }) => {
 
     navigate("/checkout");
   };
-
-  useEffect(() => {
-    console.log(getFullFormData());
-  }, [formData]);
 
   const truncateDescription = (text, wordLimit) => {
     const words = text.split(" ");
@@ -156,9 +148,8 @@ const CarDetailsDialog = ({ product }) => {
             <FormField name="time">
               <FormLabel>Select Times</FormLabel>
               <div className="grid grid-cols-3 gap-2">
-                {product.availableTimes.map(({ start, end, _id }) => {
+                {product.availableTimes.map(({ start, end, _id, disabled }) => {
                   const value = `${start}-${end}`;
-                  const disabled = isTimeOccupied(start, end, selectedDate);
 
                   return (
                     <div key={_id}>
