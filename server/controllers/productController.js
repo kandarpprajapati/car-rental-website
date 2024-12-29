@@ -111,8 +111,16 @@ const getAllProducts = async (req, res) => {
 
       const updatedAvailableTimes = (availableTimes || []).map((time) => {
         const isDisabled = (occupiedTimes || []).some((occupied) => {
+          const isToday =
+            new Date(occupied.date).toDateString() ===
+            new Date().toDateString();
+
           // Ensure all comparisons are string-based for consistent matching
-          return occupied.start === time.start && occupied.end === time.end;
+          return (
+            isToday &&
+            occupied.start === time.start &&
+            occupied.end === time.end
+          );
         });
 
         return {
@@ -147,6 +155,61 @@ const getAllProducts = async (req, res) => {
     });
   } catch (error) {
     console.error("Error fetching products:", error);
+    res
+      .status(500)
+      .json({ error: "Internal server error. Please try again later." });
+  }
+};
+
+const getAvailableTimesByDate = async (req, res) => {
+  const { date, productId } = req.query; // Get the date and productId from the query parameters
+
+  if (!date || !productId) {
+    return res
+      .status(400)
+      .json({ error: "Both date and productId are required." });
+  }
+
+  try {
+    // Find the product by the productId
+    const product = await Product.findById(productId);
+
+    if (!product) {
+      return res.status(404).json({ error: "Product not found." });
+    }
+
+    // Destructure the availableTimes and occupiedTimes
+    const { availableTimes, occupiedTimes } = product;
+
+    // Filter the available times based on the selected date
+    const updatedAvailableTimes = (availableTimes || []).map((time) => {
+      const isDisabled = (occupiedTimes || []).some((occupied) => {
+        const isSameDay =
+          new Date(occupied.date).toDateString() ===
+          new Date(date).toDateString();
+        return (
+          isSameDay &&
+          occupied.start === time.start &&
+          occupied.end === time.end
+        );
+      });
+
+      return {
+        _id: time._id,
+        start: time.start,
+        end: time.end,
+        disabled: isDisabled,
+      };
+    });
+
+    // Return the available times for the given date
+    res.status(200).json({
+      productId: product._id,
+      productName: product.name,
+      availableTimes: updatedAvailableTimes,
+    });
+  } catch (error) {
+    console.error("Error fetching available times:", error);
     res
       .status(500)
       .json({ error: "Internal server error. Please try again later." });
@@ -261,6 +324,7 @@ const applySearchAndFilters = (search, category, minPrice, maxPrice) => {
 module.exports = {
   createProduct,
   getAllProducts,
+  getAvailableTimesByDate,
   getProductById,
   updateProduct,
   deleteProduct,

@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
@@ -7,7 +8,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -17,21 +17,27 @@ import {
   FormSubmit,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { TextArea } from "@/components/ui/textarea";
 import { RadioGroup } from "@/components/ui/radio-group";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Text } from "@radix-ui/themes";
+import { TextArea } from "@/components/ui/textarea";
 import { getFormData } from "@/lib/getFormData";
 import useFormStore from "@/store/formStore";
+import { Text } from "@radix-ui/themes";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useGetProductAvailableTimes } from "../../hooks/products/useGetProductAvailableTimes";
 
 const CarDetailsDialog = ({ product }) => {
   console.log(product);
   const [isExpanded, setIsExpanded] = useState(false);
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedTimes, setSelectedTimes] = useState([]); // Track multiple selected times
+  const [availableTimes, setAvailableTimes] = useState(
+    product.availableTimes || []
+  );
   const { formData, updateFormData, getFullFormData } = useFormStore();
   const navigate = useNavigate();
+
+  const { mutateAsync } = useGetProductAvailableTimes();
 
   // Handle time selection
   const handleTimeSelection = (time) => {
@@ -66,6 +72,20 @@ const CarDetailsDialog = ({ product }) => {
       return words.slice(0, wordLimit).join(" ") + "...";
     }
     return text;
+  };
+
+  const handleDateChange = (e) => {
+    e.preventDefault();
+
+    mutateAsync(
+      { date: e.target.value, productId: product._id },
+      {
+        onSuccess: (data) => {
+          setSelectedDate(e.target.value);
+          setAvailableTimes(data.availableTimes);
+        },
+      }
+    );
   };
 
   return (
@@ -133,11 +153,7 @@ const CarDetailsDialog = ({ product }) => {
             <FormField name="date">
               <FormLabel>Select Date</FormLabel>
               <FormControl asChild>
-                <Input
-                  type="date"
-                  required
-                  onChange={(e) => setSelectedDate(e.target.value)}
-                />
+                <Input type="date" required onChange={handleDateChange} />
               </FormControl>
               <FormMessage match="valueMissing" className="text-red-800">
                 Please select a date
@@ -148,7 +164,7 @@ const CarDetailsDialog = ({ product }) => {
             <FormField name="time">
               <FormLabel>Select Times</FormLabel>
               <div className="grid grid-cols-3 gap-2">
-                {product.availableTimes.map(({ start, end, _id, disabled }) => {
+                {availableTimes.map(({ start, end, _id, disabled }) => {
                   const value = `${start}-${end}`;
 
                   return (

@@ -7,12 +7,14 @@ const {
   updateProduct,
   deleteProduct,
   createProduct,
+  getAvailableTimesByDate,
 } = require("../controllers/productController");
 
 const router = express.Router();
 
 router.get("/", getAllProducts); // Get all products
 router.get("/get/:productId", getProductById); // Get a single product by ID
+router.get("/available-times", getAvailableTimesByDate);
 
 router.post("/create", createProduct); // Create a product
 
