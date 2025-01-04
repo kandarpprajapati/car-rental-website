@@ -10,23 +10,33 @@ import {
 } from "../../components/ui/form";
 import { Input } from "../../components/ui/input";
 import { useCreateBooking } from "../../hooks/bookings/useCreateBooking";
+import { Text } from "@radix-ui/themes";
+import { useInitiatePaymentIntent } from "../../hooks/payment/useCreatePaymentIntent";
 
 const CheckOutForm = () => {
   const { mutateAsync } = useCreateBooking();
   const { updateFormData, getFullFormData } = useFormStore();
+
+  const { mutateAsync: paymentInitiateMethod } = useInitiatePaymentIntent();
 
   const placeOrder = async (event) => {
     event.preventDefault();
 
     const newFormData = getFormData(event.target);
 
-    const completeFormData = { ...getFullFormData(), ...newFormData };
+    const completeFormData = {
+      ...getFullFormData(),
+      ...newFormData,
+      amount: 45,
+    };
 
     updateFormData(completeFormData);
 
     console.log(completeFormData); // Process your form data here
 
-    await mutateAsync(completeFormData);
+    //await mutateAsync(completeFormData);
+
+    await paymentInitiateMethod({ amount: 45 });
   };
 
   return (
@@ -51,14 +61,6 @@ const CheckOutForm = () => {
                   <option>+91</option>
                   <option>+1</option>
                 </select>
-                {/* <Select className="w-24" required>
-                  <SelectTrigger variant="soft" />
-                  <SelectContent variant="soft" position="popper">
-                    <SelectItem value="Lighter">+358</SelectItem>
-                    <SelectItem value="Darker">+91</SelectItem>
-                    <SelectItem value="Darker">+1</SelectItem>
-                  </SelectContent>
-                </Select> */}
               </FormControl>
               <FormControl asChild>
                 <Input
@@ -91,23 +93,40 @@ const CheckOutForm = () => {
           <div className="mt-6 bg-gray-100 rounded-lg">
             <h2 className="text-primary-foreground font-bold">Order Summary</h2>
             <div className="text-sm text-gray-600 mt-2">
-              <div className="flex justify-between">
-                <span>Items (1)</span>
-                <span>45,00 €</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Others</span>
-                <span>0,00 €</span>
-              </div>
-              <div className="flex justify-between">
+              <FormField className="flex justify-between" name="vanPrice">
+                <span>Van Charges</span>
+                <FormControl asChild>
+                  <Text>45,00</Text>
+                </FormControl>
+              </FormField>
+              <FormField className="flex justify-between" name="servicePrice">
                 <span>Service</span>
-                <span>0,00 €</span>
-              </div>
+                <FormControl asChild>
+                  <Text>00,00</Text>
+                </FormControl>
+              </FormField>
+              <FormField className="flex justify-between" name="distancePrice">
+                <span>Distance</span>
+                <FormControl asChild>
+                  <Text>00,00</Text>
+                </FormControl>
+              </FormField>
+              <FormField className="flex justify-between" name="otherPrice">
+                <span>Others</span>
+                <FormControl asChild>
+                  <Text>00,00</Text>
+                </FormControl>
+              </FormField>
               <hr className="my-2" />
-              <div className="flex justify-between font-bold text-primary-foreground">
+              <FormField
+                className="flex justify-between font-bold text-primary-foreground"
+                name="totalPrice"
+              >
                 <span>Total (estimated)</span>
-                <span>45,00 €</span>
-              </div>
+                <FormControl asChild>
+                  <Text>45,00</Text>
+                </FormControl>
+              </FormField>
             </div>
           </div>
           <FormSubmit asChild>
