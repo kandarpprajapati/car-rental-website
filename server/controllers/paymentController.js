@@ -24,7 +24,7 @@ const initiatePaymentIntent = async (req, res) => {
 };
 
 const createCheckoutSession = async (req, res) => {
-  const { amount } = req.body;
+  const { totalPrice } = req.body;
 
   try {
     const session = await stripe.checkout.sessions.create({
@@ -37,7 +37,7 @@ const createCheckoutSession = async (req, res) => {
               name: "Product Name", // Name of the product
               description: "Product description", // Optional
             },
-            unit_amount: amount * 100, // Amount in cents (e.g., $45.00)
+            unit_amount: totalPrice * 100, // Amount in cents (e.g., $45.00)
           },
           quantity: 1, // Quantity of the product
         },

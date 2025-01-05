@@ -57,6 +57,7 @@ const CarDetailsDialog = ({ product }) => {
       ...formData,
       productId: product._id,
       time: selectedTimes, // Include the selected times
+      helperPrice: formData.helper ? product.extraHelperPrice : 0,
     };
 
     console.log(updatedFormData);
@@ -109,6 +110,10 @@ const CarDetailsDialog = ({ product }) => {
             <div className="flex flex-col items-center">
               <img src={product.imageUrl} alt="Car" />
             </div>
+            <div className="text-gray">
+              <p>{product.category}</p>
+              {/* Assuming product.category holds the category name */}
+            </div>
             <h2 className="text-lg font-semibold">{product.title}</h2>
             {/* Description with "Read More" */}
             <p className="text-gray-600 text-justify">
@@ -124,9 +129,20 @@ const CarDetailsDialog = ({ product }) => {
               </button>
             </p>
 
-            <FormField name="options">
+            <FormField name="price">
               <FormControl asChild>
-                <RadioGroup options={product.pricePerHour} required />
+                <RadioGroup
+                  options={
+                    product.pricePerHour.map((price) => ({
+                      ...price,
+                      value: price.discountPrice, // Use the unique ID for the value
+                      label: price.name, // Use a descriptive label
+                      discountPrice: `${price.discountPrice.toFixed(2)} €`,
+                      originalPrice: `${price.originalPrice.toFixed(2)} €`,
+                    })) || []
+                  }
+                  required
+                />
               </FormControl>
               <FormMessage match="valueMissing" className="text-red-800">
                 Please select a option
@@ -185,9 +201,11 @@ const CarDetailsDialog = ({ product }) => {
               <FormControl asChild>
                 <Checkbox
                   label="Extra Helper"
-                  price="+ 20,00 €"
+                  price={`+ ${product.extraHelperPrice} €`}
                   onCheckedChange={(value) =>
-                    updateFormData({ helper: value === true })
+                    updateFormData({
+                      helper: value === true,
+                    })
                   }
                 />
               </FormControl>

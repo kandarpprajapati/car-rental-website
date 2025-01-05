@@ -12,12 +12,24 @@ import { Input } from "../../components/ui/input";
 import { useCreateBooking } from "../../hooks/bookings/useCreateBooking";
 import { Text } from "@radix-ui/themes";
 import { useInitiatePaymentIntent } from "../../hooks/payment/useCreatePaymentIntent";
+import { useEffect, useState } from "react";
 
 const CheckOutForm = () => {
   const { mutateAsync } = useCreateBooking();
-  const { updateFormData, getFullFormData } = useFormStore();
+  const { formData, updateFormData, getFullFormData } = useFormStore();
+  console.log(formData);
+
+  const [distancePrice, setDistancePrice] = useState(0);
+  const [totalPrice, setTotalPrice] = useState(0);
 
   const { mutateAsync: paymentInitiateMethod } = useInitiatePaymentIntent();
+
+  // Update total price whenever price or distance price changes
+  useEffect(() => {
+    const basePrice = parseFloat(formData.price) || 0;
+    const helperPrice = formData.helperPrice || 0;
+    setTotalPrice(basePrice + distancePrice + helperPrice);
+  }, [formData.price, distancePrice, formData.helperPrice]);
 
   const placeOrder = async (event) => {
     event.preventDefault();
@@ -27,7 +39,8 @@ const CheckOutForm = () => {
     const completeFormData = {
       ...getFullFormData(),
       ...newFormData,
-      amount: 45,
+      distancePrice,
+      totalPrice,
     };
 
     updateFormData(completeFormData);
@@ -36,7 +49,7 @@ const CheckOutForm = () => {
 
     //await mutateAsync(completeFormData);
 
-    await paymentInitiateMethod({ amount: 45 });
+    // await paymentInitiateMethod({ amount: 45 });
   };
 
   return (
@@ -64,7 +77,7 @@ const CheckOutForm = () => {
               </FormControl>
               <FormControl asChild>
                 <Input
-                  type="text"
+                  type="number"
                   placeholder="Phone number"
                   required
                   className="flex-1"
@@ -96,25 +109,21 @@ const CheckOutForm = () => {
               <FormField className="flex justify-between" name="vanPrice">
                 <span>Van Charges</span>
                 <FormControl asChild>
-                  <Text>45,00</Text>
+                  <Text>{(parseFloat(formData.price) || 0).toFixed(2)}</Text>
                 </FormControl>
               </FormField>
-              <FormField className="flex justify-between" name="servicePrice">
-                <span>Service</span>
-                <FormControl asChild>
-                  <Text>00,00</Text>
-                </FormControl>
-              </FormField>
+              {formData.helper && (
+                <FormField className="flex justify-between" name="helperPrice">
+                  <span>Helper Charges</span>
+                  <FormControl asChild>
+                    <Text>{(formData.helperPrice || 0).toFixed(2)}</Text>
+                  </FormControl>
+                </FormField>
+              )}
               <FormField className="flex justify-between" name="distancePrice">
-                <span>Distance</span>
+                <span>Distance Charges</span>
                 <FormControl asChild>
-                  <Text>00,00</Text>
-                </FormControl>
-              </FormField>
-              <FormField className="flex justify-between" name="otherPrice">
-                <span>Others</span>
-                <FormControl asChild>
-                  <Text>00,00</Text>
+                  <Text>{distancePrice.toFixed(2)}</Text>
                 </FormControl>
               </FormField>
               <hr className="my-2" />
@@ -124,7 +133,7 @@ const CheckOutForm = () => {
               >
                 <span>Total (estimated)</span>
                 <FormControl asChild>
-                  <Text>45,00</Text>
+                  <Text>{parseFloat(totalPrice).toFixed(2)}</Text>
                 </FormControl>
               </FormField>
             </div>

@@ -14,17 +14,7 @@ const Home = () => {
 
   useEffect(() => {
     if (data && data.products) {
-      // Modify pricePerHour here
-      const updatedProducts = data.products.map((product) => ({
-        ...product,
-        pricePerHour: product.pricePerHour.map((price) => ({
-          ...price,
-          value: price.discountPrice,
-          discountPrice: price.discountPrice.toFixed(2), // Example modification
-          originalPrice: price.originalPrice.toFixed(2), // Example modification
-        })),
-      }));
-      setProducts(updatedProducts);
+      setProducts(data.products);
     }
   }, [data]);
 
@@ -69,19 +59,19 @@ const Home = () => {
                     />
                   </div>
 
-                  <div className="p-4">
+                  <div>
+                    {/* Product Category */}
+                    <p className="text-sm text-gray my-2">{product.category}</p>
                     <h3 className="text-primary-foreground text-lg font-semibold mb-20 uppercase">
                       {product.name}
                     </h3>
                     <div className="flex justify-between items-center">
                       <span className="text-secondary text-lg font-bold">
                         {product.pricePerHour.length > 0 && (
-                          <div>
-                            <p>
-                              {product.pricePerHour[0].discountPrice} € / hr
-                            </p>
-                            <p>{product.pricePerHour[0].originalPrice} €</p>
-                          </div>
+                          <p>
+                            {product.pricePerHour[0].discountPrice} € /{" "}
+                            <sup>hr</sup>
+                          </p>
                         )}
                       </span>
                       <CarDetailsDialog product={product} />
