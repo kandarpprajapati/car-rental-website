@@ -1,13 +1,15 @@
 import { MapPinned } from "lucide-react";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import CarImage from "../../public/car-images/van.png";
 import { useGetProducts } from "../hooks/products/useGetProducts.js";
 import useProductStore from "../store/productStore.js";
 import CarDetailsDialog from "./homepage/CarDetailsDialog.jsx";
 import ExportBookingsButton from "../components/ExportTodaysBooking.jsx";
+import translateToFinnish from "../lib/translateToFinnish.js";
 
 const Home = () => {
   const { products, setProducts } = useProductStore();
+  const [translatedProducts, setTranslatedProducts] = useState([]);
 
   const { data, isLoading, isFetching, error } = useGetProducts();
 
@@ -16,8 +18,14 @@ const Home = () => {
   useEffect(() => {
     if (data && data.products) {
       setProducts(data.products);
+
+      // Translate products to Finnish
+      translateToFinnish(data.products).then((translatedData) => {
+        setTranslatedProducts(translatedData); // Set the translated products
+        console.log(translatedData);
+      });
     }
-  }, [data]);
+  }, [data, setProducts]);
 
   return (
     <div className="max-w-screen-2xl mx-auto px-3 lg:px-2 xl:px-0">
@@ -46,8 +54,8 @@ const Home = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {loading && <p>Loading products...</p>}
             {error && <p>Error fetching products: {error.message}</p>}
-            {!loading && products.length > 0 ? (
-              products.map((product, index) => (
+            {!loading && translatedProducts.length > 0 ? (
+              translatedProducts.map((product, index) => (
                 <div
                   key={index}
                   className="bg-background rounded-lg overflow-hidden shadow-md hover:shadow-lg transform transition duration-300 ease-in-out p-4"
