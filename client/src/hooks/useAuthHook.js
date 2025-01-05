@@ -1,6 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import apiClient from "../config/apiClient";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 // export function useAuthHook() {
 //   return useMutation({
@@ -30,6 +31,7 @@ import toast from "react-hot-toast";
 // }
 
 export function useAuthHook() {
+  const navigate = useNavigate();
   return useMutation({
     mutationFn: async ({ url, data }) => {
       console.log("Calling:", url, "with data:", data);
@@ -46,6 +48,7 @@ export function useAuthHook() {
       // Optionally save token or handle success
       if (data.token) {
         localStorage.setItem("token", data.token); // Save the token locally
+        navigate("/");
       }
       // toast.success(data.message); // Uncomment if you have a toast library
     },

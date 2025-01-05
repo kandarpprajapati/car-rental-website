@@ -14,7 +14,12 @@ const protect = (req, res, next) => {
     req.user = decoded; // Attach user info to request
     next();
   } catch (err) {
-    res.status(401).json({ error: "Invalid or expired token." });
+    res
+      .status(401)
+      .json({
+        error: "Invalid or expired token.",
+        redirectUrl: req.originalUrl,
+      });
   }
 };
 
