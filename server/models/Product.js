@@ -5,7 +5,13 @@ const mongoose = require("mongoose");
 const productSchema = new mongoose.Schema({
   name: { type: String, required: true, trim: true }, // product name or model
   description: { type: String, required: true }, // product description
-  pricePerHour: { type: Number, required: true }, // Price per hour
+  pricePerHour: [
+    {
+      name: { type: String, required: true },
+      discountPrice: { type: Number, required: true },
+      originalPrice: { type: Number, required: true },
+    },
+  ], // Price per hour
   category: { type: String, required: true },
   availableTimes: [
     {

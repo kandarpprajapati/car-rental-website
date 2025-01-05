@@ -14,7 +14,17 @@ const Home = () => {
 
   useEffect(() => {
     if (data && data.products) {
-      setProducts(data.products);
+      // Modify pricePerHour here
+      const updatedProducts = data.products.map((product) => ({
+        ...product,
+        pricePerHour: product.pricePerHour.map((price) => ({
+          ...price,
+          value: price.discountPrice,
+          discountPrice: price.discountPrice.toFixed(2), // Example modification
+          originalPrice: price.originalPrice.toFixed(2), // Example modification
+        })),
+      }));
+      setProducts(updatedProducts);
     }
   }, [data]);
 
@@ -65,7 +75,14 @@ const Home = () => {
                     </h3>
                     <div className="flex justify-between items-center">
                       <span className="text-secondary text-lg font-bold">
-                        {product.pricePerHour} {"/"} <sup>hr</sup>
+                        {product.pricePerHour.length > 0 && (
+                          <div>
+                            <p>
+                              {product.pricePerHour[0].discountPrice} € / hr
+                            </p>
+                            <p>{product.pricePerHour[0].originalPrice} €</p>
+                          </div>
+                        )}
                       </span>
                       <CarDetailsDialog product={product} />
                     </div>

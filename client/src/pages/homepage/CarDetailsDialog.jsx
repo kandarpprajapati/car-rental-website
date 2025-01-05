@@ -126,23 +126,7 @@ const CarDetailsDialog = ({ product }) => {
 
             <FormField name="options">
               <FormControl asChild>
-                <RadioGroup
-                  options={[
-                    {
-                      value: "option1",
-                      label: "Option 1",
-                      price: "45,00 €",
-                      discountPrice: "60,00 €",
-                    },
-                    {
-                      value: "option2",
-                      label: "Option 2",
-                      price: "50,00 €",
-                      discountPrice: "70,00 €",
-                    },
-                  ]}
-                  required
-                />
+                <RadioGroup options={product.pricePerHour} required />
               </FormControl>
               <FormMessage match="valueMissing" className="text-red-800">
                 Please select a option
