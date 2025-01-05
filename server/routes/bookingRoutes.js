@@ -11,7 +11,7 @@ const { protect } = require("../middleware/authMiddleware");
 const router = express.Router();
 
 router.get("/userbookings", protect, getUserAllBookings);
-router.get("/today-bookings/export", exportTodayBookingsToExcel);
+router.get("/today-bookings/export", protect, exportTodayBookingsToExcel);
 
 router.post("/create", protect, createBooking);
 
