@@ -4,6 +4,7 @@ import CarImage from "../../public/car-images/van.png";
 import { useGetProducts } from "../hooks/products/useGetProducts.js";
 import useProductStore from "../store/productStore.js";
 import CarDetailsDialog from "./homepage/CarDetailsDialog.jsx";
+import ExportBookingsButton from "../components/ExportTodaysBooking.jsx";
 
 const Home = () => {
   const { products, setProducts } = useProductStore();
@@ -20,6 +21,7 @@ const Home = () => {
 
   return (
     <div className="max-w-screen-2xl mx-auto px-3 lg:px-2 xl:px-0">
+      <ExportBookingsButton />
       <div className="relative rounded-3xl md:rounded-[100px] shadow-md overflow-hidden mt-8 flex justify-center items-center lg:mx-auto bg-radial-gradient">
         {/* Image Section */}
         <img

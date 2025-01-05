@@ -1,5 +1,7 @@
 const Product = require("../models/Product");
 const Booking = require("../models/Booking");
+const XLSX = require("xlsx");
+const fs = require("fs");
 
 const createBooking = async (req, res) => {
   const {
@@ -240,9 +242,67 @@ const cancelBooking = async (req, res) => {
   }
 };
 
+// Fetch all bookings for today and export to Excel
+const exportTodayBookingsToExcel = async (req, res) => {
+  try {
+    // Get the start and end of the current day
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);
+
+    const endOfDay = new Date();
+    endOfDay.setHours(23, 59, 59, 999);
+
+    // Query bookings for today
+    const bookings = await Booking.find({
+      date: { $gte: startOfDay, $lte: endOfDay },
+    })
+      .populate("userId", "username email")
+      .populate("productId", "name pricePerHour");
+
+    if (!bookings.length) {
+      return res
+        .status(200)
+        .json({ found: false, message: "No bookings found for today." });
+    }
+
+    // Format bookings data for Excel
+    const formattedData = bookings.map((booking) => ({
+      CustomerName: booking.userId.username,
+      CustomerEmail: booking.userId.email,
+      ProductName: booking.productId.name,
+      BookingDate: booking.date.toISOString(),
+      TimeSlots: booking.time.join(", "),
+      TotalPrice: booking.totalPrice,
+      DeliveryFrom: booking.deliveryFrom,
+      DeliveryTo: booking.deliveryTo,
+      Helper: booking.helper,
+      PaymentStatus: booking.paymentStatus,
+    }));
+
+    // Create a new workbook and add data
+    const workbook = XLSX.utils.book_new();
+    const worksheet = XLSX.utils.json_to_sheet(formattedData);
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Today's Bookings");
+
+    // Write to a temporary file
+    const filePath = "today_bookings.xlsx";
+    XLSX.writeFile(workbook, filePath);
+
+    // Send the file for download
+    res.download(filePath, () => {
+      // Delete the file after sending it
+      fs.unlinkSync(filePath);
+    });
+  } catch (error) {
+    console.error("Error fetching bookings or exporting to Excel:", error);
+    res.status(500).json({ error: "Internal server error." });
+  }
+};
+
 module.exports = {
   getUserAllBookings,
   createBooking,
   updateBooking,
   cancelBooking,
+  exportTodayBookingsToExcel,
 };

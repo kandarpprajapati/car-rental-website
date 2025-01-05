@@ -34,7 +34,7 @@ const CarDetailsDialog = ({ product }) => {
   const [availableTimes, setAvailableTimes] = useState(
     product.availableTimes || []
   );
-  const { formData, updateFormData, getFullFormData } = useFormStore();
+  const { updateFormData } = useFormStore();
   const navigate = useNavigate();
 
   const { mutateAsync } = useGetProductAvailableTimes();
