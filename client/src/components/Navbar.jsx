@@ -1,8 +1,20 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
+import { useGetProductsByCategory } from "../hooks/products/useGetProductByCategory";
 
 const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false); // For mobile menu
+  const [isCategoryOpen, setIsCategoryOpen] = useState(false); // For category dropdown
+
+  const { mutateAsync } = useGetProductsByCategory();
+
+  const handleCategoryClick = async (category) => {
+    try {
+      await mutateAsync(category); // Pass the category to the API call
+    } catch (error) {
+      console.error("Error fetching products by category:", error);
+    }
+  };
 
   return (
     <header className="bg-white shadow-md text-primary">
@@ -15,12 +27,42 @@ const Navbar = () => {
           >
             HOME
           </NavLink>
-          <NavLink
-            to="#category"
-            className="text-blue-800 font-semibold hover:text-orange-500 transition"
-          >
-            CATEGORY
-          </NavLink>
+
+          {/* CATEGORY with Dropdown */}
+          <div className="relative z-50">
+            <button
+              onClick={() => setIsCategoryOpen((prev) => !prev)}
+              className="text-blue-800 font-semibold hover:text-orange-500 transition"
+            >
+              CATEGORY
+            </button>
+            {isCategoryOpen && (
+              <div className="absolute left-0 mt-2 w-48 bg-white shadow-sm shadow-gray rounded-lg">
+                <ul className="py-2">
+                  <li>
+                    <button
+                      onClick={() =>
+                        handleCategoryClick("Moving and Transportation")
+                      }
+                      className="block w-full text-left px-4 py-2 text-blue-800 hover:bg-gray-100"
+                    >
+                      Muutto ja Kuljetus
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      onClick={() =>
+                        handleCategoryClick("Long distance travel")
+                      }
+                      className="block w-full text-left px-4 py-2 text-blue-800 hover:bg-gray-100"
+                    >
+                      Pitkän matkan liikkuminen
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Center Logo */}
@@ -77,12 +119,37 @@ const Navbar = () => {
               </NavLink>
             </li>
             <li>
-              <NavLink
-                to="#category"
-                className="text-blue-800 font-semibold hover:text-orange-500 transition"
-              >
-                CATEGORY
-              </NavLink>
+              {/* CATEGORY with Dropdown */}
+              <div className="relative">
+                <button
+                  onClick={() => setIsCategoryOpen((prev) => !prev)}
+                  className="text-blue-800 font-semibold hover:text-orange-500 transition"
+                >
+                  CATEGORY
+                </button>
+                {isCategoryOpen && (
+                  <div className="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-lg">
+                    <ul className="py-2">
+                      <li>
+                        <NavLink
+                          to="/muutto"
+                          className="block px-4 py-2 text-blue-800 hover:bg-gray-100"
+                        >
+                          Muutto ja Kuljetus
+                        </NavLink>
+                      </li>
+                      <li>
+                        <NavLink
+                          to="/pitkanmatkan"
+                          className="block px-4 py-2 text-blue-800 hover:bg-gray-100"
+                        >
+                          Pitkän matkan liikkuminen
+                        </NavLink>
+                      </li>
+                    </ul>
+                  </div>
+                )}
+              </div>
             </li>
             <li>
               <NavLink

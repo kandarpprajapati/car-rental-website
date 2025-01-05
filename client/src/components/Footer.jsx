@@ -1,6 +1,18 @@
 import React from "react";
+import { useGetProductsByCategory } from "../hooks/products/useGetProductByCategory";
+import { NavLink } from "react-router-dom";
 
 const Footer = () => {
+  const { mutateAsync } = useGetProductsByCategory();
+
+  const handleCategoryClick = async (category) => {
+    try {
+      await mutateAsync(category); // Pass the category to the API call
+    } catch (error) {
+      console.error("Error fetching products by category:", error);
+    }
+  };
+
   return (
     <footer className="bg-secondary-foreground text-primary-foreground py-20">
       <div className="max-w-7xl mx-auto px-4">
@@ -17,16 +29,31 @@ const Footer = () => {
           {/* Navigation Links */}
           <div className="flex justify-between w-full md:w-auto md:gap-12">
             <div>
-              <h3 className="text-lg font-semibold mb-4">Home</h3>
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold mb-4">Contact</h3>
+              <NavLink to="/" className="text-lg font-semibold mb-4">
+                Home
+              </NavLink>
             </div>
             <div>
               <h3 className="text-lg font-semibold mb-4">Category</h3>
               <ul className="space-y-2">
-                <li>&gt; Muutto ja Kuljetus</li>
-                <li>&gt; Pitkän matkan liikkuminen</li>
+                <li>
+                  <button
+                    onClick={() =>
+                      handleCategoryClick("Moving and Transportation")
+                    }
+                    className="text-left text-primary-foreground hover:underline"
+                  >
+                    &gt; Muutto ja Kuljetus
+                  </button>
+                </li>
+                <li>
+                  <button
+                    onClick={() => handleCategoryClick("Long distance travel")}
+                    className="text-left text-primary-foreground hover:underline"
+                  >
+                    &gt; Pitkän matkan liikkuminen
+                  </button>
+                </li>
               </ul>
             </div>
           </div>

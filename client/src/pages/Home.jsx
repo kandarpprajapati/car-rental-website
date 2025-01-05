@@ -1,12 +1,12 @@
 import { MapPinned } from "lucide-react";
 import React, { useEffect } from "react";
 import CarImage from "../../public/car-images/van.png";
-import CarDetailsDialog from "./homepage/CarDetailsDialog.jsx";
 import { useGetProducts } from "../hooks/products/useGetProducts.js";
-import { useState } from "react";
+import useProductStore from "../store/productStore.js";
+import CarDetailsDialog from "./homepage/CarDetailsDialog.jsx";
 
 const Home = () => {
-  const [products, setProducts] = useState([]);
+  const { products, setProducts } = useProductStore();
 
   const { data, isLoading, isFetching, error } = useGetProducts();
 
@@ -44,8 +44,7 @@ const Home = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {loading && <p>Loading products...</p>}
             {error && <p>Error fetching products: {error.message}</p>}
-            {!loading &&
-              products.length > 0 &&
+            {!loading && products.length > 0 ? (
               products.map((product, index) => (
                 <div
                   key={index}
@@ -78,7 +77,12 @@ const Home = () => {
                     </div>
                   </div>
                 </div>
-              ))}
+              ))
+            ) : (
+              <p className="text-white font-semibold text-lg">
+                No products found.
+              </p>
+            )}
           </div>
         </div>
       </section>
