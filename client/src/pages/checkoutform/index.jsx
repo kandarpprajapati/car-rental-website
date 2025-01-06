@@ -9,18 +9,17 @@ import {
   FormSubmit,
 } from "../../components/ui/form";
 import { Input } from "../../components/ui/input";
-import { useCreateBooking } from "../../hooks/bookings/useCreateBooking";
 import { Text } from "@radix-ui/themes";
 import { useInitiatePaymentIntent } from "../../hooks/payment/useCreatePaymentIntent";
 import { useEffect, useState } from "react";
 
 const CheckOutForm = () => {
-  const { mutateAsync } = useCreateBooking();
   const { formData, updateFormData, getFullFormData } = useFormStore();
   console.log(formData);
 
   const [distancePrice, setDistancePrice] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [loading, setLoading] = useState(false); // Add loading state
 
   const { mutateAsync: paymentInitiateMethod } = useInitiatePaymentIntent();
 
@@ -33,26 +32,31 @@ const CheckOutForm = () => {
 
   const placeOrder = async (event) => {
     event.preventDefault();
+    setLoading(true); // Set loading state to true
 
-    const newFormData = getFormData(event.target);
+    try {
+      const newFormData = getFormData(event.target);
 
-    const completeFormData = {
-      ...getFullFormData(),
-      ...newFormData,
-      distancePrice,
-      totalPrice,
-    };
+      const completeFormData = {
+        ...getFullFormData(),
+        ...newFormData,
+        distancePrice,
+        totalPrice,
+      };
 
-    updateFormData(completeFormData);
+      updateFormData(completeFormData);
 
-    console.log(completeFormData); // Process your form data here
+      console.log(completeFormData); // Process your form data here
 
-    //await mutateAsync(completeFormData);
-
-    await paymentInitiateMethod({
-      totalPrice,
-      bookingDetails: completeFormData,
-    });
+      await paymentInitiateMethod({
+        totalPrice,
+        bookingDetails: completeFormData,
+      });
+    } catch (error) {
+      console.error("Error placing order:", error);
+    } finally {
+      setLoading(false); // Reset loading state
+    }
   };
 
   return (
@@ -142,7 +146,9 @@ const CheckOutForm = () => {
             </div>
           </div>
           <FormSubmit asChild>
-            <Button variant="secondary">Place Order</Button>
+            <Button variant="secondary" loading={loading}>
+              {loading ? "Placing Order..." : "Place Order"}
+            </Button>
           </FormSubmit>
         </Form>
       </div>

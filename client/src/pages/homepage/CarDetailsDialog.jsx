@@ -34,6 +34,7 @@ const CarDetailsDialog = ({ product }) => {
   const [availableTimes, setAvailableTimes] = useState(
     product.availableTimes || []
   );
+  const [loading, setLoading] = useState(false);
   const { updateFormData } = useFormStore();
   const navigate = useNavigate();
 
@@ -48,29 +49,38 @@ const CarDetailsDialog = ({ product }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const formData = getFormData(event.target);
 
-    formData.helper = formData.helper === "on" ? true : false;
+    setLoading(true); // Set loading state to true
 
-    // Calculate the total price
-    const pricePerHour =
-      formData.price || product.pricePerHour[0].discountPrice; // Default to the first price if none is selected
-    const totalPrice = pricePerHour * selectedTimes.length;
+    try {
+      const formData = getFormData(event.target);
 
-    // Add selected times to the form data
-    const updatedFormData = {
-      ...formData,
-      productId: product._id,
-      time: selectedTimes, // Include the selected times
-      helperPrice: formData.helper ? product.extraHelperPrice : 0,
-      price: totalPrice,
-    };
+      formData.helper = formData.helper === "on" ? true : false;
 
-    console.log(updatedFormData);
+      // Calculate the total price
+      const pricePerHour =
+        formData.price || product.pricePerHour[0].discountPrice; // Default to the first price if none is selected
+      const totalPrice = pricePerHour * selectedTimes.length;
 
-    updateFormData(updatedFormData);
+      // Add selected times to the form data
+      const updatedFormData = {
+        ...formData,
+        productId: product._id,
+        time: selectedTimes, // Include the selected times
+        helperPrice: formData.helper ? product.extraHelperPrice : 0,
+        price: totalPrice,
+      };
 
-    navigate("/checkout");
+      console.log(updatedFormData);
+
+      updateFormData(updatedFormData);
+
+      navigate("/checkout");
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    } finally {
+      setLoading(false); // Reset loading state
+    }
   };
 
   const truncateDescription = (text, wordLimit) => {
@@ -228,8 +238,8 @@ const CarDetailsDialog = ({ product }) => {
 
           <DialogFooter>
             <FormSubmit asChild>
-              <Button type="submit" variant="default">
-                Book this car
+              <Button type="submit" variant="default" loading={loading}>
+                {loading ? "Booking..." : "Book this car"}
               </Button>
             </FormSubmit>
           </DialogFooter>

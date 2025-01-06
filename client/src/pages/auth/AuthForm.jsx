@@ -17,13 +17,15 @@ import toast from "react-hot-toast";
 
 const AuthForm = () => {
   const [isLogin, setIsLogin] = useState(true); // Toggle between login and signup
+  const [loading, setLoading] = useState(false); // Add loading state
 
   const { mutateAsync, error, isPending } = useAuthHook();
 
   const navigate = useNavigate();
 
-  const submit = (event) => {
+  const submit = async (event) => {
     event.preventDefault();
+    setLoading(true);
 
     const formData = getFormData(event.target);
 
@@ -35,10 +37,8 @@ const AuthForm = () => {
         return;
       }
 
-      console.log(formData);
-
       // Call the auth/register API
-      mutateAsync(
+      await mutateAsync(
         {
           url: "auth/register",
           data: {
@@ -55,7 +55,7 @@ const AuthForm = () => {
       );
     } else {
       // Call the auth/login API
-      mutateAsync(
+      await mutateAsync(
         {
           url: "auth/login",
           data: {
@@ -70,6 +70,8 @@ const AuthForm = () => {
         }
       );
     }
+
+    setLoading(false);
   };
 
   const googleLogin = useGoogleLogin({
@@ -167,8 +169,14 @@ const AuthForm = () => {
 
           {/* Submit Button */}
           <FormSubmit asChild>
-            <Button variant="default" className="w-full">
-              {isLogin ? "Login" : "Signup"}
+            <Button variant="default" className="w-full" loading={loading}>
+              {loading
+                ? isLogin
+                  ? "Logging In..."
+                  : "Signing Up..."
+                : isLogin
+                ? "Login"
+                : "Signup"}
             </Button>
           </FormSubmit>
 
