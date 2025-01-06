@@ -50,7 +50,7 @@ const CheckOutForm = () => {
     //await mutateAsync(completeFormData);
 
     await paymentInitiateMethod({
-      totalPrice: 1,
+      totalPrice,
       bookingDetails: completeFormData,
     });
   };

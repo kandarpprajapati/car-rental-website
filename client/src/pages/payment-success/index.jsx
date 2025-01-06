@@ -2,10 +2,13 @@ import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import apiClient from "../../config/apiClient";
 import toast from "react-hot-toast";
+import useFormStore from "../../store/formStore";
 
 export function PaymentSuccess() {
   const location = useLocation();
   const navigate = useNavigate();
+
+  const { resetFormData } = useFormStore();
 
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
@@ -19,7 +22,7 @@ export function PaymentSuccess() {
         )
         .then((response) => {
           // If the payment is successful, navigate to booking confirmation page
-          console.log("Payment confirmed:", response.data);
+          resetFormData();
           toast.success(response.data.message);
           navigate("/"); // Redirect to confirmation page
         })

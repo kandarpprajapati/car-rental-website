@@ -1,10 +1,12 @@
 const stripe = require("../config/stripe");
-const { STRIPE_WEBHOOK_SECRET } = require("../config/env");
+const { STRIPE_WEBHOOK_SECRET, ADMIN_EMAIL } = require("../config/env");
 const {
   createBooking,
   createBookingFromSession,
 } = require("./bookingController");
 const Product = require("../models/Product");
+const sendBookingEmails = require("../utils/sendBookingEmails");
+const generateEmailContent = require("../utils/htmlContentForBookingEmail");
 
 const initiatePaymentIntent = async (req, res) => {
   const { amount } = req.body;
@@ -110,6 +112,7 @@ const handleStripeWebhook = async (req, res) => {
 const confirmPayment = async (req, res) => {
   const { session_id } = req.query;
   const userId = req.user.userId;
+  const userEmail = req.user.email;
 
   try {
     const session = await stripe.checkout.sessions.retrieve(session_id);
@@ -122,7 +125,34 @@ const confirmPayment = async (req, res) => {
 
       // Call the function to create the booking from the stored details
       const booking = await createBookingFromSession(bookingDetails, userId);
-      res.status(200).json({ message: booking });
+
+      if (booking === "Booking created successfully!") {
+        const product = await Product.findById(bookingDetails.productId);
+
+        // Generate email content for both customer and admin
+        const { customerEmailContent, adminEmailContent } =
+          generateEmailContent(bookingDetails, product.name, userEmail);
+
+        // Send email to the customer
+        await sendBookingEmails(
+          userEmail,
+          "Booking Confirmation",
+          customerEmailContent
+        );
+
+        // Send email to the admin
+        await sendBookingEmails(
+          ADMIN_EMAIL, // Ensure ADMIN_EMAIL is defined in your environment variables
+          "New Booking Alert",
+          adminEmailContent
+        );
+
+        res
+          .status(200)
+          .json({ message: "Booking confirmed and emails sent successfully!" });
+      } else {
+        res.status(400).json({ error: booking });
+      }
     } else {
       res.status(400).json({ error: "Payment not completed" });
     }

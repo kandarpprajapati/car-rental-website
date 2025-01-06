@@ -193,7 +193,7 @@ const CarDetailsDialog = ({ product }) => {
                           checked={selectedTimes.includes(value)}
                         />
                         <Text weight="bold">
-                          {start}-{end} {parseInt(start, 10) < 12 ? "AM" : "PM"}
+                          {start}-{end}
                         </Text>
                       </label>
                     </div>
