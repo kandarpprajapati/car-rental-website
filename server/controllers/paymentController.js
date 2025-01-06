@@ -28,7 +28,7 @@ const createCheckoutSession = async (req, res) => {
 
   try {
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card"], // Payment methods you support
+      payment_method_types: ["card", "paypal"], // Payment methods you support
       line_items: [
         {
           price_data: {

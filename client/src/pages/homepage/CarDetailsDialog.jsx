@@ -52,12 +52,18 @@ const CarDetailsDialog = ({ product }) => {
 
     formData.helper = formData.helper === "on" ? true : false;
 
+    // Calculate the total price
+    const pricePerHour =
+      formData.price || product.pricePerHour[0].discountPrice; // Default to the first price if none is selected
+    const totalPrice = pricePerHour * selectedTimes.length;
+
     // Add selected times to the form data
     const updatedFormData = {
       ...formData,
       productId: product._id,
       time: selectedTimes, // Include the selected times
       helperPrice: formData.helper ? product.extraHelperPrice : 0,
+      price: totalPrice,
     };
 
     console.log(updatedFormData);

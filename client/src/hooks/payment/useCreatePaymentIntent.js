@@ -11,10 +11,10 @@ export function useInitiatePaymentIntent() {
   );
 
   return useMutation({
-    mutationFn: async (amount) => {
+    mutationFn: async (totalPrice) => {
       const response = await apiClient.post(
         "http://localhost:1102/api/payments/create-checkout-session",
-        amount
+        totalPrice
       ); // Replace with your endpoint
 
       return response.data;

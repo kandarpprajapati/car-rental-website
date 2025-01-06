@@ -49,7 +49,7 @@ const CheckOutForm = () => {
 
     //await mutateAsync(completeFormData);
 
-    await paymentInitiateMethod({ amount: 45 });
+    await paymentInitiateMethod({ totalPrice });
   };
 
   return (
