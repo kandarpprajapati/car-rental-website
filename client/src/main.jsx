@@ -11,6 +11,7 @@ import Home from "./pages/Home.jsx";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "react-hot-toast";
+import { PaymentSuccess } from "./pages/payment-success/index.jsx";
 
 const clientId =
   "104963589596-b25efa1tqlp5iij0c86gbsoft9evlima.apps.googleusercontent.com";
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
       {
         path: "checkout",
         element: <CheckOutForm />, // Another child route
+      },
+      {
+        path: "payment-success",
+        element: <PaymentSuccess />,
       },
     ],
   },

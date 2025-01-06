@@ -19,9 +19,11 @@ const bookingSchema = new mongoose.Schema({
   deliveryFrom: { type: String, required: true },
   deliveryTo: { type: String, required: true },
   helper: { type: String },
-  options: { type: String, required: true },
+  helperPrice: { type: Number },
+  vanPrice: { type: Number },
+  distancePrice: { type: Number },
   phone: { type: String, required: true },
-  spacialRequirement: { type: String, required: true },
+  spacialRequirement: { type: String },
   paymentStatus: {
     type: String,
     enum: ["pending", "paid", "failed"], // Payment status

@@ -141,6 +141,139 @@ const createBooking = async (req, res) => {
   }
 };
 
+const createBookingFromSession = async (bookingDetails, userId) => {
+  const {
+    productId,
+    time, // Array of selected time slots (e.g., ["10:00-11:00", "11:00-12:00"])
+    date, // Booking date (e.g., "2025-01-07")
+    helper,
+    helperPrice,
+    price,
+    distancePrice,
+    totalPrice,
+    specialRequirements,
+    phonecode,
+    phone,
+    deliveryFrom,
+    deliveryTo,
+  } = bookingDetails;
+
+  // Check if user is logged in
+  if (!userId) {
+    return "Please login again.";
+  }
+
+  try {
+    // Validate required inputs
+    if (
+      !productId ||
+      !time ||
+      !Array.isArray(time) ||
+      time.length === 0 ||
+      !date ||
+      !phone ||
+      !deliveryFrom ||
+      !deliveryTo
+    ) {
+      return "All fields are required.";
+    }
+
+    // Find the product by ID
+    const product = await Product.findById(productId);
+    if (!product) {
+      return "Product not found.";
+    }
+
+    // Validate that selected times are available
+    const unavailableTimes = time.filter((slot) =>
+      product.occupiedTimes.some(
+        (occupied) =>
+          occupied.date === date &&
+          occupied.start === slot.split("-")[0] &&
+          occupied.end === slot.split("-")[1]
+      )
+    );
+
+    if (unavailableTimes.length > 0) {
+      return `The following times are already occupied: ${unavailableTimes.join(
+        ", "
+      )}.`;
+    }
+
+    // Create a new booking with the data provided in bookingDetails
+    const booking = new Booking({
+      productId,
+      userId,
+      time,
+      date: new Date(date), // Convert date string to Date object
+      totalPrice,
+      deliveryFrom,
+      deliveryTo,
+      helper: helper ? "Yes" : "No",
+      helperPrice, // Store the helper price
+      price, // Store the base price (before any additions)
+      distancePrice, // Store the distance price (if applicable)
+      phone: `${phonecode} ${phone}`, // Store the phone number with the country code
+      spacialRequirement: specialRequirements, // Store special requirements
+      paymentStatus: "pending", // Set payment status to pending (default)
+    });
+
+    // Save the booking to the database
+    await booking.save();
+
+    // Update product's available and occupied times
+    const updatedAvailableTimes = product.availableTimes.filter(
+      ({ start, end }) =>
+        !time.some((slot) => {
+          const [slotStart, slotEnd] = slot.split("-");
+          return slotStart === start && slotEnd === end;
+        })
+    );
+
+    // Find the next consecutive times and add them to the occupiedTimes
+    const newOccupiedTimes = [];
+    time.forEach((slot) => {
+      const [start, end] = slot.split("-");
+      newOccupiedTimes.push({ date, start, end });
+
+      // Add the next time slot (if it exists) to the occupiedTimes
+      const nextStart = parseInt(end); // Get the ending hour as an integer
+      const nextEnd = nextStart + 1; // Calculate the next hour
+      const nextSlot = `${end}-${nextEnd}`; // Format the next time slot
+      const [nextStartHour, nextEndHour] = nextSlot.split("-");
+
+      // Avoid duplicates in occupiedTimes
+      if (
+        !product.occupiedTimes.some(
+          (occupied) =>
+            occupied.date === date &&
+            occupied.start === nextStartHour &&
+            occupied.end === nextEndHour
+        ) &&
+        !newOccupiedTimes.some(
+          (occupied) =>
+            occupied.date === date &&
+            occupied.start === nextStartHour &&
+            occupied.end === nextEndHour
+        )
+      ) {
+        newOccupiedTimes.push({ date, start: nextStartHour, end: nextEndHour });
+      }
+    });
+
+    // Update only the occupiedTimes
+    product.occupiedTimes = [...product.occupiedTimes, ...newOccupiedTimes];
+
+    // Save the updated product with the new occupied times
+    await product.save();
+
+    return "Booking created successfully!";
+  } catch (error) {
+    console.error("Error creating booking:", error);
+    return "Internal server error.";
+  }
+};
+
 const getUserAllBookings = async (req, res) => {
   try {
     const filters = {};
@@ -254,7 +387,7 @@ const exportTodayBookingsToExcel = async (req, res) => {
 
     // Query bookings for today
     const bookings = await Booking.find({
-      date: { $gte: startOfDay, $lte: endOfDay },
+      createdAt: { $gte: startOfDay, $lte: endOfDay },
     })
       .populate("userId", "username email")
       .populate("productId", "name pricePerHour");
@@ -270,13 +403,18 @@ const exportTodayBookingsToExcel = async (req, res) => {
       CustomerName: booking.userId.username,
       CustomerEmail: booking.userId.email,
       ProductName: booking.productId.name,
-      BookingDate: booking.date.toISOString(),
-      TimeSlots: booking.time.join(", "),
+      ProductPricePerHour: booking.productId.pricePerHour.join(", "), // Ensure it's a string
+      BookingDate: booking.date.toISOString().split("T")[0], // Formatting date (e.g., 2025-01-07)
+      TimeSlots: booking.time.join(", "), // Joining time slots into a string
       TotalPrice: booking.totalPrice,
       DeliveryFrom: booking.deliveryFrom,
       DeliveryTo: booking.deliveryTo,
-      Helper: booking.helper,
+      Helper: booking.helper === "Yes" ? "Yes" : "No", // Ensure it's a string
       PaymentStatus: booking.paymentStatus,
+      HelperPrice: booking.helperPrice,
+      DistancePrice: booking.distancePrice,
+      Phone: booking.phone,
+      SpecialRequirement: booking.spacialRequirement || "None", // Handle empty fields
     }));
 
     // Create a new workbook and add data
@@ -286,12 +424,37 @@ const exportTodayBookingsToExcel = async (req, res) => {
 
     // Write to a temporary file
     const filePath = "today_bookings.xlsx";
+    console.log("Writing file to:", filePath);
     XLSX.writeFile(workbook, filePath);
 
+    // Set the headers for Excel file download
+    res.setHeader(
+      "Content-Type",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    );
+    res.setHeader(
+      "Content-Disposition",
+      'attachment; filename="today_bookings.xlsx"'
+    );
+
     // Send the file for download
-    res.download(filePath, () => {
-      // Delete the file after sending it
+    // res.download(filePath, () => {
+    //   // Ensure the file is deleted after download is complete
+    //   res.on("finish", () => {
+    //     fs.unlinkSync(filePath);
+    //     console.log("File deleted after download");
+    //   });
+    // });
+
+    res.download(filePath, (err) => {
+      if (err) {
+        console.error("Error during file download:", err);
+      } else {
+        console.log("File downloaded successfully.");
+      }
+      // Delete the file after sending
       fs.unlinkSync(filePath);
+      console.log("File deleted after download.");
     });
   } catch (error) {
     console.error("Error fetching bookings or exporting to Excel:", error);
@@ -305,4 +468,5 @@ module.exports = {
   updateBooking,
   cancelBooking,
   exportTodayBookingsToExcel,
+  createBookingFromSession,
 };
