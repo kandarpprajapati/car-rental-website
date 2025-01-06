@@ -185,20 +185,20 @@ const createBookingFromSession = async (bookingDetails, userId) => {
     }
 
     // Validate that selected times are available
-    const unavailableTimes = time.filter((slot) =>
-      product.occupiedTimes.some(
-        (occupied) =>
-          occupied.date === date &&
-          occupied.start === slot.split("-")[0] &&
-          occupied.end === slot.split("-")[1]
-      )
-    );
+    // const unavailableTimes = time.filter((slot) =>
+    //   product.occupiedTimes.some(
+    //     (occupied) =>
+    //       occupied.date === date &&
+    //       occupied.start === slot.split("-")[0] &&
+    //       occupied.end === slot.split("-")[1]
+    //   )
+    // );
 
-    if (unavailableTimes.length > 0) {
-      return `The following times are already occupied: ${unavailableTimes.join(
-        ", "
-      )}.`;
-    }
+    // if (unavailableTimes.length > 0) {
+    //   return `The following times are already occupied: ${unavailableTimes.join(
+    //     ", "
+    //   )}.`;
+    // }
 
     // Create a new booking with the data provided in bookingDetails
     const booking = new Booking({
@@ -211,7 +211,7 @@ const createBookingFromSession = async (bookingDetails, userId) => {
       deliveryTo,
       helper: helper ? "Yes" : "No",
       helperPrice, // Store the helper price
-      price, // Store the base price (before any additions)
+      vanPrice: price, // Store the base price (before any additions)
       distancePrice, // Store the distance price (if applicable)
       phone: `${phonecode} ${phone}`, // Store the phone number with the country code
       spacialRequirement: specialRequirements, // Store special requirements
@@ -409,9 +409,10 @@ const exportTodayBookingsToExcel = async (req, res) => {
       DeliveryFrom: booking.deliveryFrom,
       DeliveryTo: booking.deliveryTo,
       Helper: booking.helper === "Yes" ? "Yes" : "No", // Ensure it's a string
-      TotalPrice: `${booking.totalPrice} €`,
+      vanPrice: `${booking.vanPrice} €`,
       HelperPrice: `${booking.helperPrice} €`,
       DistancePrice: `${booking.distancePrice} €`,
+      TotalPrice: `${booking.totalPrice} €`,
       SpecialRequirement: booking.spacialRequirement || "None", // Handle empty fields
       PaymentStatus: booking.paymentStatus,
     }));

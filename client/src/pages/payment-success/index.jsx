@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import apiClient from "../../config/apiClient";
+import toast from "react-hot-toast";
 
 export function PaymentSuccess() {
   const location = useLocation();
@@ -19,7 +20,8 @@ export function PaymentSuccess() {
         .then((response) => {
           // If the payment is successful, navigate to booking confirmation page
           console.log("Payment confirmed:", response.data);
-          navigate("/booking-confirmation"); // Redirect to confirmation page
+          toast.success(response.data.message);
+          navigate("/"); // Redirect to confirmation page
         })
         .catch((error) => {
           console.error("Error confirming payment:", error);

@@ -122,7 +122,7 @@ const confirmPayment = async (req, res) => {
 
       // Call the function to create the booking from the stored details
       const booking = await createBookingFromSession(bookingDetails, userId);
-      res.status(200).json({ message: "Booking confirmed", booking });
+      res.status(200).json({ message: booking });
     } else {
       res.status(400).json({ error: "Payment not completed" });
     }
