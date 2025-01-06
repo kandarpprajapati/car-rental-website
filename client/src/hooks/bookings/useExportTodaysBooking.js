@@ -8,7 +8,10 @@ export function useExportTodayBookings() {
   return useMutation({
     mutationFn: async () => {
       const response = await apiClient.get(
-        "http://localhost:1102/api/booking/today-bookings/export"
+        "http://localhost:1102/api/booking/today-bookings/export",
+        {
+          responseType: "blob", // Important: Set the response type to blob
+        }
       );
       return response.data;
     },

@@ -215,7 +215,7 @@ const createBookingFromSession = async (bookingDetails, userId) => {
       distancePrice, // Store the distance price (if applicable)
       phone: `${phonecode} ${phone}`, // Store the phone number with the country code
       spacialRequirement: specialRequirements, // Store special requirements
-      paymentStatus: "pending", // Set payment status to pending (default)
+      paymentStatus: "paid", // Set payment status to pending (default)
     });
 
     // Save the booking to the database
@@ -402,19 +402,18 @@ const exportTodayBookingsToExcel = async (req, res) => {
     const formattedData = bookings.map((booking) => ({
       CustomerName: booking.userId.username,
       CustomerEmail: booking.userId.email,
+      Phone: booking.phone,
       ProductName: booking.productId.name,
-      ProductPricePerHour: booking.productId.pricePerHour.join(", "), // Ensure it's a string
       BookingDate: booking.date.toISOString().split("T")[0], // Formatting date (e.g., 2025-01-07)
       TimeSlots: booking.time.join(", "), // Joining time slots into a string
-      TotalPrice: booking.totalPrice,
       DeliveryFrom: booking.deliveryFrom,
       DeliveryTo: booking.deliveryTo,
       Helper: booking.helper === "Yes" ? "Yes" : "No", // Ensure it's a string
-      PaymentStatus: booking.paymentStatus,
-      HelperPrice: booking.helperPrice,
-      DistancePrice: booking.distancePrice,
-      Phone: booking.phone,
+      TotalPrice: `${booking.totalPrice} €`,
+      HelperPrice: `${booking.helperPrice} €`,
+      DistancePrice: `${booking.distancePrice} €`,
       SpecialRequirement: booking.spacialRequirement || "None", // Handle empty fields
+      PaymentStatus: booking.paymentStatus,
     }));
 
     // Create a new workbook and add data
