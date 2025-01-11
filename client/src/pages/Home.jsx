@@ -20,10 +20,10 @@ const Home = () => {
       setProducts(data.products);
 
       // Translate products to Finnish
-      translateToFinnish(data.products).then((translatedData) => {
-        setTranslatedProducts(translatedData); // Set the translated products
-        console.log(translatedData);
-      });
+      // translateToFinnish(data.products).then((translatedData) => {
+      //   setTranslatedProducts(translatedData); // Set the translated products
+      //   console.log(translatedData);
+      // });
     }
   }, [data, setProducts]);
 
@@ -54,8 +54,8 @@ const Home = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {loading && <p>Loading products...</p>}
             {error && <p>Error fetching products: {error.message}</p>}
-            {!loading && translatedProducts.length > 0 ? (
-              translatedProducts.map((product, index) => (
+            {!loading && products.length > 0 ? (
+              products.map((product, index) => (
                 <div
                   key={index}
                   className="bg-background rounded-lg overflow-hidden shadow-md hover:shadow-lg transform transition duration-300 ease-in-out p-4"
