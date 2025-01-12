@@ -1,0 +1,21 @@
+{
+  "nav": {
+    "home": "Hem",
+    "category": {
+      "name": "Kategori",
+      "category1": "Flytt och transport",
+      "category2": "Långdistansresor"
+    },
+    "menu": "Meny",
+    "login": "Logga in"
+  },
+  "productCard": {
+    "button": {
+      "add": "Lägg till",
+      "bookCar": "Boka denna bil"
+    }
+  },
+  "noProducts": "Inga produkter hittades.",
+  "loadingProducts": "Laddar produkter...",
+  "errorFetchingProducts": "<0>Fel vid hämtning av produkter: {{errorMsg}}</0>"
+}

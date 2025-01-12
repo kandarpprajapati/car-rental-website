@@ -1,0 +1,49 @@
+{
+  "learn": "Nothing to learn",
+  "contentDescription": "The most beautiful <br/> thing in the world.",
+  "nav": {
+    "home": "Home",
+    "category": {
+      "name": "Category",
+      "category1": "Moving and Transportation",
+      "category2": "Long distance travel"
+    },
+    "menu": "Menu",
+    "login": "Login"
+  },
+  "productCard": {
+    "button": {
+      "add": "Add",
+      "bookCar": "Book this car",
+      "carBeingBook": "Booking..."
+    },
+    "dialog": {
+      "heading": "Car Details",
+      "errorMissingSelection": "Please select a option",
+      "errorMissingDate": "Please select a date",
+      "requirementTextBoxHeading": "Special Requirements",
+      "requirementTextPlaceholder": "Enter special requirements...",
+      "extraHelper": "Extra Helper"
+    }
+  },
+  "checkout": {
+    "heading": "Checkout",
+    "customer": "Customer",
+    "deliveryFrom": "Delivery From",
+    "deliveryTo": "Delivery To",
+    "yourAnswer": "Your Answer",
+    "phoneNo": "Phone Number",
+    "orderSummary": {
+      "heading": "Order Summary",
+      "vanCharge": "Van Charges",
+      "helperCharge": "Helper Charge",
+      "distanceCharge": "Distance Charges",
+      "total": "Total (estimated)"
+    },
+    "button": "Place Order",
+    "orderPlacing": "Placing Order..."
+  },
+  "noProducts": "No products found.",
+  "loadingProducts": "Loading Products...",
+  "errorFetchingProducts": "<0>Error fetching products: {{errorMsg}}</0>"
+}

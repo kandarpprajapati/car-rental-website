@@ -1,6 +1,7 @@
 // controllers/productController.js
 
 const Product = require("../models/Product");
+const translate = require('translate-google')
 
 const createProduct = async (req, res) => {
   const {
@@ -143,8 +144,7 @@ const getAllProducts = async (req, res) => {
     // Calculate total pages
     const totalPages = Math.ceil(totalProducts / limitNumber);
 
-    // Return paginated products
-    res.status(200).json({
+    const translateObj = await translate({
       products: updatedProducts,
       pagination: {
         totalProducts,
@@ -152,7 +152,10 @@ const getAllProducts = async (req, res) => {
         currentPage: pageNumber,
         limit: limitNumber,
       },
-    });
+    }, { from: 'en', to: req.query.lang || "en", except: ['imageUrl', '_id'] }).then(res => res);
+
+    // Return paginated products
+    res.status(200).json(translateObj);
   } catch (error) {
     console.error("Error fetching products:", error);
     res

@@ -1,0 +1,49 @@
+{
+  "learn": "Inget att lära sig",
+  "contentDescription": "Det vackraste <br/> i världen.",
+  "nav": {
+    "home": "Hem",
+    "category": {
+      "name": "Kategori",
+      "category1": "Flytt och transport",
+      "category2": "Långdistansresor"
+    },
+    "menu": "Meny",
+    "login": "Logga in"
+  },
+  "productCard": {
+    "button": {
+      "add": "Lägg till",
+      "bookCar": "Boka denna bil",
+      "carBeingBook": "Bokar..."
+    },
+    "dialog": {
+      "heading": "Bildetaljer",
+      "errorMissingSelection": "Vänligen välj ett alternativ",
+      "errorMissingDate": "Vänligen välj ett datum",
+      "requirementTextBoxHeading": "Särskilda krav",
+      "requirementTextPlaceholder": "Ange särskilda krav...",
+      "extraHelper": "Extra Hjälpare"
+    }
+  },
+  "checkout": {
+    "heading": "Kassa",
+    "customer": "Kund",
+    "deliveryFrom": "Leverans från",
+    "deliveryTo": "Leverans till",
+    "yourAnswer": "Ditt svar",
+    "phoneNo": "Telefonnummer",
+    "orderSummary": {
+      "heading": "Ordersammanfattning",
+      "vanCharge": "Skåpbilavgifter",
+      "helperCharge": "Hjälparavgift",
+      "distanceCharge": "Avståndsavgifter",
+      "total": "Totalt (uppskattat)"
+    },
+    "button": "Gör beställning",
+    "orderPlacing": "Lägger beställning..."
+  },
+  "noProducts": "Inga produkter hittades.",
+  "loadingProducts": "Laddar produkter...",
+  "errorFetchingProducts": "<0>Fel vid hämtning av produkter: {{errorMsg}}</0>"
+}

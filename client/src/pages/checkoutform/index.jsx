@@ -12,6 +12,7 @@ import { Input } from "../../components/ui/input";
 import { Text } from "@radix-ui/themes";
 import { useInitiatePaymentIntent } from "../../hooks/payment/useCreatePaymentIntent";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const CheckOutForm = () => {
   const { formData, updateFormData, getFullFormData } = useFormStore();
@@ -22,6 +23,7 @@ const CheckOutForm = () => {
   const [loading, setLoading] = useState(false); // Add loading state
 
   const { mutateAsync: paymentInitiateMethod } = useInitiatePaymentIntent();
+  const { t, i18n } = useTranslation("translation");
 
   // Update total price whenever price or distance price changes
   useEffect(() => {
@@ -63,13 +65,13 @@ const CheckOutForm = () => {
     <div className="w-full py-10 flex justify-center items-center">
       <div className="w-[90%] max-w-[600px] bg-background shadow-xl rounded-lg p-6 flex-col justify-center items-center">
         <h1 className="text-3xl font-bold text-primary-foreground mb-4">
-          Checkout
+          {t("checkout.heading")}
         </h1>
         {/* <p className="text-sm text-gray-500 mb-6">Pnix.fi</p> */}
         <Form className="w-full" onSubmit={placeOrder}>
           {/* Customer Phone */}
           <FormField name="phone">
-            <FormLabel>Customer *</FormLabel>
+            <FormLabel>{t("checkout.customer")} *</FormLabel>
             <div className="flex items-center space-x-2">
               <FormControl asChild>
                 <select
@@ -95,40 +97,40 @@ const CheckOutForm = () => {
 
           {/* Delivery From */}
           <FormField name="deliveryFrom" className="mt-4">
-            <FormLabel>Delivery From *</FormLabel>
+            <FormLabel>{t("checkout.deliveryFrom")} *</FormLabel>
             <FormControl asChild>
-              <Input type="text" placeholder="Your answer" required />
+              <Input type="text" placeholder={t("checkout.yourAnswer")} required />
             </FormControl>
           </FormField>
 
           {/* Delivery To */}
           <FormField name="deliveryTo" className="mt-4">
-            <FormLabel>Delivery To *</FormLabel>
+            <FormLabel>{t("checkout.deliveryTo")} *</FormLabel>
             <FormControl asChild>
-              <Input type="text" placeholder="Your answer" required />
+              <Input type="text" placeholder={t("checkout.yourAnswer")} required />
             </FormControl>
           </FormField>
 
           {/* Order Summary */}
           <div className="mt-6 bg-gray-100 rounded-lg">
-            <h2 className="text-primary-foreground font-bold">Order Summary</h2>
+            <h2 className="text-primary-foreground font-bold">{t("checkout.orderSummary.heading")}</h2>
             <div className="text-sm text-gray-600 mt-2">
               <FormField className="flex justify-between" name="vanPrice">
-                <span>Van Charges</span>
+                <span>{t("checkout.orderSummary.vanCharge")}</span>
                 <FormControl asChild>
                   <Text>{(parseFloat(formData.price) || 0).toFixed(2)}</Text>
                 </FormControl>
               </FormField>
               {formData.helper && (
                 <FormField className="flex justify-between" name="helperPrice">
-                  <span>Helper Charges</span>
+                  <span>{t("checkout.orderSummary.helperCharge")}</span>
                   <FormControl asChild>
                     <Text>{(formData.helperPrice || 0).toFixed(2)}</Text>
                   </FormControl>
                 </FormField>
               )}
               <FormField className="flex justify-between" name="distancePrice">
-                <span>Distance Charges</span>
+                <span>{t("checkout.orderSummary.distanceCharge")}</span>
                 <FormControl asChild>
                   <Text>{distancePrice.toFixed(2)}</Text>
                 </FormControl>
@@ -138,7 +140,7 @@ const CheckOutForm = () => {
                 className="flex justify-between font-bold text-primary-foreground"
                 name="totalPrice"
               >
-                <span>Total (estimated)</span>
+                <span>{t("checkout.orderSummary.total")}</span>
                 <FormControl asChild>
                   <Text>{parseFloat(totalPrice).toFixed(2)}</Text>
                 </FormControl>
@@ -147,7 +149,7 @@ const CheckOutForm = () => {
           </div>
           <FormSubmit asChild>
             <Button variant="secondary" loading={loading}>
-              {loading ? "Placing Order..." : "Place Order"}
+              {loading ? t("checkout.orderPlacing") : t("checkout.button")}
             </Button>
           </FormSubmit>
         </Form>

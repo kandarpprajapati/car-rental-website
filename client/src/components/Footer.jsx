@@ -1,9 +1,11 @@
 import React from "react";
 import { useGetProductsByCategory } from "../hooks/products/useGetProductByCategory";
 import { NavLink } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const Footer = () => {
   const { mutateAsync } = useGetProductsByCategory();
+  const { t, i18n } = useTranslation('translation', { keyPrefix: "nav" });
 
   const handleCategoryClick = async (category) => {
     try {
@@ -27,14 +29,14 @@ const Footer = () => {
           </div>
 
           {/* Navigation Links */}
-          <div className="flex justify-between w-full md:w-auto md:gap-12">
+          <div className="flex justify-between w-full md:w-auto md:gap-12 first-letter:capitalize">
             <div>
               <NavLink to="/" className="text-lg font-semibold mb-4">
-                Home
+                {t('home')}
               </NavLink>
             </div>
             <div>
-              <h3 className="text-lg font-semibold mb-4">Category</h3>
+              <h3 className="text-lg font-semibold mb-4">{t('category.name')}</h3>
               <ul className="space-y-2">
                 <li>
                   <button
@@ -43,7 +45,7 @@ const Footer = () => {
                     }
                     className="text-left text-primary-foreground hover:underline"
                   >
-                    &gt; Muutto ja Kuljetus
+                    &gt; {t('category.category1')}
                   </button>
                 </li>
                 <li>
@@ -51,7 +53,7 @@ const Footer = () => {
                     onClick={() => handleCategoryClick("Long distance travel")}
                     className="text-left text-primary-foreground hover:underline"
                   >
-                    &gt; Pitkän matkan liikkuminen
+                    &gt; {t('category.category2')}
                   </button>
                 </li>
               </ul>
