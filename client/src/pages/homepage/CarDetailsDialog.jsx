@@ -25,6 +25,7 @@ import { Text } from "@radix-ui/themes";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGetProductAvailableTimes } from "../../hooks/products/useGetProductAvailableTimes";
+import { useTranslation } from "react-i18next";
 
 const CarDetailsDialog = ({ product }) => {
   console.log(product);
@@ -37,6 +38,7 @@ const CarDetailsDialog = ({ product }) => {
   const [loading, setLoading] = useState(false);
   const { updateFormData } = useFormStore();
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation("translation");
 
   const { mutateAsync } = useGetProductAvailableTimes();
 
@@ -109,14 +111,14 @@ const CarDetailsDialog = ({ product }) => {
     <Dialog>
       <DialogTrigger>
         <Button variant="secondary" className="rounded-full" size="sm">
-          + Add
+          + {t("productCard.button.add")}
         </Button>
       </DialogTrigger>
 
       <DialogContent className="sm:max-w-[425px] max-h-[90vh] overflow-y-auto scrollbar">
         <DialogHeader>
           <DialogTitle className="text-primary-foreground">
-            Car Details
+            {t("productCard.dialog.heading")}
           </DialogTitle>
           <p>{product.name}</p>
         </DialogHeader>
@@ -161,7 +163,7 @@ const CarDetailsDialog = ({ product }) => {
                 />
               </FormControl>
               <FormMessage match="valueMissing" className="text-red-800">
-                Please select a option
+                {t("productCard.dialog.errorMissingSelection", { ns: "translation" })}
               </FormMessage>
             </FormField>
 
@@ -172,7 +174,7 @@ const CarDetailsDialog = ({ product }) => {
                 <Input type="date" required onChange={handleDateChange} />
               </FormControl>
               <FormMessage match="valueMissing" className="text-red-800">
-                Please select a date
+                {t("productCard.dialog.errorMissingDate", { ns: "translation" })}
               </FormMessage>
             </FormField>
 
@@ -186,13 +188,12 @@ const CarDetailsDialog = ({ product }) => {
                   return (
                     <div key={_id}>
                       <label
-                        className={`flex flex-col items-center border p-2 rounded-lg cursor-pointer ${
-                          disabled
-                            ? "bg-gray text-white cursor-not-allowed"
-                            : selectedTimes.includes(value)
+                        className={`flex flex-col items-center border p-2 rounded-lg cursor-pointer ${disabled
+                          ? "bg-gray text-white cursor-not-allowed"
+                          : selectedTimes.includes(value)
                             ? "bg-secondary-foreground border-secondary text-white" // Highlight selected
                             : ""
-                        }`}
+                          }`}
                       >
                         <input
                           type="checkbox"
@@ -216,7 +217,7 @@ const CarDetailsDialog = ({ product }) => {
             <FormField name="helper">
               <FormControl asChild>
                 <Checkbox
-                  label="Extra Helper"
+                  label={t("productCard.dialog.extraHelper")}
                   price={`+ ${product.extraHelperPrice} €`}
                   onCheckedChange={(value) =>
                     updateFormData({
@@ -229,9 +230,9 @@ const CarDetailsDialog = ({ product }) => {
 
             {/* Special Requirements */}
             <FormField name="specialRequirements">
-              <FormLabel>Special Requirements</FormLabel>
+              <FormLabel>{t("productCard.dialog.requirementTextBoxHeading")}</FormLabel>
               <FormControl asChild>
-                <TextArea placeholder="Enter special requirements…" />
+                <TextArea placeholder={t("productCard.dialog.requirementTextPlaceholder")} />
               </FormControl>
             </FormField>
           </div>
@@ -239,7 +240,7 @@ const CarDetailsDialog = ({ product }) => {
           <DialogFooter>
             <FormSubmit asChild>
               <Button type="submit" variant="default" loading={loading}>
-                {loading ? "Booking..." : "Book this car"}
+                {loading ? t("productCard.button.carBeingBook") : t("productCard.button.bookCar")}
               </Button>
             </FormSubmit>
           </DialogFooter>

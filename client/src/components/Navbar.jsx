@@ -1,12 +1,15 @@
 import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useGetProductsByCategory } from "../hooks/products/useGetProductByCategory";
 import { useTranslation } from "react-i18next";
+import { useGetProducts } from "../hooks/products/useGetProducts";
 
 const Navbar = () => {
-  const { t, i18n } = useTranslation('common', { keyPrefix: "nav" });
+  const { t, i18n } = useTranslation('translation', { keyPrefix: "nav" });
   const [isOpen, setIsOpen] = useState(false); // For mobile menu
   const [isCategoryOpen, setIsCategoryOpen] = useState(false); // For category dropdown
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
 
   const { mutateAsync } = useGetProductsByCategory();
 
@@ -17,6 +20,13 @@ const Navbar = () => {
       console.error("Error fetching products by category:", error);
     }
   };
+
+
+  const handleLanguageSelection = (event) => {
+    i18n.changeLanguage(event.target.value);
+    navigate(`${pathname}?lang=${event.target.value}`);
+    window.location.reload();
+  }
 
   return (
     <header className="bg-white shadow-md text-primary">
@@ -78,12 +88,15 @@ const Navbar = () => {
           >
             {t('menu').toUpperCase()}
           </NavLink>
-          <a
-            href="/auth"
-            className="text-blue-800 font-semibold hover:text-orange-500 transition"
-          >
-            {t('login').toUpperCase()}
-          </a>
+          <div className="relative flex justify-center">
+            <select id="language" class="bg-white border-none appearance-none text-blue-800 font-semibold flex justify-center text-center"
+              onChange={handleLanguageSelection}
+            >
+              <option value="en" selected={i18n.language === "en"}>ENGLISH</option>
+              <option value="fi" selected={i18n.language === "fi"}>FINNISH</option>
+              <option value="sv" selected={i18n.language === "sv"}>SWIDISH</option>
+            </select>
+          </div>
         </div>
 
         {/* Hamburger Menu Icon (Visible on Mobile) */}
@@ -162,12 +175,15 @@ const Navbar = () => {
               </NavLink>
             </li>
             <li>
-              <NavLink
-                to="#finnish"
-                className="text-blue-800 font-semibold hover:text-orange-500 transition"
-              >
-                FINNISH
-              </NavLink>
+              <div className="relative flex justify-center">
+                <select id="language" class="bg-white border-none appearance-none text-blue-800 font-semibold flex justify-center text-center"
+                  onChange={handleLanguageSelection}
+                >
+                  <option value="en" selected={i18n.language === "en"}>ENGLISH</option>
+                  <option value="fi" selected={i18n.language === "fi"}>FINNISH</option>
+                  <option value="sv" selected={i18n.language === "sv"}>SWIDISH</option>
+                </select>
+              </div>
             </li>
           </ul>
         </div>

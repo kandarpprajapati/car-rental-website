@@ -13,10 +13,11 @@ import apiClient from "../../config/apiClient";
 // }
 
 export function useGetProducts() {
+  const translationLang = localStorage.getItem("i18nextLng") || "en";
   return useQuery({
     queryKey: ["all-products"], // Cache key for React Query
     queryFn: async () => {
-      const response = await apiClient.get("/product", {
+      const response = await apiClient.get(`/product?lang=${translationLang}`, {
         headers: {
           excludeAuth: true, // Prevent Authorization header for this request
         },

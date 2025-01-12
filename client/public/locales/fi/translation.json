@@ -1,0 +1,49 @@
+{
+  "learn": "Ei mitään opittavaa",
+  "contentDescription": "Loutettavat palvelut <br /> edulliseen hintaan.",
+  "nav": {
+    "home": "Koti",
+    "category": {
+      "name": "Kategoria",
+      "category1": "Muutto ja kuljetus",
+      "category2": "Pitkän matkan matkustaminen"
+    },
+    "menu": "Valikko",
+    "login": "Kirjaudu sisään"
+  },
+  "productCard": {
+    "button": {
+      "add": "Lisää",
+      "bookCar": "Varaa tämä auto",
+      "carBeingBook": "Varataan..."
+    },
+    "dialog": {
+      "heading": "Auton tiedot",
+      "errorMissingSelection": "Valitse vaihtoehto",
+      "errorMissingDate": "Valitse päivämäärä",
+      "requirementTextBoxHeading": "Erityisvaatimukset",
+      "requirementTextPlaceholder": "Kirjoita erityisvaatimukset...",
+      "extraHelper": "Lisäapuri"
+    }
+  },
+  "checkout": {
+    "heading": "Kassa",
+    "customer": "Asiakas",
+    "deliveryFrom": "Toimitus alkaen",
+    "deliveryTo": "Toimitus päättyen",
+    "yourAnswer": "Vastauksesi",
+    "phoneNo": "Puhelinnumero",
+    "orderSummary": {
+      "heading": "Tilausyhteenveto",
+      "vanCharge": "Pakettiauton kulut",
+      "helperCharge": "Avustajan kulut",
+      "distanceCharge": "Etäisyyskustannukset",
+      "total": "Yhteensä (arvio)"
+    },
+    "button": "Tee tilaus",
+    "orderPlacing": "Tilataan..."
+  },
+  "noProducts": "Ei tuotteita löytynyt.",
+  "loadingProducts": "Ladataan tuotteita...",
+  "errorFetchingProducts": "<0>Virhe tuotteiden lataamisessa: {{errorMsg}}</0>"
+}

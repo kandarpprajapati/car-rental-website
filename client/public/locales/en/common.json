@@ -1,12 +1,1 @@
-{
-    "nav": {
-        "home":"home",
-        "category":{
-            "name": "category",
-            "category1": "Moving and Transportation",
-            "category2": "Long distance travel"
-        },
-        "menu":"menu",
-        "login":"login"
-    }
-}
+{}
