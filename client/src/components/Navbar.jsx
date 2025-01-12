@@ -44,7 +44,7 @@ const Navbar = () => {
                       onClick={() =>
                         handleCategoryClick("Moving and Transportation")
                       }
-                      className="block w-full text-left px-4 py-2 text-blue-800 hover:bg-gray-100"
+                      className="block w-full text-left px-4 py-2 text-blue-800 hover:bg-gray hover:text-white"
                     >
                       Muutto ja Kuljetus
                     </button>
@@ -54,7 +54,7 @@ const Navbar = () => {
                       onClick={() =>
                         handleCategoryClick("Long distance travel")
                       }
-                      className="block w-full text-left px-4 py-2 text-blue-800 hover:bg-gray-100"
+                      className="block w-full text-left px-4 py-2 text-blue-800 hover:bg-gray hover:text-white"
                     >
                       Pitkän matkan liikkuminen
                     </button>
@@ -77,10 +77,10 @@ const Navbar = () => {
             MENU
           </NavLink>
           <a
-            href="/auth"
+            href="#"
             className="text-blue-800 font-semibold hover:text-orange-500 transition"
           >
-            LOGIN
+            TRANSLATION
           </a>
         </div>
 
