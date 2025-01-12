@@ -22,10 +22,10 @@ const Home = () => {
       setProducts(data.products);
 
       // Translate products to Finnish
-      translateToFinnish(data.products).then((translatedData) => {
-        setTranslatedProducts(translatedData); // Set the translated products
-        console.log(translatedData);
-      });
+      // translateToFinnish(data.products).then((translatedData) => {
+      //   setTranslatedProducts(translatedData); // Set the translated products
+      //   console.log(translatedData);
+      // });
     }
   }, [data, setProducts]);
 
@@ -57,10 +57,10 @@ const Home = () => {
         </div>
         <div className="mx-auto p-6 md:p-14 bg-primary-foreground rounded-2xl md:rounded-[50px]">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {loading && <p>t</p>}
+            {loading && <p>Loading products...</p>}
             {error && <Trans i18nKey="errorFetchingProducts" ns="translation"><p>Error fetching products: {{ errorMsg: error.message }}</p></Trans>}
-            {!loading && translatedProducts.length > 0 ? (
-              translatedProducts.map((product, index) => (
+            {!loading && products ? (
+              products.map((product, index) => (
                 <div
                   key={index}
                   className="bg-background rounded-lg overflow-hidden shadow-md hover:shadow-lg transform transition duration-300 ease-in-out p-4"

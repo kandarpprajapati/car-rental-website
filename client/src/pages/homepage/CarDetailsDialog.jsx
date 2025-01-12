@@ -171,7 +171,12 @@ const CarDetailsDialog = ({ product }) => {
             <FormField name="date">
               <FormLabel>Select Date</FormLabel>
               <FormControl asChild>
-                <Input type="date" required onChange={handleDateChange} />
+                <Input
+                  type="date"
+                  defaultValue={new Date().toISOString().split("T")[0]}
+                  required
+                  onChange={handleDateChange}
+                />
               </FormControl>
               <FormMessage match="valueMissing" className="text-red-800">
                 {t("productCard.dialog.errorMissingDate", { ns: "translation" })}

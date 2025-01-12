@@ -56,7 +56,7 @@ const Navbar = () => {
                       onClick={() =>
                         handleCategoryClick("Moving and Transportation")
                       }
-                      className="block w-full text-left px-4 py-2 text-blue-800 hover:bg-gray-100"
+                      className="block w-full text-left px-4 py-2 text-blue-800 hover:bg-gray hover:text-white"
                     >
                       {t('category.category1')}
                     </button>
@@ -66,7 +66,7 @@ const Navbar = () => {
                       onClick={() =>
                         handleCategoryClick("Long distance travel")
                       }
-                      className="block w-full text-left px-4 py-2 text-blue-800 hover:bg-gray-100"
+                      className="block w-full text-left px-4 py-2 text-blue-800 hover:bg-gray hover:text-white"
                     >
                       {t('category.category2')}
                     </button>
