@@ -1,7 +1,7 @@
 // controllers/productController.js
 
 const Product = require("../models/Product");
-const translate = require('translate-google')
+const translate = require("translate-google");
 
 const createProduct = async (req, res) => {
   const {
@@ -144,15 +144,22 @@ const getAllProducts = async (req, res) => {
     // Calculate total pages
     const totalPages = Math.ceil(totalProducts / limitNumber);
 
-    const translateObj = await translate({
-      products: updatedProducts,
-      pagination: {
-        totalProducts,
-        totalPages,
-        currentPage: pageNumber,
-        limit: limitNumber,
+    const translateObj = await translate(
+      {
+        products: updatedProducts,
+        pagination: {
+          totalProducts,
+          totalPages,
+          currentPage: pageNumber,
+          limit: limitNumber,
+        },
       },
-    }, { from: 'en', to: req.query.lang || "en", except: ['imageUrl', '_id'] }).then(res => res);
+      {
+        from: "en",
+        to: req.query.lang.slice(0, 2) || "en",
+        except: ["imageUrl", "_id"],
+      }
+    ).then((res) => res);
 
     // Return paginated products
     res.status(200).json(translateObj);

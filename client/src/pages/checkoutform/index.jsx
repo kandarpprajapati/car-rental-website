@@ -87,7 +87,7 @@ const CheckOutForm = () => {
               <FormControl asChild>
                 <Input
                   type="number"
-                  placeholder="Phone number"
+                  placeholder={t("checkout.phoneNo")}
                   required
                   className="flex-1"
                 />
@@ -99,7 +99,11 @@ const CheckOutForm = () => {
           <FormField name="deliveryFrom" className="mt-4">
             <FormLabel>{t("checkout.deliveryFrom")} *</FormLabel>
             <FormControl asChild>
-              <Input type="text" placeholder={t("checkout.yourAnswer")} required />
+              <Input
+                type="text"
+                placeholder={t("checkout.yourAnswer")}
+                required
+              />
             </FormControl>
           </FormField>
 
@@ -107,13 +111,19 @@ const CheckOutForm = () => {
           <FormField name="deliveryTo" className="mt-4">
             <FormLabel>{t("checkout.deliveryTo")} *</FormLabel>
             <FormControl asChild>
-              <Input type="text" placeholder={t("checkout.yourAnswer")} required />
+              <Input
+                type="text"
+                placeholder={t("checkout.yourAnswer")}
+                required
+              />
             </FormControl>
           </FormField>
 
           {/* Order Summary */}
           <div className="mt-6 bg-gray-100 rounded-lg">
-            <h2 className="text-primary-foreground font-bold">{t("checkout.orderSummary.heading")}</h2>
+            <h2 className="text-primary-foreground font-bold">
+              {t("checkout.orderSummary.heading")}
+            </h2>
             <div className="text-sm text-gray-600 mt-2">
               <FormField className="flex justify-between" name="vanPrice">
                 <span>{t("checkout.orderSummary.vanCharge")}</span>

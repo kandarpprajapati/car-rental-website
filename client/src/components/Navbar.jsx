@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { useGetProducts } from "../hooks/products/useGetProducts";
 
 const Navbar = () => {
-  const { t, i18n } = useTranslation('translation', { keyPrefix: "nav" });
+  const { t, i18n } = useTranslation("translation", { keyPrefix: "nav" });
   const [isOpen, setIsOpen] = useState(false); // For mobile menu
   const [isCategoryOpen, setIsCategoryOpen] = useState(false); // For category dropdown
   const { pathname } = useLocation();
@@ -21,12 +21,11 @@ const Navbar = () => {
     }
   };
 
-
   const handleLanguageSelection = (event) => {
     i18n.changeLanguage(event.target.value);
     navigate(`${pathname}?lang=${event.target.value}`);
-    window.location.reload();
-  }
+    navigate("/");
+  };
 
   return (
     <header className="bg-white shadow-md text-primary">
@@ -37,7 +36,7 @@ const Navbar = () => {
             to="/"
             className="text-blue-800 font-semibold hover:text-orange-500 transition"
           >
-            {t('home').toUpperCase()}
+            {t("home").toUpperCase()}
           </NavLink>
 
           {/* CATEGORY with Dropdown */}
@@ -46,7 +45,7 @@ const Navbar = () => {
               onClick={() => setIsCategoryOpen((prev) => !prev)}
               className="text-blue-800 font-semibold hover:text-orange-500 transition"
             >
-              {t('category.name').toUpperCase()}
+              {t("category.name").toUpperCase()}
             </button>
             {isCategoryOpen && (
               <div className="absolute left-0 mt-2 w-48 bg-white shadow-sm shadow-gray rounded-lg">
@@ -58,7 +57,7 @@ const Navbar = () => {
                       }
                       className="block w-full text-left px-4 py-2 text-blue-800 hover:bg-gray hover:text-white"
                     >
-                      {t('category.category1')}
+                      {t("category.category1")}
                     </button>
                   </li>
                   <li>
@@ -68,7 +67,7 @@ const Navbar = () => {
                       }
                       className="block w-full text-left px-4 py-2 text-blue-800 hover:bg-gray hover:text-white"
                     >
-                      {t('category.category2')}
+                      {t("category.category2")}
                     </button>
                   </li>
                 </ul>
@@ -86,15 +85,23 @@ const Navbar = () => {
             to="#menu"
             className="text-blue-800 font-semibold hover:text-orange-500 transition"
           >
-            {t('menu').toUpperCase()}
+            {t("menu").toUpperCase()}
           </NavLink>
           <div className="relative flex justify-center">
-            <select id="language" class="bg-white border-none appearance-none text-blue-800 font-semibold flex justify-center text-center"
+            <select
+              id="language"
+              class="bg-white border-none appearance-none text-blue-800 font-semibold flex justify-center text-center"
               onChange={handleLanguageSelection}
             >
-              <option value="en" selected={i18n.language === "en"}>ENGLISH</option>
-              <option value="fi" selected={i18n.language === "fi"}>FINNISH</option>
-              <option value="sv" selected={i18n.language === "sv"}>SWIDISH</option>
+              <option value="en" selected={i18n.language === "en"}>
+                ENGLISH
+              </option>
+              <option value="fi" selected={i18n.language === "fi"}>
+                FINNISH
+              </option>
+              <option value="sv" selected={i18n.language === "sv"}>
+                SWIDISH
+              </option>
             </select>
           </div>
         </div>
@@ -130,7 +137,7 @@ const Navbar = () => {
                 to="/"
                 className="text-blue-800 font-semibold hover:text-orange-500 transition"
               >
-                {t('home').toUpperCase()}
+                {t("home").toUpperCase()}
               </NavLink>
             </li>
             <li>
@@ -140,7 +147,7 @@ const Navbar = () => {
                   onClick={() => setIsCategoryOpen((prev) => !prev)}
                   className="text-blue-800 font-semibold hover:text-orange-500 transition"
                 >
-                  {t('category.name').toUpperCase()}
+                  {t("category.name").toUpperCase()}
                 </button>
                 {isCategoryOpen && (
                   <div className="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-lg">
@@ -150,7 +157,7 @@ const Navbar = () => {
                           to="/muutto"
                           className="block px-4 py-2 text-blue-800 hover:bg-gray-100"
                         >
-                          {t('category.category1')}
+                          {t("category.category1")}
                         </NavLink>
                       </li>
                       <li>
@@ -158,7 +165,7 @@ const Navbar = () => {
                           to="/pitkanmatkan"
                           className="block px-4 py-2 text-blue-800 hover:bg-gray-100"
                         >
-                          {t('category.category2')}
+                          {t("category.category2")}
                         </NavLink>
                       </li>
                     </ul>
@@ -171,17 +178,25 @@ const Navbar = () => {
                 to="#menu"
                 className="text-blue-800 font-semibold hover:text-orange-500 transition"
               >
-                {t('menu').toUpperCase()}
+                {t("menu").toUpperCase()}
               </NavLink>
             </li>
             <li>
               <div className="relative flex justify-center">
-                <select id="language" class="bg-white border-none appearance-none text-blue-800 font-semibold flex justify-center text-center"
+                <select
+                  id="language"
+                  class="bg-white border-none appearance-none text-blue-800 font-semibold flex justify-center text-center"
                   onChange={handleLanguageSelection}
                 >
-                  <option value="en" selected={i18n.language === "en"}>ENGLISH</option>
-                  <option value="fi" selected={i18n.language === "fi"}>FINNISH</option>
-                  <option value="sv" selected={i18n.language === "sv"}>SWIDISH</option>
+                  <option value="en" selected={i18n.language === "en"}>
+                    ENGLISH
+                  </option>
+                  <option value="fi" selected={i18n.language === "fi"}>
+                    FINNISH
+                  </option>
+                  <option value="sv" selected={i18n.language === "sv"}>
+                    SWIDISH
+                  </option>
                 </select>
               </div>
             </li>
