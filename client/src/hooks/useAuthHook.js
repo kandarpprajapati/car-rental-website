@@ -54,8 +54,8 @@ export function useAuthHook() {
     },
     onError: (error) => {
       console.error("Error:", error);
-      toast.error("Something went wrong, Please try again !");
-      // toast.error(error.message); // Uncomment if you have a toast library
+      // toast.error("Something went wrong, Please try again !");
+      toast.error(error.response.data.error); // Uncomment if you have a toast library
     },
   });
 }
