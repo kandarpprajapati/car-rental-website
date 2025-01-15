@@ -11,7 +11,7 @@ import CarDetailsDialog from "./homepage/CarDetailsDialog.jsx";
 const Home = () => {
   const { products, setProducts } = useProductStore();
 
-  const { data, isLoading, isFetching, error } = useGetProducts();
+  const { data, isLoading, isFetching, error, refetch } = useGetProducts();
   const { t, i18n } = useTranslation();
 
   const loading = isLoading || isFetching;
@@ -21,6 +21,11 @@ const Home = () => {
       setProducts(data.products);
     }
   }, [data, setProducts]);
+
+  // Refetch products when the language changes
+  useEffect(() => {
+    refetch();
+  }, [i18n.language, refetch]);
 
   return (
     <div className="max-w-screen-2xl mx-auto px-3 lg:px-2 xl:px-0">
