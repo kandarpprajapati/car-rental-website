@@ -25,7 +25,7 @@ const Home = () => {
   // Refetch products when the language changes
   useEffect(() => {
     refetch();
-  }, [i18n.language, refetch]);
+  }, [i18n.language]);
 
   return (
     <div className="max-w-screen-2xl mx-auto px-3 lg:px-2 xl:px-0">
@@ -55,7 +55,13 @@ const Home = () => {
           </p>
         </div>
         <div className="mx-auto p-6 md:p-14 bg-primary-foreground rounded-2xl md:rounded-[50px]">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div
+            className={`${
+              loading
+                ? "flex justify-center items-center"
+                : "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+            }`}
+          >
             {loading && (
               <LoadingComponent
                 text="Loading Products..."

@@ -1,15 +1,16 @@
 // hooks/useFetchProducts.js
 import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
-import useProductStore from "../../store/productStore";
 import toast from "react-hot-toast";
+import apiClient from "../../config/apiClient";
+import useProductStore from "../../store/productStore";
 
 export function useGetProductsByCategory() {
   const setProducts = useProductStore((state) => state.setProducts);
+  const translationLang = localStorage.getItem("i18nextLng") || "en";
 
   return useMutation({
     mutationFn: async (category) => {
-      const response = await axios.get("http://localhost:1102/api/product", {
+      const response = await apiClient.get(`/product?lang=${translationLang}`, {
         params: { category },
       });
       return response.data;

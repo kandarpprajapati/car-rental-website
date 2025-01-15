@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useGetProductsByCategory } from "../hooks/products/useGetProductByCategory";
 import { useTranslation } from "react-i18next";
-import { useGetProducts } from "../hooks/products/useGetProducts";
 
 const Navbar = () => {
   const { t, i18n } = useTranslation("translation", { keyPrefix: "nav" });

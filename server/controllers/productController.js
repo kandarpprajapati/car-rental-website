@@ -144,6 +144,17 @@ const getAllProducts = async (req, res) => {
     // Calculate total pages
     const totalPages = Math.ceil(totalProducts / limitNumber);
 
+    if (updatedProducts.length === 0)
+      return res.status(200).json({
+        products: updatedProducts,
+        pagination: {
+          totalProducts,
+          totalPages,
+          currentPage: pageNumber,
+          limit: limitNumber,
+        },
+      });
+
     const translateObj = await translate(
       {
         products: updatedProducts,
@@ -162,10 +173,10 @@ const getAllProducts = async (req, res) => {
     ).then((res) => res);
 
     // Return paginated products
-    res.status(200).json(translateObj);
+    return res.status(200).json(translateObj);
   } catch (error) {
     console.error("Error fetching products:", error);
-    res
+    return res
       .status(500)
       .json({ error: "Internal server error. Please try again later." });
   }
