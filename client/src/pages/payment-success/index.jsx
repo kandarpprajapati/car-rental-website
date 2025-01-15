@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import apiClient from "../../config/apiClient";
 import toast from "react-hot-toast";
 import useFormStore from "../../store/formStore";
+import LoadingComponent from "../../components/ui/loading-component";
 
 export function PaymentSuccess() {
   const location = useLocation();
@@ -33,5 +34,9 @@ export function PaymentSuccess() {
     }
   }, [location, navigate]);
 
-  return <div>Processing your payment...</div>;
+  return (
+    <>
+      <LoadingComponent text="Processing your payment..." />
+    </>
+  );
 }

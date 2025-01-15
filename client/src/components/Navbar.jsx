@@ -8,6 +8,7 @@ const Navbar = () => {
   const { t, i18n } = useTranslation("translation", { keyPrefix: "nav" });
   const [isOpen, setIsOpen] = useState(false); // For mobile menu
   const [isCategoryOpen, setIsCategoryOpen] = useState(false); // For category dropdown
+  const [isLanguageOpen, setIsLanguageOpen] = useState(false); // For category dropdown
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
@@ -16,6 +17,7 @@ const Navbar = () => {
   const handleCategoryClick = async (category) => {
     try {
       await mutateAsync(category); // Pass the category to the API call
+      setIsCategoryOpen(false);
     } catch (error) {
       console.error("Error fetching products by category:", error);
     }
@@ -23,8 +25,9 @@ const Navbar = () => {
 
   const handleLanguageSelection = (event) => {
     i18n.changeLanguage(event.target.value);
-    navigate(`${pathname}?lang=${event.target.value}`);
+    // navigate(`${pathname !== "/" ? pathname : ""}?lang=${event.target.value}`);
     navigate("/");
+    setIsLanguageOpen(false);
   };
 
   return (
@@ -87,22 +90,54 @@ const Navbar = () => {
           >
             {t("menu").toUpperCase()}
           </NavLink>
-          <div className="relative flex justify-center">
-            <select
-              id="language"
-              class="bg-white border-none appearance-none text-blue-800 font-semibold flex justify-center text-center"
-              onChange={handleLanguageSelection}
+          {/* LANGUAGE Dropdown */}
+          <div className="relative z-50">
+            <button
+              onClick={() => setIsLanguageOpen((prev) => !prev)}
+              className="text-blue-800 font-semibold hover:text-orange-500 transition"
             >
-              <option value="en" selected={i18n.language === "en"}>
-                ENGLISH
-              </option>
-              <option value="fi" selected={i18n.language === "fi"}>
-                FINNISH
-              </option>
-              <option value="sv" selected={i18n.language === "sv"}>
-                SWIDISH
-              </option>
-            </select>
+              {i18n.language === "en"
+                ? "ENGLISH"
+                : i18n.language === "fi"
+                ? "FINNISH"
+                : "SWEDISH"}
+            </button>
+            {isLanguageOpen && (
+              <div className="absolute left-0 mt-2 w-48 bg-white shadow-sm shadow-gray rounded-lg">
+                <ul className="py-2">
+                  <li>
+                    <button
+                      onClick={() =>
+                        handleLanguageSelection({ target: { value: "en" } })
+                      }
+                      className="block w-full text-left px-4 py-2 text-blue-800 hover:bg-gray hover:text-white"
+                    >
+                      ENGLISH
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      onClick={() =>
+                        handleLanguageSelection({ target: { value: "fi" } })
+                      }
+                      className="block w-full text-left px-4 py-2 text-blue-800 hover:bg-gray hover:text-white"
+                    >
+                      FINNISH
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      onClick={() =>
+                        handleLanguageSelection({ target: { value: "sv" } })
+                      }
+                      className="block w-full text-left px-4 py-2 text-blue-800 hover:bg-gray hover:text-white"
+                    >
+                      SWEDISH
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            )}
           </div>
         </div>
 

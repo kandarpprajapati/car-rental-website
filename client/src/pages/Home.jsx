@@ -1,16 +1,15 @@
 import { MapPinned } from "lucide-react";
-import React, { useEffect, useState, useTransition } from "react";
+import React, { useEffect } from "react";
+import { Trans, useTranslation } from "react-i18next";
 import CarImage from "../../public/car-images/van.png";
+import ExportBookingsButton from "../components/ExportTodaysBooking.jsx";
+import LoadingComponent from "../components/ui/loading-component.jsx";
 import { useGetProducts } from "../hooks/products/useGetProducts.js";
 import useProductStore from "../store/productStore.js";
 import CarDetailsDialog from "./homepage/CarDetailsDialog.jsx";
-import ExportBookingsButton from "../components/ExportTodaysBooking.jsx";
-import translateToFinnish from "../lib/translateToFinnish.js";
-import { Trans, useTranslation } from "react-i18next";
 
 const Home = () => {
   const { products, setProducts } = useProductStore();
-  const [translatedProducts, setTranslatedProducts] = useState([]);
 
   const { data, isLoading, isFetching, error } = useGetProducts();
   const { t, i18n } = useTranslation();
@@ -20,12 +19,6 @@ const Home = () => {
   useEffect(() => {
     if (data && data.products) {
       setProducts(data.products);
-
-      // Translate products to Finnish
-      // translateToFinnish(data.products).then((translatedData) => {
-      //   setTranslatedProducts(translatedData); // Set the translated products
-      //   console.log(translatedData);
-      // });
     }
   }, [data, setProducts]);
 
@@ -50,16 +43,32 @@ const Home = () => {
           </h2>
           <p className="mt-2 text-primary-foreground text-4xl uppercase tracking-widest">
             <Trans i18nKey="contentDescription" ns="translation">
-              The most beautiful <br />thing in the world.
+              The most beautiful <br />
+              thing in the world.
               {t("contentDescription", { ns: "translation" })}
             </Trans>
           </p>
         </div>
         <div className="mx-auto p-6 md:p-14 bg-primary-foreground rounded-2xl md:rounded-[50px]">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {loading && <p>Loading products...</p>}
-            {error && <Trans i18nKey="errorFetchingProducts" ns="translation"><p>Error fetching products: {{ errorMsg: error.message }}</p></Trans>}
-            {!loading && products ? (
+            {loading && (
+              <LoadingComponent
+                text="Loading Products..."
+                textColor="text-white"
+              />
+            )}
+            {error && (
+              <Trans i18nKey="errorFetchingProducts" ns="translation">
+                <p>Error fetching products: {{ errorMsg: error.message }}</p>
+              </Trans>
+            )}
+            {products && products.length === 0 && (
+              <p className="text-white font-semibold text-lg">
+                {t("noProducts", { ns: "translation" })}
+              </p>
+            )}
+            {!loading &&
+              products &&
               products.map((product, index) => (
                 <div
                   key={index}
@@ -92,12 +101,7 @@ const Home = () => {
                     </div>
                   </div>
                 </div>
-              ))
-            ) : (
-              <p className="text-white font-semibold text-lg">
-                {t("noProducts", { ns: "translation" })}
-              </p>
-            )}
+              ))}
           </div>
         </div>
       </section>
