@@ -8,10 +8,7 @@ export function useCreateBooking() {
 
   return useMutation({
     mutationFn: async (data) => {
-      const response = await apiClient.post(
-        "http://localhost:1102/api/booking/create",
-        data
-      ); // Replace with your endpoint
+      const response = await apiClient.post("/booking/create", data); // Replace with your endpoint
       return response.data;
     },
     onError: (error) => {

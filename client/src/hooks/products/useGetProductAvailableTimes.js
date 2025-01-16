@@ -6,15 +6,12 @@ export function useGetProductAvailableTimes() {
   return useMutation({
     mutationFn: async ({ date, productId }) => {
       // Use apiClient for the request
-      const response = await apiClient.get(
-        "http://localhost:1102/api/product/available-times",
-        {
-          params: {
-            date,
-            productId,
-          },
-        }
-      );
+      const response = await apiClient.get("/product/available-times", {
+        params: {
+          date,
+          productId,
+        },
+      });
 
       // Return the API response data
       return response.data;

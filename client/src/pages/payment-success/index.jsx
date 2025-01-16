@@ -18,9 +18,7 @@ export function PaymentSuccess() {
     if (sessionId) {
       // Call your backend to fetch the session details and confirm the booking
       apiClient
-        .get(
-          `http://localhost:1102/api/payments/confirm-payment?session_id=${sessionId}`
-        )
+        .get(`/payments/confirm-payment?session_id=${sessionId}`)
         .then((response) => {
           // If the payment is successful, navigate to booking confirmation page
           resetFormData();

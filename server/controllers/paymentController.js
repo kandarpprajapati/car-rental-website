@@ -59,7 +59,7 @@ const createCheckoutSession = async (req, res) => {
       mode: "payment", // Options: 'payment', 'setup', or 'subscription'
       success_url:
         "http://localhost:5173/payment-success?session_id={CHECKOUT_SESSION_ID}", // Redirect on success
-      cancel_url: "http://localhost:5173/payment-cancel", // Redirect on cancel
+      cancel_url: "http://localhost:5173", // Redirect on cancel
       metadata: {
         bookingDetails: JSON.stringify(bookingDetails), // Store the booking details here
       },
