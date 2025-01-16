@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 
 const Footer = () => {
   const { mutateAsync } = useGetProductsByCategory();
-  const { t, i18n } = useTranslation('translation', { keyPrefix: "nav" });
+  const { t, i18n } = useTranslation("translation", { keyPrefix: "nav" });
 
   const handleCategoryClick = async (category) => {
     try {
@@ -32,11 +32,13 @@ const Footer = () => {
           <div className="flex justify-between w-full md:w-auto md:gap-12 first-letter:capitalize">
             <div>
               <NavLink to="/" className="text-lg font-semibold mb-4">
-                {t('home')}
+                {t("home")}
               </NavLink>
             </div>
             <div>
-              <h3 className="text-lg font-semibold mb-4">{t('category.name')}</h3>
+              <h3 className="text-lg font-semibold mb-4">
+                {t("category.name")}
+              </h3>
               <ul className="space-y-2">
                 <li>
                   <button
@@ -45,7 +47,7 @@ const Footer = () => {
                     }
                     className="text-left text-primary-foreground hover:underline"
                   >
-                    &gt; {t('category.category1')}
+                    &gt; {t("category.category1")}
                   </button>
                 </li>
                 <li>
@@ -53,7 +55,7 @@ const Footer = () => {
                     onClick={() => handleCategoryClick("Long distance travel")}
                     className="text-left text-primary-foreground hover:underline"
                   >
-                    &gt; {t('category.category2')}
+                    &gt; {t("category.category2")}
                   </button>
                 </li>
               </ul>
@@ -64,7 +66,9 @@ const Footer = () => {
         {/* Bottom Section */}
         <div className="border-t border-blue-900 mt-8 pt-4 flex justify-between items-center flex-wrap">
           {/* Login */}
-          <p className="text-sm font-semibold">Login</p>
+          <NavLink className="text-sm font-semibold" to="/auth">
+            Login
+          </NavLink>
 
           {/* Icons */}
           <div className="flex gap-4 mt-4 md:mt-0">
