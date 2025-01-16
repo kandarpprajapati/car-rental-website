@@ -25,6 +25,15 @@ const CheckOutForm = () => {
   const { mutateAsync: paymentInitiateMethod } = useInitiatePaymentIntent();
   const { t, i18n } = useTranslation("translation");
 
+  useEffect(() => {
+    const booking_details = localStorage.getItem('booking_details') ? JSON.parse(localStorage.getItem('booking_details')) : null;
+    if (booking_details) {
+      updateFormData(booking_details);
+      localStorage.removeItem('booking_details')
+    }
+  }, [])
+
+
   // Update total price whenever price or distance price changes
   useEffect(() => {
     const basePrice = parseFloat(formData.price) || 0;
@@ -49,6 +58,7 @@ const CheckOutForm = () => {
       updateFormData(completeFormData);
 
       console.log(completeFormData); // Process your form data here
+      localStorage.setItem('booking_details', JSON.stringify({ ...completeFormData, time_checkout: new Date() }));
 
       await paymentInitiateMethod({
         totalPrice,
@@ -90,6 +100,7 @@ const CheckOutForm = () => {
                   placeholder={t("checkout.phoneNo")}
                   required
                   className="flex-1"
+                  defaultValue={formData.phone}
                 />
               </FormControl>
             </div>
@@ -103,6 +114,7 @@ const CheckOutForm = () => {
                 type="text"
                 placeholder={t("checkout.yourAnswer")}
                 required
+                defaultValue={formData.deliveryFrom}
               />
             </FormControl>
           </FormField>
@@ -115,6 +127,7 @@ const CheckOutForm = () => {
                 type="text"
                 placeholder={t("checkout.yourAnswer")}
                 required
+                defaultValue={formData.deliveryTo}
               />
             </FormControl>
           </FormField>

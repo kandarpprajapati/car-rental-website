@@ -1,8 +1,9 @@
 import { getFormData } from "@/lib/getFormData";
 import { useGoogleLogin } from "@react-oauth/google";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "../../components/ui/button";
+import useFormStore from "@/store/formStore";
 import {
   Form,
   FormControl,
@@ -34,9 +35,9 @@ const AuthForm = () => {
       // Check if password matches confirmPassword
       if (formData.password !== formData.confirmPassword) {
         toast.error("Password and Confirm Password do not match!");
+        setLoading(false);
         return;
       }
-
       // Call the auth/register API
       await mutateAsync(
         {
@@ -49,8 +50,13 @@ const AuthForm = () => {
         },
         {
           onSuccess: () => {
-            navigate("/");
+            if (JSON.parse(localStorage.getItem('booking_details'))) navigate('/checkout')
+            else navigate("/");
+            setLoading(false);
           },
+          onError: () => {
+            setLoading(false);
+          }
         }
       );
     } else {
@@ -65,13 +71,16 @@ const AuthForm = () => {
         },
         {
           onSuccess: () => {
-            navigate("/");
+            if (JSON.parse(localStorage.getItem('booking_details'))) navigate('/checkout')
+            else navigate("/");
+            setLoading(false);
           },
+          onError: () => {
+            setLoading(false);
+          }
         }
       );
     }
-
-    setLoading(false);
   };
 
   const googleLogin = useGoogleLogin({
@@ -175,8 +184,8 @@ const AuthForm = () => {
                   ? "Logging In..."
                   : "Signing Up..."
                 : isLogin
-                ? "Login"
-                : "Signup"}
+                  ? "Login"
+                  : "Signup"}
             </Button>
           </FormSubmit>
 
