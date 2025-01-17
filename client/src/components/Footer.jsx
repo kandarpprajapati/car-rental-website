@@ -21,10 +21,8 @@ const Footer = () => {
         <div className="flex flex-col md:flex-row justify-between items-center md:items-start">
           {/* Logo Section */}
           <div className="mb-6 md:mb-0">
-            <h2 className="text-3xl font-bold tracking-wider">
-              LO
-              <br />
-              GO
+            <h2 className="text-2xl font-semibold tracking-wider">
+              FAITHLINE ENTERPRISE
             </h2>
           </div>
 

@@ -1,4 +1,4 @@
-const transporter = require("../config/nodemailer");
+const transporter = require("../config/nodeMailer");
 
 // Function to send an email
 const sendBookingEmails = async (to, subject, htmlContent) => {

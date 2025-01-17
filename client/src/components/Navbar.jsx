@@ -79,7 +79,9 @@ const Navbar = () => {
         </div>
 
         {/* Center Logo */}
-        <div className="text-2xl font-bold text-blue-800">LOGO</div>
+        <div className="text-2xl font-semibold text-blue-800 tracking-wider">
+          FAITHLINE ENTERPRISE
+        </div>
 
         {/* Right Navigation Links (Hidden on Mobile) */}
         <div className="hidden md:flex space-x-6">
