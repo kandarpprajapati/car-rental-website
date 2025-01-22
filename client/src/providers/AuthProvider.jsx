@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import LoadingComponent from "../components/ui/loading-component";
 
 const AuthContext = createContext();
 
@@ -17,7 +18,7 @@ export const AuthProvider = ({ children }) => {
   }, [navigate]);
 
   if (loading) {
-    return <div>Loading...</div>; // Render nothing (or a spinner) while checking the auth state
+    return <LoadingComponent text="Loading..." />; // Render nothing (or a spinner) while checking the auth state
   }
 
   return <AuthContext.Provider value={{}}>{children}</AuthContext.Provider>;

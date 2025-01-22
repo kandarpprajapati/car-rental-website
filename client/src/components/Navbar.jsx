@@ -1,7 +1,8 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useGetProductsByCategory } from "../hooks/products/useGetProductByCategory";
-import { useTranslation } from "react-i18next";
+import useAuthStore from "../store/authStore";
 
 const Navbar = () => {
   const { t, i18n } = useTranslation("translation", { keyPrefix: "nav" });
@@ -10,6 +11,17 @@ const Navbar = () => {
   const [isLanguageOpen, setIsLanguageOpen] = useState(false); // For category dropdown
   const { pathname } = useLocation();
   const navigate = useNavigate();
+
+  const { isAuthenticated, title, logout } = useAuthStore();
+
+  const handleAction = () => {
+    if (isAuthenticated) {
+      logout();
+      navigate("/");
+    } else {
+      navigate("/auth");
+    }
+  };
 
   const { mutateAsync } = useGetProductsByCategory();
 
@@ -85,12 +97,12 @@ const Navbar = () => {
 
         {/* Right Navigation Links (Hidden on Mobile) */}
         <div className="hidden md:flex space-x-6">
-          <NavLink
-            to="#menu"
+          <button
+            onClick={handleAction}
             className="text-blue-800 font-semibold hover:text-orange-500 transition"
           >
-            {t("menu").toUpperCase()}
-          </NavLink>
+            {title.toUpperCase()}
+          </button>
           {/* LANGUAGE Dropdown */}
           <div className="relative z-50">
             <button

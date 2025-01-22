@@ -32,6 +32,7 @@ import { useNavigate } from "react-router-dom";
 
 export function useAuthHook() {
   const navigate = useNavigate();
+
   return useMutation({
     mutationFn: async ({ url, data }) => {
       console.log("Calling:", url, "with data:", data);

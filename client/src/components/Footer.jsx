@@ -1,11 +1,23 @@
 import React from "react";
-import { useGetProductsByCategory } from "../hooks/products/useGetProductByCategory";
-import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useGetProductsByCategory } from "../hooks/products/useGetProductByCategory";
+import useAuthStore from "../store/authStore";
 
 const Footer = () => {
   const { mutateAsync } = useGetProductsByCategory();
   const { t, i18n } = useTranslation("translation", { keyPrefix: "nav" });
+  const { isAuthenticated, title, logout } = useAuthStore();
+  const navigate = useNavigate();
+
+  const handleAction = () => {
+    if (isAuthenticated) {
+      logout();
+      navigate("/");
+    } else {
+      navigate("/auth");
+    }
+  };
 
   const handleCategoryClick = async (category) => {
     try {
@@ -63,10 +75,10 @@ const Footer = () => {
 
         {/* Bottom Section */}
         <div className="border-t border-blue-900 mt-8 pt-4 flex justify-between items-center flex-wrap">
-          {/* Login */}
-          <NavLink className="text-sm font-semibold" to="/auth">
-            Login
-          </NavLink>
+          {/* Login/Logout */}
+          <button onClick={handleAction} className="text-sm font-semibold">
+            {title}
+          </button>
 
           {/* Icons */}
           <div className="flex gap-4 mt-4 md:mt-0">

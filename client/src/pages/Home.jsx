@@ -55,13 +55,7 @@ const Home = () => {
           </p>
         </div>
         <div className="mx-auto p-6 md:p-14 bg-primary-foreground rounded-2xl md:rounded-[50px]">
-          <div
-            className={`${
-              loading
-                ? "flex justify-center items-center"
-                : "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
-            }`}
-          >
+          <div className="flex justify-center items-center">
             {loading && (
               <LoadingComponent
                 text="Loading Products..."
@@ -83,7 +77,7 @@ const Home = () => {
               products.map((product, index) => (
                 <div
                   key={index}
-                  className="bg-background rounded-lg overflow-hidden shadow-md hover:shadow-lg transform transition duration-300 ease-in-out p-4"
+                  className="bg-background rounded-lg overflow-hidden shadow-md hover:shadow-lg transform transition duration-300 ease-in-out p-4 w-[30%]"
                 >
                   <div className="bg-gray flex justify-center rounded-lg">
                     <img
