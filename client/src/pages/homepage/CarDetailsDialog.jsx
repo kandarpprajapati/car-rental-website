@@ -163,7 +163,9 @@ const CarDetailsDialog = ({ product }) => {
                 />
               </FormControl>
               <FormMessage match="valueMissing" className="text-red-800">
-                {t("productCard.dialog.errorMissingSelection", { ns: "translation" })}
+                {t("productCard.dialog.errorMissingSelection", {
+                  ns: "translation",
+                })}
               </FormMessage>
             </FormField>
 
@@ -179,7 +181,9 @@ const CarDetailsDialog = ({ product }) => {
                 />
               </FormControl>
               <FormMessage match="valueMissing" className="text-red-800">
-                {t("productCard.dialog.errorMissingDate", { ns: "translation" })}
+                {t("productCard.dialog.errorMissingDate", {
+                  ns: "translation",
+                })}
               </FormMessage>
             </FormField>
 
@@ -193,12 +197,13 @@ const CarDetailsDialog = ({ product }) => {
                   return (
                     <div key={_id}>
                       <label
-                        className={`flex flex-col items-center border p-2 rounded-lg cursor-pointer ${disabled
-                          ? "bg-gray text-white cursor-not-allowed"
-                          : selectedTimes.includes(value)
+                        className={`flex flex-col items-center border p-2 rounded-lg cursor-pointer ${
+                          disabled
+                            ? "bg-gray text-white cursor-not-allowed"
+                            : selectedTimes.includes(value)
                             ? "bg-secondary-foreground border-secondary text-white" // Highlight selected
                             : ""
-                          }`}
+                        }`}
                       >
                         <input
                           type="checkbox"
@@ -216,6 +221,11 @@ const CarDetailsDialog = ({ product }) => {
                   );
                 })}
               </div>
+              <FormMessage match="valueMissing" className="text-red-800">
+                {t("productCard.dialog.errorMissingTimes", {
+                  ns: "translation",
+                })}
+              </FormMessage>
             </FormField>
 
             {/* Helper Checkbox */}
@@ -235,9 +245,15 @@ const CarDetailsDialog = ({ product }) => {
 
             {/* Special Requirements */}
             <FormField name="specialRequirements">
-              <FormLabel>{t("productCard.dialog.requirementTextBoxHeading")}</FormLabel>
+              <FormLabel>
+                {t("productCard.dialog.requirementTextBoxHeading")}
+              </FormLabel>
               <FormControl asChild>
-                <TextArea placeholder={t("productCard.dialog.requirementTextPlaceholder")} />
+                <TextArea
+                  placeholder={t(
+                    "productCard.dialog.requirementTextPlaceholder"
+                  )}
+                />
               </FormControl>
             </FormField>
           </div>
@@ -245,7 +261,9 @@ const CarDetailsDialog = ({ product }) => {
           <DialogFooter>
             <FormSubmit asChild>
               <Button type="submit" variant="default" loading={loading}>
-                {loading ? t("productCard.button.carBeingBook") : t("productCard.button.bookCar")}
+                {loading
+                  ? t("productCard.button.carBeingBook")
+                  : t("productCard.button.bookCar")}
               </Button>
             </FormSubmit>
           </DialogFooter>

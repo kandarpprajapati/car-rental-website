@@ -1,20 +1,17 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
+import {
+  FaFacebookF,
+  FaGoogle,
+  FaTiktok,
+  FaTwitter,
+  FaYoutube,
+} from "react-icons/fa";
+import { RiInstagramFill, RiWhatsappFill } from "react-icons/ri";
+import { SiYoutubeshorts } from "react-icons/si";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useGetProductsByCategory } from "../hooks/products/useGetProductByCategory";
 import useAuthStore from "../store/authStore";
-import {
-  FaInstagram,
-  FaFacebookF,
-  FaTiktok,
-  FaYoutube,
-  FaTwitter,
-  FaGoogle,
-  FaWhatsapp,
-  FaInstagramSquare,
-} from "react-icons/fa";
-import { SiYoutubeshorts } from "react-icons/si";
-import { RiWhatsappFill, RiInstagramFill } from "react-icons/ri";
 
 const Footer = () => {
   const { mutateAsync } = useGetProductsByCategory();
