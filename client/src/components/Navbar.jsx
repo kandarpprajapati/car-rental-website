@@ -1,6 +1,17 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
+import {
+  FaFacebookF,
+  FaGoogle,
+  FaInstagramSquare,
+  FaTiktok,
+  FaTwitter,
+  FaYoutube,
+} from "react-icons/fa";
+import { RiInstagramFill, RiWhatsappFill } from "react-icons/ri";
+import { SiYoutubeshorts } from "react-icons/si";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
+
 import { useGetProductsByCategory } from "../hooks/products/useGetProductByCategory";
 import useAuthStore from "../store/authStore";
 
@@ -53,36 +64,111 @@ const Navbar = () => {
             {t("home").toUpperCase()}
           </NavLink>
 
-          {/* CATEGORY with Dropdown */}
+          {/* MENU with Dropdown */}
           <div className="relative z-50">
             <button
               onClick={() => setIsCategoryOpen((prev) => !prev)}
               className="text-blue-800 font-semibold hover:text-orange-500 transition"
             >
-              {t("category.name").toUpperCase()}
+              MENU
             </button>
             {isCategoryOpen && (
               <div className="absolute left-0 mt-2 w-48 bg-white shadow-sm shadow-gray rounded-lg">
                 <ul className="py-2">
-                  <li>
-                    <button
-                      onClick={() =>
-                        handleCategoryClick("Moving and Transportation")
-                      }
-                      className="block w-full text-left px-4 py-2 text-blue-800 hover:bg-gray hover:text-white"
+                  <li className="border-b border-gray-300">
+                    <NavLink
+                      to="/orders"
+                      className="block w-full text-left px-4 py-2 text-blue-800 font-semibold hover:bg-gray hover:text-white"
                     >
-                      {t("category.category1")}
-                    </button>
+                      Orders
+                    </NavLink>
                   </li>
+
+                  {/* Social Media Icons */}
+                  <li className="border-b border-gray-300">
+                    <div className="flex items-center gap-4 flex-wrap px-4 py-4 text-blue-800">
+                      <a
+                        href="https://instagram.com"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <RiInstagramFill className="text-xl cursor-pointer text-pink-500" />
+                      </a>
+                      <a
+                        href="https://facebook.com"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <FaFacebookF className="text-xl cursor-pointer text-blue-600" />
+                      </a>
+                      <a
+                        href="https://tiktok.com"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <FaTiktok className="text-xl cursor-pointer text-black" />
+                      </a>
+                      <a
+                        href="https://youtube.com"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <FaYoutube className="text-xl cursor-pointer text-red-600" />
+                      </a>
+                      <a
+                        href="https://www.youtube.com/shorts"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <SiYoutubeshorts className="text-xl cursor-pointer text-red-600" />
+                      </a>
+                      <a
+                        href="https://twitter.com"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <FaTwitter className="text-xl cursor-pointer text-blue-400" />
+                      </a>
+                      <a
+                        href="https://google.com"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <FaGoogle className="text-xl cursor-pointer text-red-500" />
+                      </a>
+                      <a
+                        href="https://wa.me"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <RiWhatsappFill className="text-xl cursor-pointer text-green-500" />
+                      </a>
+                    </div>
+                  </li>
+
+                  {/* Contact Details */}
                   <li>
-                    <button
-                      onClick={() =>
-                        handleCategoryClick("Long distance travel")
-                      }
-                      className="block w-full text-left px-4 py-2 text-blue-800 hover:bg-gray hover:text-white"
-                    >
-                      {t("category.category2")}
-                    </button>
+                    <div className="px-4 py-2 text-blue-800">
+                      <p className="font-semibold">Contact Details</p>
+                      <p className="text-sm">
+                        Phone:{" "}
+                        <a
+                          href="tel:+1234567890"
+                          className="text-blue-800 hover:text-orange-500"
+                        >
+                          +1 234 567 890
+                        </a>
+                      </p>
+                      <p className="text-sm">
+                        Email:{" "}
+                        <a
+                          href="mailto:info@example.com"
+                          className="text-blue-800 hover:text-orange-500"
+                        >
+                          info@example.com
+                        </a>
+                      </p>
+                    </div>
                   </li>
                 </ul>
               </div>
@@ -90,8 +176,8 @@ const Navbar = () => {
           </div>
         </div>
 
-        {/* Center Logo */}
-        <div className="text-2xl font-semibold text-blue-800 tracking-wider">
+        {/* Center Logo/Name */}
+        <div className="text-2xl font-semibold text-blue-800 tracking-wider text-center">
           FAITHLINE ENTERPRISE
         </div>
 
@@ -178,74 +264,163 @@ const Navbar = () => {
 
       {/* Mobile Dropdown Menu */}
       {isOpen && (
-        <div className="md:hidden bg-white shadow-lg">
+        <div className="md:hidden bg-white shadow-lg rounded-b-lg">
           <ul className="flex flex-col items-center space-y-4 py-4">
             <li>
               <NavLink
                 to="/"
-                className="text-blue-800 font-semibold hover:text-orange-500 transition"
+                className="text-blue-800 font-semibold hover:text-orange-500 transition py-2"
               >
                 {t("home").toUpperCase()}
               </NavLink>
             </li>
+
+            {/* Menu with Social Media Icons */}
             <li>
-              {/* CATEGORY with Dropdown */}
+              <div className="flex flex-wrap gap-4 px-4 py-2 text-blue-800">
+                <a
+                  href="https://instagram.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <RiInstagramFill className="text-xl cursor-pointer text-pink-500" />
+                </a>
+                <a
+                  href="https://facebook.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <FaFacebookF className="text-xl cursor-pointer text-blue-600" />
+                </a>
+                <a
+                  href="https://tiktok.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <FaTiktok className="text-xl cursor-pointer text-black" />
+                </a>
+                <a
+                  href="https://youtube.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <FaYoutube className="text-xl cursor-pointer text-red-600" />
+                </a>
+                <a
+                  href="https://www.youtube.com/shorts"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <SiYoutubeshorts className="text-xl cursor-pointer text-red-600" />
+                </a>
+                <a
+                  href="https://twitter.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <FaTwitter className="text-xl cursor-pointer text-blue-400" />
+                </a>
+                <a
+                  href="https://google.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <FaGoogle className="text-xl cursor-pointer text-red-500" />
+                </a>
+                <a
+                  href="https://wa.me"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <RiWhatsappFill className="text-xl cursor-pointer text-green-500" />
+                </a>
+              </div>
+            </li>
+
+            {/* Contact Details */}
+            <li>
+              <div className="px-4 py-2 text-blue-800">
+                <p className="font-semibold">Contact Details</p>
+                <p className="text-sm">
+                  Phone:{" "}
+                  <a
+                    href="tel:+1234567890"
+                    className="text-blue-800 hover:text-orange-500"
+                  >
+                    +1 234 567 890
+                  </a>
+                </p>
+                <p className="text-sm">
+                  Email:{" "}
+                  <a
+                    href="mailto:info@example.com"
+                    className="text-blue-800 hover:text-orange-500"
+                  >
+                    info@example.com
+                  </a>
+                </p>
+              </div>
+            </li>
+
+            {/* Login / Logout Button */}
+            <li>
+              <button
+                onClick={handleAction}
+                className="text-blue-800 font-semibold hover:text-orange-500 transition py-2"
+              >
+                {isAuthenticated ? "LOG OUT" : "LOG IN"}
+              </button>
+            </li>
+
+            {/* Language Dropdown */}
+            <li>
               <div className="relative">
                 <button
-                  onClick={() => setIsCategoryOpen((prev) => !prev)}
-                  className="text-blue-800 font-semibold hover:text-orange-500 transition"
+                  onClick={() => setIsLanguageOpen((prev) => !prev)}
+                  className="text-blue-800 font-semibold hover:text-orange-500 py-2"
                 >
-                  {t("category.name").toUpperCase()}
+                  {i18n.language === "en"
+                    ? "ENGLISH"
+                    : i18n.language === "fi"
+                    ? "FINNISH"
+                    : "SWEDISH"}
                 </button>
-                {isCategoryOpen && (
-                  <div className="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-lg">
+                {isLanguageOpen && (
+                  <div className="absolute left-0 mt-2 w-48 bg-white shadow-sm shadow-gray rounded-lg z-50">
                     <ul className="py-2">
                       <li>
-                        <NavLink
-                          to="/muutto"
-                          className="block px-4 py-2 text-blue-800 hover:bg-gray-100"
+                        <button
+                          onClick={() =>
+                            handleLanguageSelection({ target: { value: "en" } })
+                          }
+                          className="block w-full text-left px-4 py-2 text-blue-800 hover:bg-gray-200"
                         >
-                          {t("category.category1")}
-                        </NavLink>
+                          ENGLISH
+                        </button>
                       </li>
                       <li>
-                        <NavLink
-                          to="/pitkanmatkan"
-                          className="block px-4 py-2 text-blue-800 hover:bg-gray-100"
+                        <button
+                          onClick={() =>
+                            handleLanguageSelection({ target: { value: "fi" } })
+                          }
+                          className="block w-full text-left px-4 py-2 text-blue-800 hover:bg-gray-200"
                         >
-                          {t("category.category2")}
-                        </NavLink>
+                          FINNISH
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          onClick={() =>
+                            handleLanguageSelection({ target: { value: "sv" } })
+                          }
+                          className="block w-full text-left px-4 py-2 text-blue-800 hover:bg-gray-200"
+                        >
+                          SWEDISH
+                        </button>
                       </li>
                     </ul>
                   </div>
                 )}
-              </div>
-            </li>
-            <li>
-              <NavLink
-                to="#menu"
-                className="text-blue-800 font-semibold hover:text-orange-500 transition"
-              >
-                {t("menu").toUpperCase()}
-              </NavLink>
-            </li>
-            <li>
-              <div className="relative flex justify-center">
-                <select
-                  id="language"
-                  class="bg-white border-none appearance-none text-blue-800 font-semibold flex justify-center text-center"
-                  onChange={handleLanguageSelection}
-                >
-                  <option value="en" selected={i18n.language === "en"}>
-                    ENGLISH
-                  </option>
-                  <option value="fi" selected={i18n.language === "fi"}>
-                    FINNISH
-                  </option>
-                  <option value="sv" selected={i18n.language === "sv"}>
-                    SWIDISH
-                  </option>
-                </select>
               </div>
             </li>
           </ul>

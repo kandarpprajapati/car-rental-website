@@ -77,7 +77,7 @@ const Home = () => {
               products.map((product, index) => (
                 <div
                   key={index}
-                  className="bg-background rounded-lg overflow-hidden shadow-md hover:shadow-lg transform transition duration-300 ease-in-out p-4 w-[30%]"
+                  className="bg-background rounded-lg overflow-hidden shadow-md hover:shadow-lg transform transition duration-300 ease-in-out p-4 min-[200px]:w-[97%] sm:w-[50%] lg:w-[30%]"
                 >
                   <div className="bg-gray flex justify-center rounded-lg">
                     <img

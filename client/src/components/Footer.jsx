@@ -3,6 +3,18 @@ import { useTranslation } from "react-i18next";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useGetProductsByCategory } from "../hooks/products/useGetProductByCategory";
 import useAuthStore from "../store/authStore";
+import {
+  FaInstagram,
+  FaFacebookF,
+  FaTiktok,
+  FaYoutube,
+  FaTwitter,
+  FaGoogle,
+  FaWhatsapp,
+  FaInstagramSquare,
+} from "react-icons/fa";
+import { SiYoutubeshorts } from "react-icons/si";
+import { RiWhatsappFill, RiInstagramFill } from "react-icons/ri";
 
 const Footer = () => {
   const { mutateAsync } = useGetProductsByCategory();
@@ -38,7 +50,7 @@ const Footer = () => {
             </h2>
           </div>
 
-          {/* Navigation Links */}
+          {/* Navigation Links (same as Navbar but without social media icons) */}
           <div className="flex justify-between w-full md:w-auto md:gap-12 first-letter:capitalize">
             <div>
               <NavLink to="/" className="text-lg font-semibold mb-4">
@@ -46,27 +58,23 @@ const Footer = () => {
               </NavLink>
             </div>
             <div>
-              <h3 className="text-lg font-semibold mb-4">
-                {t("category.name")}
-              </h3>
+              <h3 className="text-lg font-semibold mb-4">{t("menu")}</h3>
               <ul className="space-y-2">
                 <li>
-                  <button
-                    onClick={() =>
-                      handleCategoryClick("Moving and Transportation")
-                    }
+                  <NavLink
+                    to="/services"
                     className="text-left text-primary-foreground hover:underline"
                   >
-                    &gt; {t("category.category1")}
-                  </button>
+                    &gt; {t("orders")}
+                  </NavLink>
                 </li>
                 <li>
-                  <button
-                    onClick={() => handleCategoryClick("Long distance travel")}
+                  <NavLink
+                    to="/services"
                     className="text-left text-primary-foreground hover:underline"
                   >
-                    &gt; {t("category.category2")}
-                  </button>
+                    &gt; {t("contactDetails")}
+                  </NavLink>
                 </li>
               </ul>
             </div>
@@ -76,16 +84,64 @@ const Footer = () => {
         {/* Bottom Section */}
         <div className="border-t border-blue-900 mt-8 pt-4 flex justify-between items-center flex-wrap">
           {/* Login/Logout */}
-          <button onClick={handleAction} className="text-sm font-semibold">
+          <button onClick={handleAction} className="font-semibold">
             {title}
           </button>
 
           {/* Icons */}
           <div className="flex gap-4 mt-4 md:mt-0">
-            <span className="text-xl cursor-pointer">🌐</span>
-            <span className="text-xl cursor-pointer">📸</span>
-            <span className="text-xl cursor-pointer">📘</span>
-            <span className="text-xl cursor-pointer">📞</span>
+            <a
+              href="https://instagram.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <RiInstagramFill className="text-2xl cursor-pointer hover:text-pink-800" />
+            </a>
+            <a
+              href="https://facebook.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <FaFacebookF className="text-2xl cursor-pointer hover:text-blue-600" />
+            </a>
+            <a
+              href="https://tiktok.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <FaTiktok className="text-2xl cursor-pointer hover:text-black" />
+            </a>
+            <a
+              href="https://youtube.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <FaYoutube className="text-2xl cursor-pointer hover:text-red-600" />
+            </a>
+            <a
+              href="https://www.youtube.com/shorts"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <SiYoutubeshorts className="text-2xl cursor-pointer hover:text-red-600" />
+            </a>
+            <a
+              href="https://twitter.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <FaTwitter className="text-2xl cursor-pointer hover:text-blue-400" />
+            </a>
+            <a
+              href="https://google.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <FaGoogle className="text-2xl cursor-pointer hover:text-orange-800" />
+            </a>
+            <a href="https://wa.me" target="_blank" rel="noopener noreferrer">
+              <RiWhatsappFill className="text-2xl cursor-pointer hover:text-green-500" />
+            </a>
           </div>
         </div>
       </div>

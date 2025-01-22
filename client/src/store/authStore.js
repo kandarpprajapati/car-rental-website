@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 const useAuthStore = create((set) => ({
   user: getUser(),
   isAuthenticated: Boolean(getUser()),
-  title: Boolean(getUser()) ? "Logout" : "Login",
+  title: Boolean(localStorage.getItem("token")) ? "Logout" : "Login",
 
   login: () => {
     set({ isAuthenticated: true, title: "Logout" });
