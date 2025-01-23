@@ -1,7 +1,4 @@
 // Example: useAuth.js
-import { useState } from "react";
-import { getUser } from "../utils/auth";
-import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
 const useHandleAuth = () => {

@@ -56,6 +56,7 @@ const AuthForm = () => {
             if (JSON.parse(localStorage.getItem("booking_details")))
               navigate("/checkout");
             else navigate("/");
+
             setLoading(false);
           },
           onError: () => {
@@ -78,6 +79,7 @@ const AuthForm = () => {
             if (JSON.parse(localStorage.getItem("booking_details")))
               navigate("/checkout");
             else navigate("/");
+
             setLoading(false);
           },
           onError: () => {

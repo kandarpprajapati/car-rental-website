@@ -15,6 +15,12 @@ const register = async (req, res) => {
       return res.status(400).json({ error: "All fields are required." });
     }
 
+    if (password.length < 6) {
+      return res
+        .status(400)
+        .json({ error: "Password should not be less than 6 characters" });
+    }
+
     // Check if the user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -113,7 +119,7 @@ const googleLogin = async (req, res) => {
     const newUser = new User({
       username,
       email,
-      password: await bcrypt.hash(randomPassword, 16), // No password for Google login users (adjust logic as needed)
+      password: await bcrypt.hash(randomPassword, 16),
     });
 
     await newUser.save();
