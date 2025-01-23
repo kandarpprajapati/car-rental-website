@@ -15,12 +15,15 @@ import {
 import { Input } from "../../components/ui/input";
 import { useAuthHook } from "../../hooks/useAuthHook";
 import toast from "react-hot-toast";
+import { useGoogleAuthHook } from "../../hooks/useGoogleAuthHook";
 
 const AuthForm = () => {
   const [isLogin, setIsLogin] = useState(true); // Toggle between login and signup
   const [loading, setLoading] = useState(false); // Add loading state
 
   const { mutateAsync, error, isPending } = useAuthHook();
+
+  const { mutateAsync: googleAuthMutation } = useGoogleAuthHook();
 
   const navigate = useNavigate();
 
@@ -50,13 +53,14 @@ const AuthForm = () => {
         },
         {
           onSuccess: () => {
-            if (JSON.parse(localStorage.getItem('booking_details'))) navigate('/checkout')
+            if (JSON.parse(localStorage.getItem("booking_details")))
+              navigate("/checkout");
             else navigate("/");
             setLoading(false);
           },
           onError: () => {
             setLoading(false);
-          }
+          },
         }
       );
     } else {
@@ -71,44 +75,22 @@ const AuthForm = () => {
         },
         {
           onSuccess: () => {
-            if (JSON.parse(localStorage.getItem('booking_details'))) navigate('/checkout')
+            if (JSON.parse(localStorage.getItem("booking_details")))
+              navigate("/checkout");
             else navigate("/");
             setLoading(false);
           },
           onError: () => {
             setLoading(false);
-          }
+          },
         }
       );
     }
   };
 
   const googleLogin = useGoogleLogin({
-    onSuccess: async (tokenResponse) => {
-      try {
-        const response = await fetch(
-          "https://www.googleapis.com/oauth2/v3/userinfo",
-          {
-            headers: {
-              Authorization: `Bearer ${tokenResponse.access_token}`,
-            },
-          }
-        );
-
-        const data = await response.json();
-
-        localStorage.setItem("user", JSON.stringify(data));
-        console.log("User Data:", data);
-
-        navigate("/");
-
-        // Here you can handle the user data, e.g., store it in state, context, or local storage.
-        // You can also redirect the user to a different page.
-      } catch (error) {
-        console.error("Error fetching user info:", error);
-        // Handle error appropriately, e.g., display an error message to the user.
-      }
-    },
+    onSuccess: (tokenResponse) =>
+      googleAuthMutation({ token: tokenResponse.access_token }),
     onError: (error) => {
       console.error("Login Failed:", error);
       // Handle login error, e.g., display an error message to the user.
@@ -184,8 +166,8 @@ const AuthForm = () => {
                   ? "Logging In..."
                   : "Signing Up..."
                 : isLogin
-                  ? "Login"
-                  : "Signup"}
+                ? "Login"
+                : "Signup"}
             </Button>
           </FormSubmit>
 

@@ -46,7 +46,6 @@ export function useAuthHook() {
       return response.data;
     },
     onSuccess: (data) => {
-      console.log("Success:", data);
       toast.success(data.message);
       // Optionally save token or handle success
       if (data.token) {

@@ -3,6 +3,7 @@
 const bcrypt = require("bcryptjs");
 const { generateToken } = require("../config/jwt");
 const User = require("../models/User");
+const { generateRandomPassword } = require("../utils/generateRandomPassword");
 
 // Register function
 const register = async (req, res) => {
@@ -77,6 +78,60 @@ const login = async (req, res) => {
     res
       .status(500)
       .json({ error: "Internal server error. Please try again later." });
+  }
+};
+
+const googleLogin = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    // Validate request
+    if (!email) {
+      return res.status(400).json({ error: "Email and name are required." });
+    }
+
+    // Check if the user already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      // Generate JWT token
+      const token = generateToken({
+        userId: existingUser._id,
+        username: existingUser.username,
+        email: existingUser.email,
+        role: existingUser.role,
+      });
+
+      return res
+        .status(201)
+        .json({ success: true, message: "User login successful.", token });
+    }
+
+    // Create new user
+    const username = email.split("@")[0]; // Use part of the email as username
+    const randomPassword = generateRandomPassword(); // Generate random password
+
+    const newUser = new User({
+      username,
+      email,
+      password: await bcrypt.hash(randomPassword, 16), // No password for Google login users (adjust logic as needed)
+    });
+
+    await newUser.save();
+
+    // Generate JWT token
+    const token = generateToken({
+      userId: newUser._id,
+      username: newUser.username,
+      email: newUser.email,
+      role: newUser.role,
+    });
+
+    return res
+      .status(201)
+      .json({ success: true, message: "User login successful.", token });
+  } catch (error) {
+    console.error("Error adding user:", error);
+    return res.status(500).json({ error: "Internal server error." });
   }
 };
 
@@ -160,6 +215,7 @@ const profile = async (req, res) => {
 module.exports = {
   register,
   login,
+  googleLogin,
   getUserById,
   updateUser,
   deleteUser,

@@ -23,9 +23,9 @@ import { getFormData } from "@/lib/getFormData";
 import useFormStore from "@/store/formStore";
 import { Text } from "@radix-ui/themes";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useGetProductAvailableTimes } from "../../hooks/products/useGetProductAvailableTimes";
-import { useTranslation } from "react-i18next";
 
 const CarDetailsDialog = ({ product }) => {
   console.log(product);
