@@ -128,10 +128,6 @@ const CarDetailsDialog = ({ product }) => {
             <div className="flex flex-col items-center">
               <img src={product.imageUrl} alt="Car" />
             </div>
-            <div className="text-gray">
-              <p>{product.category}</p>
-              {/* Assuming product.category holds the category name */}
-            </div>
             <h2 className="text-lg font-semibold">{product.title}</h2>
             {/* Description with "Read More" */}
             <p className="text-gray-600 text-justify">

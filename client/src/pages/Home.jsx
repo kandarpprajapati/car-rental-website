@@ -88,9 +88,7 @@ const Home = () => {
                   </div>
 
                   <div>
-                    {/* Product Category */}
-                    <p className="text-sm text-gray my-2">{product.category}</p>
-                    <h3 className="text-primary-foreground text-lg font-semibold mb-20 uppercase">
+                    <h3 className="text-primary-foreground text-lg font-semibold mt-3 mb-20 uppercase">
                       {product.name}
                     </h3>
                     <div className="flex justify-between items-center">

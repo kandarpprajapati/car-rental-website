@@ -238,7 +238,7 @@ const createBookingFromSession = async (bookingDetails, userId) => {
 
       // Add the next time slot (if it exists) to the occupiedTimes
       const nextStart = parseInt(end); // Get the ending hour as an integer
-      const nextEnd = nextStart + 1; // Calculate the next hour
+      const nextEnd = nextStart + 2; // Calculate the next hour
       const nextSlot = `${end}-${nextEnd}`; // Format the next time slot
       const [nextStartHour, nextEndHour] = nextSlot.split("-");
 

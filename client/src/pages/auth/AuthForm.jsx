@@ -148,18 +148,6 @@ const AuthForm = () => {
             </FormField>
           )}
 
-          {/* Forgot Password (Login only) */}
-          {isLogin && (
-            <div className="text-right mt-2">
-              <a
-                href="#"
-                className="text-sm text-primary-foreground hover:underline"
-              >
-                Forgot Password?
-              </a>
-            </div>
-          )}
-
           {/* Submit Button */}
           <FormSubmit asChild>
             <Button variant="default" className="w-full" loading={loading}>
