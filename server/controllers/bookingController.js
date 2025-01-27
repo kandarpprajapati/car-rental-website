@@ -327,9 +327,8 @@ const getUserAllBookings = async (req, res) => {
       filters.productId = req.query.productId;
     }
 
-    const bookings = await Booking.find(filters)
-      .populate("userId", "username email") // Include user details
-      .populate("productId", "name pricePerHour"); // Include product details
+    const bookings = await Booking.find(filters).populate("productId", "name"); // Include product details
+    // .populate("userId", "username email") // Include user details
 
     res.status(200).json(bookings);
   } catch (error) {

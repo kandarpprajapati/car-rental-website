@@ -15,6 +15,7 @@ import { PaymentSuccess } from "./pages/payment-success/index.jsx";
 
 import "../i18n.js";
 import LoadingComponent from "./components/ui/loading-component.jsx";
+import OrdersPage from "./pages/orders/index.jsx";
 
 const clientId =
   "104963589596-b25efa1tqlp5iij0c86gbsoft9evlima.apps.googleusercontent.com";
@@ -39,6 +40,10 @@ const router = createBrowserRouter([
       {
         path: "payment-success",
         element: <PaymentSuccess />,
+      },
+      {
+        path: "orders",
+        element: <OrdersPage />,
       },
     ],
   },
