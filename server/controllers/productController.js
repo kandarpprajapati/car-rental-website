@@ -111,6 +111,16 @@ const getAllProducts = async (req, res) => {
       const { availableTimes, occupiedTimes } = product;
 
       const updatedAvailableTimes = (availableTimes || []).map((time) => {
+        const now = new Date();
+        const isToday = new Date().toDateString() === now.toDateString();
+
+        // Check if the current time is within 2 hours of the first available time
+        const timeStart = new Date(
+          `${now.toISOString().split("T")[0]}T${time.start}`
+        );
+        const isWithinTwoHours =
+          isToday && timeStart.getTime() - now.getTime() <= 2 * 60 * 60 * 1000;
+
         const isDisabled = (occupiedTimes || []).some((occupied) => {
           const isToday =
             new Date(occupied.date).toDateString() ===
@@ -128,7 +138,7 @@ const getAllProducts = async (req, res) => {
           _id: time._id,
           start: time.start,
           end: time.end,
-          disabled: isDisabled,
+          disabled: isDisabled || isWithinTwoHours,
         };
       });
 
@@ -202,12 +212,16 @@ const getAvailableTimesByDate = async (req, res) => {
     // Destructure the availableTimes and occupiedTimes
     const { availableTimes, occupiedTimes } = product;
 
+    // Get the current date and time
+    const now = new Date();
+
     // Filter the available times based on the selected date
     const updatedAvailableTimes = (availableTimes || []).map((time) => {
       const isDisabled = (occupiedTimes || []).some((occupied) => {
         const isSameDay =
           new Date(occupied.date).toDateString() ===
           new Date(date).toDateString();
+
         return (
           isSameDay &&
           occupied.start === time.start &&
@@ -215,11 +229,17 @@ const getAvailableTimesByDate = async (req, res) => {
         );
       });
 
+      // Check if today is the selected date and if the current time is within 2 hours of the first available time
+      const isToday = new Date(date).toDateString() === now.toDateString();
+      const timeStart = new Date(`${date}T${time.start}`);
+      const isWithinTwoHours =
+        isToday && timeStart.getTime() - now.getTime() <= 2 * 60 * 60 * 1000;
+
       return {
         _id: time._id,
         start: time.start,
         end: time.end,
-        disabled: isDisabled,
+        disabled: isDisabled || isWithinTwoHours,
       };
     });
 

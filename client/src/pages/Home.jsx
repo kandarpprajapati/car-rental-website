@@ -64,7 +64,9 @@ const Home = () => {
             )}
             {error && (
               <Trans i18nKey="errorFetchingProducts" ns="translation">
-                <p>Error fetching products: {{ errorMsg: error.message }}</p>
+                <p className="text-white font-semibold text-lg">
+                  Error fetching products: {{ errorMsg: error.message }}
+                </p>
               </Trans>
             )}
             {products && products.length === 0 && (

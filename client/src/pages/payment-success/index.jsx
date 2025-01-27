@@ -22,6 +22,7 @@ export function PaymentSuccess() {
         .then((response) => {
           // If the payment is successful, navigate to booking confirmation page
           resetFormData();
+          localStorage.removeItem("booking_details");
           toast.success(response.data.message);
           navigate("/"); // Redirect to confirmation page
         })
@@ -30,7 +31,7 @@ export function PaymentSuccess() {
           // Handle error (e.g., payment failed)
         });
     }
-  }, [location, navigate]);
+  }, []);
 
   return (
     <>

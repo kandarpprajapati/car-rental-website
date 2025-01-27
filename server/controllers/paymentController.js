@@ -7,6 +7,7 @@ const {
 const Product = require("../models/Product");
 const sendBookingEmails = require("../utils/sendBookingEmails");
 const generateEmailContent = require("../utils/htmlContentForBookingEmail");
+const Booking = require("../models/Booking");
 
 const initiatePaymentIntent = async (req, res) => {
   const { amount } = req.body;
@@ -115,6 +116,12 @@ const confirmPayment = async (req, res) => {
   const userEmail = req.user.email;
 
   try {
+    // Check if a booking already exists for this session
+    const existingBooking = await Booking.findOne({ sessionId: session_id });
+    if (existingBooking) {
+      return res.status(200).json({ message: "Booking already confirmed." });
+    }
+
     const session = await stripe.checkout.sessions.retrieve(session_id);
 
     if (session.payment_status === "paid") {

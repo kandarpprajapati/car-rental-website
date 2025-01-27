@@ -221,45 +221,84 @@ const createBookingFromSession = async (bookingDetails, userId) => {
     // Save the booking to the database
     await booking.save();
 
-    // Update product's available and occupied times
-    const updatedAvailableTimes = product.availableTimes.filter(
-      ({ start, end }) =>
-        !time.some((slot) => {
-          const [slotStart, slotEnd] = slot.split("-");
-          return slotStart === start && slotEnd === end;
-        })
+    // Use a Set to track new occupied time slots to prevent duplicates
+    const occupiedTimeSet = new Set(
+      product.occupiedTimes.map(
+        (slot) => `${slot.date}-${slot.start}-${slot.end}`
+      )
     );
+
+    // Update product's available and occupied times
+    // const updatedAvailableTimes = product.availableTimes.filter(
+    //   ({ start, end }) =>
+    //     !time.some((slot) => {
+    //       const [slotStart, slotEnd] = slot.split("-");
+    //       return slotStart === start && slotEnd === end;
+    //     })
+    // );
 
     // Find the next consecutive times and add them to the occupiedTimes
     const newOccupiedTimes = [];
     time.forEach((slot) => {
       const [start, end] = slot.split("-");
-      newOccupiedTimes.push({ date, start, end });
+      const baseSlotKey = `${date}-${start}-${end}`;
+      if (!occupiedTimeSet.has(baseSlotKey)) {
+        newOccupiedTimes.push({ date, start, end });
+        occupiedTimeSet.add(baseSlotKey);
+      }
 
-      // Add the next time slot (if it exists) to the occupiedTimes
-      const nextStart = parseInt(end); // Get the ending hour as an integer
-      const nextEnd = nextStart + 2; // Calculate the next hour
-      const nextSlot = `${end}-${nextEnd}`; // Format the next time slot
-      const [nextStartHour, nextEndHour] = nextSlot.split("-");
+      // Add the next two consecutive time slots
+      for (let i = 1; i <= 2; i++) {
+        const nextStart = parseInt(end) + i - 1;
+        const nextEnd = nextStart + 1;
 
-      // Avoid duplicates in occupiedTimes
-      if (
-        !product.occupiedTimes.some(
-          (occupied) =>
-            occupied.date === date &&
-            occupied.start === nextStartHour &&
-            occupied.end === nextEndHour
-        ) &&
-        !newOccupiedTimes.some(
-          (occupied) =>
-            occupied.date === date &&
-            occupied.start === nextStartHour &&
-            occupied.end === nextEndHour
-        )
-      ) {
-        newOccupiedTimes.push({ date, start: nextStartHour, end: nextEndHour });
+        const nextSlotKey = `${date}-${nextStart}-${nextEnd}`;
+        if (!occupiedTimeSet.has(nextSlotKey)) {
+          newOccupiedTimes.push({
+            date,
+            start: `${nextStart}`,
+            end: `${nextEnd}`,
+          });
+          occupiedTimeSet.add(nextSlotKey);
+        }
       }
     });
+
+    // time.forEach((slot) => {
+    //   const [start, end] = slot.split("-");
+    //   newOccupiedTimes.push({ date, start, end });
+
+    //   // Add the next two consecutive timeslots
+    //   for (let i = 1; i <= 2; i++) {
+    //     // Add the next time slot (if it exists) to the occupiedTimes
+    //     const nextStart = parseInt(end) + (i - 1); // Get the ending hour as an integer
+    //     const nextEnd = nextStart + 1; // Calculate the next hour
+    //     const nextSlot = `${nextStart}-${nextEnd}`; // Format the next time slot
+    //     const [nextStartHour, nextEndHour] = nextSlot.split("-");
+
+    //     // Avoid duplicates in occupiedTimes
+    //     if (
+    //       !product.occupiedTimes.some(
+    //         (occupied) =>
+    //           occupied.date === date &&
+    //           occupied.start === nextStartHour &&
+    //           occupied.end === nextEndHour
+    //       ) &&
+    //       !newOccupiedTimes.some(
+    //         (occupied) =>
+    //           occupied.date === date &&
+    //           occupied.start === nextStartHour &&
+    //           occupied.end === nextEndHour
+    //       )
+    //     ) {
+    //       newOccupiedTimes.push({
+    //         date,
+    //         start: nextStartHour,
+    //         end: nextEndHour,
+    //       });
+    //     }
+    //   }
+    // });
 
     // Update only the occupiedTimes
     product.occupiedTimes = [...product.occupiedTimes, ...newOccupiedTimes];
