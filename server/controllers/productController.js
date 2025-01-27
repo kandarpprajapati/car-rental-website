@@ -112,25 +112,24 @@ const getAllProducts = async (req, res) => {
 
       const updatedAvailableTimes = (availableTimes || []).map((time) => {
         const now = new Date();
-        const isToday = new Date().toDateString() === now.toDateString();
 
-        // Check if the current time is within 2 hours of the first available time
-        const timeStart = new Date(
-          `${now.toISOString().split("T")[0]}T${time.start}`
-        );
-        const isWithinTwoHours =
-          isToday && timeStart.getTime() - now.getTime() <= 2 * 60 * 60 * 1000;
+        const todayDate = now.toISOString().split("T")[0];
 
-        const isDisabled = (occupiedTimes || []).some((occupied) => {
-          const isToday =
-            new Date(occupied.date).toDateString() ===
-            new Date().toDateString();
+        // Construct the full date-time of the slot start time
+        const timeStart = new Date(`${todayDate}T${time.start}:00`);
 
-          // Ensure all comparisons are string-based for consistent matching
+        const diffInMilliseconds = timeStart.getTime() - now.getTime();
+        const diffInHours = diffInMilliseconds / (1000 * 60 * 60);
+
+        // Determine if the slot is within 2 hours
+        const isWithinTwoHours = diffInHours <= 2;
+
+        // Check if the time slot is occupied
+        const isOccupied = (occupiedTimes || []).some((occupied) => {
           return (
-            isToday &&
             occupied.start === time.start &&
-            occupied.end === time.end
+            occupied.end === time.end &&
+            new Date(occupied.date).toDateString() === now.toDateString()
           );
         });
 
@@ -138,7 +137,7 @@ const getAllProducts = async (req, res) => {
           _id: time._id,
           start: time.start,
           end: time.end,
-          disabled: isDisabled || isWithinTwoHours,
+          disabled: isOccupied || isWithinTwoHours,
         };
       });
 
@@ -217,7 +216,7 @@ const getAvailableTimesByDate = async (req, res) => {
 
     // Filter the available times based on the selected date
     const updatedAvailableTimes = (availableTimes || []).map((time) => {
-      const isDisabled = (occupiedTimes || []).some((occupied) => {
+      const isOccupied = (occupiedTimes || []).some((occupied) => {
         const isSameDay =
           new Date(occupied.date).toDateString() ===
           new Date(date).toDateString();
@@ -229,17 +228,18 @@ const getAvailableTimesByDate = async (req, res) => {
         );
       });
 
-      // Check if today is the selected date and if the current time is within 2 hours of the first available time
+      // Check if today is the selected date and if the current time is within 2 hours of the slot start time
       const isToday = new Date(date).toDateString() === now.toDateString();
-      const timeStart = new Date(`${date}T${time.start}`);
-      const isWithinTwoHours =
-        isToday && timeStart.getTime() - now.getTime() <= 2 * 60 * 60 * 1000;
+      const timeStart = new Date(`${date}T${time.start}:00`);
+      const diffInMilliseconds = timeStart.getTime() - now.getTime();
+      const diffInHours = diffInMilliseconds / (1000 * 60 * 60);
+      const isWithinTwoHours = isToday && diffInHours < 2;
 
       return {
         _id: time._id,
         start: time.start,
         end: time.end,
-        disabled: isDisabled || isWithinTwoHours,
+        disabled: isOccupied || isWithinTwoHours,
       };
     });
 
