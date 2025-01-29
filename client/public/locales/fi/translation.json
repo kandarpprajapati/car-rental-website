@@ -3,13 +3,17 @@
   "contentDescription": "Loutettavat palvelut <br /> edulliseen hintaan.",
   "nav": {
     "home": "Koti",
-    "category": {
-      "name": "Kategoria",
-      "category1": "Muutto ja kuljetus",
-      "category2": "Pitkän matkan matkustaminen"
+    "menu": {
+      "name": "Valikko",
+      "orders": "Tilaukset",
+      "contactDetails": {
+        "name": "Yhteystiedot",
+        "phone": "Puhelin",
+        "email": "Sähköposti"
+      }
     },
-    "menu": "Valikko",
-    "login": "Kirjaudu sisään"
+    "login": "Kirjaudu sisään",
+    "logout": "Kirjaudu ulos"
   },
   "productCard": {
     "button": {
@@ -42,6 +46,20 @@
     },
     "button": "Tee tilaus",
     "orderPlacing": "Tilataan..."
+  },
+  "orders": {
+    "heading": "Varauksesi",
+    "table": {
+      "bookingDate": "Varauspäivämäärä",
+      "productName": "Tuotteen nimi",
+      "timeSlots": "Aikavälit",
+      "from": "From",
+      "to": "To",
+      "totalPrice": "Kokonaishinta",
+      "loadingMessage": "Varauksia haetaan...",
+      "errorMessage": "Ei pystytä hakemaan varauksia.",
+      "noDataMessage": "Ei varauksia löytynyt."
+    }
   },
   "noProducts": "Ei tuotteita löytynyt.",
   "loadingProducts": "Ladataan tuotteita...",

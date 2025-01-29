@@ -2,6 +2,7 @@ const Product = require("../models/Product");
 const Booking = require("../models/Booking");
 const XLSX = require("xlsx");
 const fs = require("fs");
+const translate = require("translate-google");
 
 const createBooking = async (req, res) => {
   const {
@@ -330,7 +331,26 @@ const getUserAllBookings = async (req, res) => {
     const bookings = await Booking.find(filters).populate("productId", "name"); // Include product details
     // .populate("userId", "username email") // Include user details
 
-    res.status(200).json(bookings);
+    // ✅ Convert Mongoose documents to plain objects
+    const plainBookings = bookings.map((booking) => booking.toObject());
+
+    const translateObj = await translate(plainBookings, {
+      from: "en",
+      to: req.query.lang.slice(0, 2) || "en",
+      except: [
+        "_id",
+        "userId",
+        "time",
+        "date",
+        "totalPrice",
+        "helperPrice",
+        "vanPrice",
+        "distancePrice",
+        "phone",
+      ],
+    }).then((res) => res);
+
+    res.status(200).json({ bookings: translateObj });
   } catch (error) {
     console.error("Error fetching bookings:", error);
     res.status(500).json({ error: "Internal server error." });

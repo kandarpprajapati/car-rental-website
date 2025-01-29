@@ -3,13 +3,17 @@
   "contentDescription": "Det vackraste <br/> i världen.",
   "nav": {
     "home": "Hem",
-    "category": {
-      "name": "Kategori",
-      "category1": "Flytt och transport",
-      "category2": "Långdistansresor"
+    "menu": {
+      "name": "Meny",
+      "orders": "Beställningar",
+      "contactDetails": {
+        "name": "Kontaktuppgifter",
+        "phone": "Telefon",
+        "email": "E-post"
+      }
     },
-    "menu": "Meny",
-    "login": "Logga in"
+    "login": "Logga in",
+    "logout": "Logga ut"
   },
   "productCard": {
     "button": {
@@ -42,6 +46,20 @@
     },
     "button": "Gör beställning",
     "orderPlacing": "Lägger beställning..."
+  },
+  "orders": {
+    "heading": "Dina bokningar",
+    "table": {
+      "bookingDate": "Bokningsdatum",
+      "productName": "Produktnamn",
+      "timeSlots": "Tidsluckor",
+      "from": "Från",
+      "to": "Till",
+      "totalPrice": "Totalt pris",
+      "loadingMessage": "Bokningar hämtas...",
+      "errorMessage": "Kan inte hämta bokningar.",
+      "noDataMessage": "Inga bokningar hittades."
+    }
   },
   "noProducts": "Inga produkter hittades.",
   "loadingProducts": "Laddar produkter...",

@@ -70,17 +70,17 @@ const Navbar = () => {
               onClick={() => setIsCategoryOpen((prev) => !prev)}
               className="text-blue-800 font-semibold hover:text-orange-500 transition"
             >
-              MENU
+              {t("menu.name").toUpperCase()}
             </button>
             {isCategoryOpen && (
-              <div className="absolute left-0 mt-2 w-48 bg-white shadow-sm shadow-gray rounded-lg">
+              <div className="absolute left-0 mt-2 w-fit bg-white shadow-sm shadow-gray rounded-lg">
                 <ul className="py-2">
                   <li className="border-b border-gray-300">
                     <NavLink
                       to="/orders"
                       className="block w-full text-left px-4 py-2 text-blue-800 font-semibold hover:bg-gray hover:text-white"
                     >
-                      Orders
+                      {t("menu.orders")}
                     </NavLink>
                   </li>
 
@@ -149,9 +149,11 @@ const Navbar = () => {
                   {/* Contact Details */}
                   <li>
                     <div className="px-4 py-2 text-blue-800">
-                      <p className="font-semibold">Contact Details</p>
+                      <p className="font-semibold">
+                        {t("menu.contactDetails.name")}
+                      </p>
                       <p className="text-sm">
-                        Phone:{" "}
+                        {t("menu.contactDetails.phone")}
                         <a
                           href="tel:+1234567890"
                           className="text-blue-800 hover:text-orange-500"
@@ -160,7 +162,7 @@ const Navbar = () => {
                         </a>
                       </p>
                       <p className="text-sm">
-                        Email:{" "}
+                        {t("menu.contactDetails.email")}
                         <a
                           href="mailto:info@example.com"
                           className="text-blue-800 hover:text-orange-500"
@@ -187,7 +189,9 @@ const Navbar = () => {
             onClick={handleAction}
             className="text-blue-800 font-semibold hover:text-orange-500 transition"
           >
-            {title.toUpperCase()}
+            {isAuthenticated
+              ? t("logout", { ns: "translation" }).toUpperCase()
+              : t("login", { ns: "translation" }).toUpperCase()}
           </button>
           {/* LANGUAGE Dropdown */}
           <div className="relative z-50">
@@ -340,9 +344,9 @@ const Navbar = () => {
             {/* Contact Details */}
             <li>
               <div className="px-4 py-2 text-blue-800">
-                <p className="font-semibold">Contact Details</p>
+                <p className="font-semibold">{t("menu.contactDetails.name")}</p>
                 <p className="text-sm">
-                  Phone:{" "}
+                  {t("menu.contactDetails.phone")}:
                   <a
                     href="tel:+1234567890"
                     className="text-blue-800 hover:text-orange-500"
@@ -351,7 +355,7 @@ const Navbar = () => {
                   </a>
                 </p>
                 <p className="text-sm">
-                  Email:{" "}
+                  {t("menu.contactDetails.email")}:
                   <a
                     href="mailto:info@example.com"
                     className="text-blue-800 hover:text-orange-500"
@@ -368,7 +372,9 @@ const Navbar = () => {
                 onClick={handleAction}
                 className="text-blue-800 font-semibold hover:text-orange-500 transition py-2"
               >
-                {isAuthenticated ? "LOG OUT" : "LOG IN"}
+                {isAuthenticated
+                  ? t("logout", { ns: "translation" }).toUpperCase()
+                  : t("login", { ns: "translation" }).toUpperCase()}
               </button>
             </li>
 

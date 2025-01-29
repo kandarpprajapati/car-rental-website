@@ -3,13 +3,17 @@
   "contentDescription": "The most beautiful <br/> thing in the world.",
   "nav": {
     "home": "Home",
-    "category": {
-      "name": "Category",
-      "category1": "Moving and Transportation",
-      "category2": "Long distance travel"
+    "menu": {
+      "name": "Menu",
+      "orders": "Orders",
+      "contactDetails": {
+        "name": "Contact Details",
+        "phone": "Phone",
+        "email": "Email"
+      }
     },
-    "menu": "Menu",
-    "login": "Login"
+    "login": "Login",
+    "logout": "Logout"
   },
   "productCard": {
     "button": {
@@ -42,6 +46,20 @@
     },
     "button": "Place Order",
     "orderPlacing": "Placing Order..."
+  },
+  "orders": {
+    "heading": "Your Bookings",
+    "table": {
+      "bookingDate": "Booking Date",
+      "productName": "Product Name",
+      "timeSlots": "Time Slots",
+      "from": "From",
+      "to": "To",
+      "totalPrice": "Total Price",
+      "loadingMessage": "Bookings are being fetched...",
+      "errorMessage": "Unable to fetch bookings.",
+      "noDataMessage": "No bookings found."
+    }
   },
   "noProducts": "No products found.",
   "loadingProducts": "Loading Products...",

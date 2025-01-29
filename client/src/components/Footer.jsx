@@ -55,23 +55,38 @@ const Footer = () => {
               </NavLink>
             </div>
             <div>
-              <h3 className="text-lg font-semibold mb-4">{t("menu")}</h3>
+              <h3 className="text-lg font-semibold mb-4">{t("menu.name")}</h3>
               <ul className="space-y-2">
                 <li>
                   <NavLink
                     to="/services"
-                    className="text-left text-primary-foreground hover:underline"
+                    className="text-primary-foreground hover:underline"
                   >
-                    &gt; {t("orders")}
+                    &gt; {t("menu.orders")}
                   </NavLink>
                 </li>
                 <li>
-                  <NavLink
-                    to="/services"
-                    className="text-left text-primary-foreground hover:underline"
-                  >
-                    &gt; {t("contactDetails")}
-                  </NavLink>
+                  <p className="text-primary-foreground">
+                    &gt; {t("menu.contactDetails.name")}
+                  </p>
+                  <p className="text-sm">
+                    {t("menu.contactDetails.phone")}:
+                    <a
+                      href="tel:+1234567890"
+                      className="text-foreground ml-1 hover:underline"
+                    >
+                      +1 234 567 890
+                    </a>
+                  </p>
+                  <p className="text-sm">
+                    {t("menu.contactDetails.email")}:
+                    <a
+                      href="mailto:info@example.com"
+                      className="text-foreground ml-1 hover:underline"
+                    >
+                      info@example.com
+                    </a>
+                  </p>
                 </li>
               </ul>
             </div>
@@ -82,7 +97,9 @@ const Footer = () => {
         <div className="border-t border-blue-900 mt-8 pt-4 flex justify-between items-center flex-wrap">
           {/* Login/Logout */}
           <button onClick={handleAction} className="font-semibold">
-            {title}
+            {isAuthenticated
+              ? t("logout", { ns: "translation" }).toUpperCase()
+              : t("login", { ns: "translation" }).toUpperCase()}
           </button>
 
           {/* Icons */}

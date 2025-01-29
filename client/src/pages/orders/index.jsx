@@ -7,8 +7,10 @@ import {
   CardTitle,
 } from "../../components/ui/card";
 import { useGetUserBookings } from "../../hooks/bookings/useGetUserBookings";
+import { useTranslation } from "react-i18next";
 
 const OrdersPage = () => {
+  const { t, i18n } = useTranslation("translation", { keyPrefix: "orders" });
   const { data: bookings, isFetching, isLoading, error } = useGetUserBookings();
 
   const loading = isFetching || isLoading;
@@ -20,15 +22,14 @@ const OrdersPage = () => {
       <Card className="max-w-[90%] lg:w-fit lg:max-w-[80%] mx-auto my-8 shadow-lg rounded-lg bg-white">
         <CardHeader>
           <CardTitle className="text-xl font-semibold text-slate-800">
-            Your Bookings
+            {t("heading")}
           </CardTitle>
         </CardHeader>
         <CardContent>
           {error ? (
             <div className="min-h-screen flex items-center justify-center bg-gray-100">
               <div className="bg-red-100 text-red-800 px-4 py-3 rounded-md shadow-md">
-                <p className="font-semibold">Something went wrong:</p>
-                <p>{error.message || "Unable to fetch bookings."}</p>
+                <p>{error.message || t("errorMessage")}</p>
               </div>
             </div>
           ) : (
@@ -40,22 +41,22 @@ const OrdersPage = () => {
               <Table.Header className="bg-slate-200">
                 <Table.Row>
                   <Table.ColumnHeaderCell className="px-6 py-3 text-left font-medium text-slate-600 uppercase tracking-wider">
-                    Booking Date
+                    {t("table.bookingDate")}
                   </Table.ColumnHeaderCell>
                   <Table.ColumnHeaderCell className="px-6 py-3 text-left font-medium text-slate-600 uppercase tracking-wider">
-                    Product Name
+                    {t("table.productName")}
                   </Table.ColumnHeaderCell>
                   <Table.ColumnHeaderCell className="px-6 py-3 text-left font-medium text-slate-600 uppercase tracking-wider">
-                    Time Slots
+                    {t("table.timeSlots")}
                   </Table.ColumnHeaderCell>
                   <Table.ColumnHeaderCell className="px-6 py-3 text-left font-medium text-slate-600 uppercase tracking-wider">
-                    From
+                    {t("table.from")}
                   </Table.ColumnHeaderCell>
                   <Table.ColumnHeaderCell className="px-6 py-3 text-left font-medium text-slate-600 uppercase tracking-wider">
-                    To
+                    {t("table.to")}
                   </Table.ColumnHeaderCell>
                   <Table.ColumnHeaderCell className="px-6 py-3 text-left font-medium text-slate-600 uppercase tracking-wider">
-                    Total Price
+                    {t("table.totalPrice")}
                   </Table.ColumnHeaderCell>
                 </Table.Row>
               </Table.Header>
@@ -71,7 +72,7 @@ const OrdersPage = () => {
                         <p
                           className={`mt-4 font-medium text-primary-foreground`}
                         >
-                          Bookings are being fetched...
+                          {t("table.loadingMessage")}
                         </p>
                       </div>
                     </Table.RowHeaderCell>
@@ -115,7 +116,7 @@ const OrdersPage = () => {
                       colSpan={6}
                       className="text-center py-4 text-slate-500"
                     >
-                      No bookings found.
+                      {t("table.noDataMessage")}
                     </Table.RowHeaderCell>
                   </Table.Row>
                 )}
