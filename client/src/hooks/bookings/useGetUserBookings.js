@@ -6,8 +6,11 @@ export function useGetUserBookings() {
   return useQuery({
     queryKey: ["user-bookings"], // Cache key for React Query
     queryFn: async () => {
-      const response = await apiClient.get(`/booking/userbookings`);
-      return response.data; // Assuming Axios response has data in `response.data`
+      const response = await apiClient.get(
+        `/booking/userbookings?lang=${translationLang}`
+      );
+      console.log(response);
+      return response.data.bookings; // Assuming Axios response has data in `response.data`
     },
   });
 }
