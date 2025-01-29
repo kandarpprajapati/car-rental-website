@@ -15,8 +15,6 @@ const OrdersPage = () => {
 
   const loading = isFetching || isLoading;
 
-  useEffect(() => console.log(bookings), [bookings]);
-
   return (
     <div className="min-h-screen bg-gray-100">
       <Card className="max-w-[90%] lg:w-fit lg:max-w-[80%] mx-auto my-8 shadow-lg rounded-lg bg-white">
