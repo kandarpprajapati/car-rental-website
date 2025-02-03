@@ -45,7 +45,12 @@
       "total": "Totalt (uppskattat)"
     },
     "button": "Gör beställning",
-    "orderPlacing": "Lägger beställning..."
+    "orderPlacing": "Lägger beställning...",
+    "confirmTitle": "Vilken betalningsmetod föredrar du?",
+    "confirmMessage": "Om du vill betala med kort eller någon online-metod, välj 'Online'. Det finns också ett alternativ för kontant betalning vid leverans.",
+    "cancel": "Avbryt",
+    "cod": "Kontant vid leverans",
+    "online": "Onlinebetalning"
   },
   "orders": {
     "heading": "Dina bokningar",

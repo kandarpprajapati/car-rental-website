@@ -45,7 +45,12 @@
       "total": "Yhteensä (arvio)"
     },
     "button": "Tee tilaus",
-    "orderPlacing": "Tilataan..."
+    "orderPlacing": "Tilataan...",
+    "confirmTitle": "Minkä maksutavan valitset?",
+    "confirmMessage": "Jos haluat maksaa kortilla tai muulla verkkomaksutavalla, valitse 'Online'. Vaihtoehtona on myös käteinen toimituksen yhteydessä.",
+    "cancel": "Peruuta",
+    "cod": "Käteinen toimituksessa",
+    "online": "Verkkopankki / Korttimaksu"
   },
   "orders": {
     "heading": "Varauksesi",

@@ -1,6 +1,8 @@
 import { getFormData } from "@/lib/getFormData";
 import useFormStore from "@/store/formStore";
-import { Button } from "../../components/ui/button";
+import { Text } from "@radix-ui/themes";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Form,
   FormControl,
@@ -9,10 +11,9 @@ import {
   FormSubmit,
 } from "../../components/ui/form";
 import { Input } from "../../components/ui/input";
-import { Text } from "@radix-ui/themes";
 import { useInitiatePaymentIntent } from "../../hooks/payment/useCreatePaymentIntent";
-import { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
+import { Button } from "../../components/ui/button";
+import PlaceOrderAlertDialog from "./PlaceOrderAlertDialog";
 
 const CheckOutForm = () => {
   const { formData, updateFormData, getFullFormData } = useFormStore();
@@ -21,18 +22,20 @@ const CheckOutForm = () => {
   const [distancePrice, setDistancePrice] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
   const [loading, setLoading] = useState(false); // Add loading state
+  const [openAlert, setOpenAlert] = useState(false);
 
   const { mutateAsync: paymentInitiateMethod } = useInitiatePaymentIntent();
   const { t, i18n } = useTranslation("translation");
 
   useEffect(() => {
-    const booking_details = localStorage.getItem('booking_details') ? JSON.parse(localStorage.getItem('booking_details')) : null;
+    const booking_details = localStorage.getItem("booking_details")
+      ? JSON.parse(localStorage.getItem("booking_details"))
+      : null;
     if (booking_details) {
       updateFormData(booking_details);
-      localStorage.removeItem('booking_details')
+      localStorage.removeItem("booking_details");
     }
-  }, [])
-
+  }, []);
 
   // Update total price whenever price or distance price changes
   useEffect(() => {
@@ -40,6 +43,23 @@ const CheckOutForm = () => {
     const helperPrice = formData.helperPrice || 0;
     setTotalPrice(basePrice + distancePrice + helperPrice);
   }, [formData.price, distancePrice, formData.helperPrice]);
+
+  // ✅ Step 1: Open the Alert Instead of Submitting Form Directly
+  const handleOpenAlert = (event) => {
+    event.preventDefault(); // Prevent default form submission
+
+    const newFormData = getFormData(event.currentTarget.form);
+    const updatedDataForm = {
+      ...getFullFormData(),
+      ...newFormData,
+      distancePrice,
+      totalPrice,
+    };
+
+    updateFormData(updatedDataForm);
+
+    setOpenAlert(true); // Open the alert dialog
+  };
 
   const placeOrder = async (event) => {
     event.preventDefault();
@@ -58,7 +78,10 @@ const CheckOutForm = () => {
       updateFormData(completeFormData);
 
       console.log(completeFormData); // Process your form data here
-      localStorage.setItem('booking_details', JSON.stringify({ ...completeFormData, time_checkout: new Date() }));
+      localStorage.setItem(
+        "booking_details",
+        JSON.stringify({ ...completeFormData, time_checkout: new Date() })
+      );
 
       await paymentInitiateMethod({
         totalPrice,
@@ -78,7 +101,7 @@ const CheckOutForm = () => {
           {t("checkout.heading")}
         </h1>
         {/* <p className="text-sm text-gray-500 mb-6">Pnix.fi</p> */}
-        <Form className="w-full" onSubmit={placeOrder}>
+        <Form className="w-full">
           {/* Customer Phone */}
           <FormField name="phone">
             <FormLabel>{t("checkout.customer")} *</FormLabel>
@@ -141,21 +164,21 @@ const CheckOutForm = () => {
               <FormField className="flex justify-between" name="vanPrice">
                 <span>{t("checkout.orderSummary.vanCharge")}</span>
                 <FormControl asChild>
-                  <Text>{(parseFloat(formData.price) || 0).toFixed(2)}</Text>
+                  <Text>{(parseFloat(formData.price) || 0).toFixed(2)} €</Text>
                 </FormControl>
               </FormField>
               {formData.helper && (
                 <FormField className="flex justify-between" name="helperPrice">
                   <span>{t("checkout.orderSummary.helperCharge")}</span>
                   <FormControl asChild>
-                    <Text>{(formData.helperPrice || 0).toFixed(2)}</Text>
+                    <Text>{(formData.helperPrice || 0).toFixed(2)} €</Text>
                   </FormControl>
                 </FormField>
               )}
               <FormField className="flex justify-between" name="distancePrice">
                 <span>{t("checkout.orderSummary.distanceCharge")}</span>
                 <FormControl asChild>
-                  <Text>{distancePrice.toFixed(2)}</Text>
+                  <Text>{distancePrice.toFixed(2)} €</Text>
                 </FormControl>
               </FormField>
               <hr className="my-2" />
@@ -165,17 +188,28 @@ const CheckOutForm = () => {
               >
                 <span>{t("checkout.orderSummary.total")}</span>
                 <FormControl asChild>
-                  <Text>{parseFloat(totalPrice).toFixed(2)}</Text>
+                  <Text>{parseFloat(totalPrice).toFixed(2)} €</Text>
                 </FormControl>
               </FormField>
             </div>
           </div>
           <FormSubmit asChild>
-            <Button variant="secondary" loading={loading}>
+            <Button
+              variant="secondary"
+              loading={loading}
+              onClick={handleOpenAlert}
+            >
               {loading ? t("checkout.orderPlacing") : t("checkout.button")}
             </Button>
           </FormSubmit>
         </Form>
+
+        {/* Place Order Alert Dialog */}
+        <PlaceOrderAlertDialog
+          open={openAlert}
+          setOpen={setOpenAlert}
+          placeOrder={placeOrder}
+        />
       </div>
     </div>
   );

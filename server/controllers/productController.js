@@ -113,23 +113,33 @@ const getAllProducts = async (req, res) => {
       const updatedAvailableTimes = (availableTimes || []).map((time) => {
         const now = new Date();
 
-        const todayDate = now.toISOString().split("T")[0];
+        // const todayDate = now.toISOString().split("T")[0];
 
-        // Construct the full date-time of the slot start time
-        const timeStart = new Date(`${todayDate}T${time.start}:00`);
+        // // Construct the full date-time of the slot start time
+        // const timeStart = new Date(`${todayDate}T${time.start}:00`);
 
-        const diffInMilliseconds = timeStart.getTime() - now.getTime();
-        const diffInHours = diffInMilliseconds / (1000 * 60 * 60);
+        // const diffInMilliseconds = timeStart.getTime() - now.getTime();
+        // const diffInHours = diffInMilliseconds / (1000 * 60 * 60);
 
-        // Determine if the slot is within 2 hours
-        const isWithinTwoHours = diffInHours <= 2;
+        // // Determine if the slot is within 2 hours
+        // const isWithinTwoHours = diffInHours <= 2;
 
         // Check if the time slot is occupied
         const isOccupied = (occupiedTimes || []).some((occupied) => {
+          const todayDate = now.toISOString().split("T")[0];
+          const isSameDay =
+            new Date(occupied.date).toDateString() ===
+            new Date(todayDate).toDateString();
+
+          const timeStart = new Date(`${todayDate}T${time.start}:00`);
+          const diffInMilliseconds = timeStart.getTime() - now.getTime();
+          const diffInHours = diffInMilliseconds / (1000 * 60 * 60);
+          const isWithinTwoHours = isSameDay && diffInHours <= 2;
+
           return (
+            (isSameDay || isWithinTwoHours) &&
             occupied.start === time.start &&
-            occupied.end === time.end &&
-            new Date(occupied.date).toDateString() === now.toDateString()
+            occupied.end === time.end
           );
         });
 
@@ -137,7 +147,7 @@ const getAllProducts = async (req, res) => {
           _id: time._id,
           start: time.start,
           end: time.end,
-          disabled: isOccupied || isWithinTwoHours,
+          disabled: isOccupied,
         };
       });
 

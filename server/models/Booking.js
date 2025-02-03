@@ -24,6 +24,11 @@ const bookingSchema = new mongoose.Schema({
   distancePrice: { type: Number },
   phone: { type: String, required: true },
   spacialRequirement: { type: String },
+  paymentMethod: {
+    type: String,
+    enum: ["online", "cod"], // Added cash-on-delivery option
+    default: "online",
+  },
   paymentStatus: {
     type: String,
     enum: ["pending", "paid", "failed"], // Payment status

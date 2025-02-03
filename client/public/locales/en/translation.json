@@ -45,7 +45,12 @@
       "total": "Total (estimated)"
     },
     "button": "Place Order",
-    "orderPlacing": "Placing Order..."
+    "orderPlacing": "Placing Order...",
+    "confirmTitle": "Which payment method do you like?",
+    "confirmMessage": "If you want to make payment through card or any online method then please select online and other is Cash on delivery option.",
+    "cancel": "Cancel",
+    "cod": "Cash on Delivery",
+    "online": "Online Payment"
   },
   "orders": {
     "heading": "Your Bookings",

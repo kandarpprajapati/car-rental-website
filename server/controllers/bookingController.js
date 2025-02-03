@@ -314,6 +314,117 @@ const createBookingFromSession = async (bookingDetails, userId) => {
   }
 };
 
+const createCODBooking = async (req, res) => {
+  const {
+    productId,
+    time,
+    date,
+    helper,
+    options,
+    specialRequirements,
+    phonecode,
+    phone,
+    deliveryFrom,
+    deliveryTo,
+  } = req.body;
+
+  const userId = req.user.userId;
+
+  if (!userId) {
+    return res.status(400).json({ error: "Please login again." });
+  }
+
+  try {
+    if (
+      !productId ||
+      !time ||
+      !Array.isArray(time) ||
+      time.length === 0 ||
+      !date ||
+      !phone ||
+      !deliveryFrom ||
+      !deliveryTo
+    ) {
+      return res.status(400).json({ error: "All fields are required." });
+    }
+
+    const product = await Product.findById(productId);
+    if (!product) {
+      return res.status(404).json({ error: "Product not found." });
+    }
+
+    const basePrice = product.pricePerHour;
+    const helperCost = helper ? 20 : 0;
+    const totalPrice = basePrice * time.length + helperCost;
+
+    const booking = new Booking({
+      productId,
+      userId,
+      time,
+      date: new Date(date),
+      totalPrice,
+      deliveryFrom,
+      deliveryTo,
+      helper: helper ? "Yes" : "No",
+      options,
+      phone: `${phonecode} ${phone}`,
+      spacialRequirement: specialRequirements,
+      paymentMethod: "cod", // Marking as cash on delivery
+      paymentStatus: "pending",
+    });
+
+    await booking.save();
+
+    // Use a Set to track new occupied time slots to prevent duplicates
+    const occupiedTimeSet = new Set(
+      product.occupiedTimes.map(
+        (slot) => `${slot.date}-${slot.start}-${slot.end}`
+      )
+    );
+
+    // Find the next consecutive times and add them to the occupiedTimes
+    const newOccupiedTimes = [];
+    time.forEach((slot) => {
+      const [start, end] = slot.split("-");
+      const baseSlotKey = `${date}-${start}-${end}`;
+      if (!occupiedTimeSet.has(baseSlotKey)) {
+        newOccupiedTimes.push({ date, start, end });
+        occupiedTimeSet.add(baseSlotKey);
+      }
+
+      // Add the next two consecutive time slots
+      for (let i = 1; i <= 2; i++) {
+        const nextStart = parseInt(end) + i - 1;
+        const nextEnd = nextStart + 1;
+
+        const nextSlotKey = `${date}-${nextStart}-${nextEnd}`;
+        if (!occupiedTimeSet.has(nextSlotKey)) {
+          newOccupiedTimes.push({
+            date,
+            start: `${nextStart}`,
+            end: `${nextEnd}`,
+          });
+          occupiedTimeSet.add(nextSlotKey);
+        }
+      }
+    });
+
+    // Update only the occupiedTimes
+    product.occupiedTimes = [...product.occupiedTimes, ...newOccupiedTimes];
+
+    // Save the updated product with the new occupied times
+    await product.save();
+
+    res.status(201).json({
+      message: "COD Booking created successfully!",
+      booking,
+    });
+  } catch (error) {
+    console.error("Error creating COD booking:", error);
+    res.status(500).json({ error: "Internal server error." });
+  }
+};
+
 const getUserAllBookings = async (req, res) => {
   try {
     const filters = {};
@@ -527,4 +638,5 @@ module.exports = {
   cancelBooking,
   exportTodayBookingsToExcel,
   createBookingFromSession,
+  createCODBooking,
 };
