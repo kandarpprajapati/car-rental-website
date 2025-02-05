@@ -4,7 +4,7 @@ require("dotenv").config(); // Load environment variables from .env file
 
 // Export environment variables
 module.exports = {
-  PORT: process.env.PORT || 5000,
+  PORT: process.env.PORT || 1102,
   MONGO_URL: process.env.MONGO_URL,
   COLLECTION: process.env.COLLECTION,
   JWT_SECRET: process.env.JWT_SECRET,
