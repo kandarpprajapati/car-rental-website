@@ -6,9 +6,7 @@ import { loadStripe } from "@stripe/stripe-js";
 export function useInitiatePaymentIntent() {
   const navigate = useNavigate();
 
-  const stripePromise = loadStripe(
-    "pk_test_51QVWOtP9aalJFh41vwsUux6OhkNw780bJQp6QLlzAcS1cmANheYDqwHCe3Eu7wk8ZVjr9LEJkvIVo6AhhRIbDaTK00rDjxBsWu"
-  );
+  const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_SECRET_KEY);
 
   return useMutation({
     mutationFn: async (totalPrice, bookingDetails) => {
@@ -29,8 +27,6 @@ export function useInitiatePaymentIntent() {
       }
     },
     onSuccess: async (data) => {
-      console.log("Session successful:", data);
-
       const stripe = await stripePromise;
       try {
         const result = await stripe.redirectToCheckout({

@@ -10,7 +10,6 @@ const ExportBookingsButton = () => {
 
   useEffect(() => {
     const role = getUserRole(); // Assuming the role is in localStorage or JWT token
-    console.log(role);
     if (role === "admin") {
       setIsAdmin(true);
     }

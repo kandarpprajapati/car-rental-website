@@ -18,7 +18,6 @@ import { useCreateCODBooking } from "../../hooks/bookings/useCreateCODBooking";
 
 const CheckOutForm = () => {
   const { formData, updateFormData, getFullFormData } = useFormStore();
-  console.log(formData);
 
   const [distancePrice, setDistancePrice] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
@@ -80,7 +79,6 @@ const CheckOutForm = () => {
 
       updateFormData(completeFormData);
 
-      console.log(completeFormData); // Process your form data here
       localStorage.setItem(
         "booking_details",
         JSON.stringify({ ...completeFormData, time_checkout: new Date() })

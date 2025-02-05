@@ -17,7 +17,6 @@ export function useGetProductsByCategory() {
     },
     onSuccess: (data) => {
       setProducts(data.products); // Update Zustand store with fetched products
-      console.log("Fetched products:", data);
     },
     onError: (error) => {
       console.error("Error fetching products:", error);

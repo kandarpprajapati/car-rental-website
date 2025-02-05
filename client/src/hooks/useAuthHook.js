@@ -37,8 +37,6 @@ export function useAuthHook() {
 
   return useMutation({
     mutationFn: async ({ url, data }) => {
-      console.log("Calling:", url, "with data:", data);
-
       // Use apiClient for the request
       const response = await apiClient.post(url, data);
 

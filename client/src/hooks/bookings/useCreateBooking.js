@@ -20,7 +20,6 @@ export function useCreateBooking() {
       }
     },
     onSuccess: (data) => {
-      console.log("Booking successful:", data);
       toast.success(data.message);
       resetFormData();
       // You can add any side effects here, like navigating to another page

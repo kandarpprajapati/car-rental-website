@@ -99,7 +99,6 @@ const handleStripeWebhook = async (req, res) => {
       // Call your booking function here
       try {
         const booking = await createBookingFromSession(bookingDetails);
-        console.log("Booking created successfully:", booking);
       } catch (error) {
         console.error("Error creating booking:", error);
       }
@@ -127,8 +126,6 @@ const confirmPayment = async (req, res) => {
     if (session.payment_status === "paid") {
       // Payment was successful, now confirm the booking
       const bookingDetails = JSON.parse(session.metadata.bookingDetails); // Get the booking details
-
-      console.log(bookingDetails);
 
       // Call the function to create the booking from the stored details
       const booking = await createBookingFromSession(bookingDetails, userId);

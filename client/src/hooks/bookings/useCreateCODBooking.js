@@ -25,7 +25,6 @@ export function useCreateCODBooking() {
       }
     },
     onSuccess: (data) => {
-      console.log("Booking successful:", data);
       resetFormData();
       localStorage.removeItem("booking_details");
       toast.success(data.message);

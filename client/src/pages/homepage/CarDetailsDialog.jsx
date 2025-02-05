@@ -28,7 +28,6 @@ import { useNavigate } from "react-router-dom";
 import { useGetProductAvailableTimes } from "../../hooks/products/useGetProductAvailableTimes";
 
 const CarDetailsDialog = ({ product }) => {
-  console.log(product);
   const [isExpanded, setIsExpanded] = useState(false);
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedTimes, setSelectedTimes] = useState([]); // Track multiple selected times
@@ -72,8 +71,6 @@ const CarDetailsDialog = ({ product }) => {
         helperPrice: formData.helper ? product.extraHelperPrice : 0,
         price: totalPrice,
       };
-
-      console.log(updatedFormData);
 
       updateFormData(updatedFormData);
 

@@ -1,7 +1,7 @@
 import { MapPinned } from "lucide-react";
 import React, { useEffect } from "react";
 import { Trans, useTranslation } from "react-i18next";
-import CarImage from "../../public/car-images/van.png";
+import CarImage from "../assets/car-images/van.png";
 import ExportBookingsButton from "../components/ExportTodaysBooking.jsx";
 import LoadingComponent from "../components/ui/loading-component.jsx";
 import { useGetProducts } from "../hooks/products/useGetProducts.js";

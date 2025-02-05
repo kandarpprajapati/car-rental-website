@@ -640,7 +640,6 @@ const exportTodayBookingsToExcel = async (req, res) => {
 
     // Write to a temporary file
     const filePath = "today_bookings.xlsx";
-    console.log("Writing file to:", filePath);
     XLSX.writeFile(workbook, filePath);
 
     // Set the headers for Excel file download
@@ -666,11 +665,9 @@ const exportTodayBookingsToExcel = async (req, res) => {
       if (err) {
         console.error("Error during file download:", err);
       } else {
-        console.log("File downloaded successfully.");
       }
       // Delete the file after sending
       fs.unlinkSync(filePath);
-      console.log("File deleted after download.");
     });
   } catch (error) {
     console.error("Error fetching bookings or exporting to Excel:", error);

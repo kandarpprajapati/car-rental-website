@@ -9,7 +9,6 @@ export function useGetUserBookings() {
       const response = await apiClient.get(
         `/booking/userbookings?lang=${translationLang}`
       );
-      console.log(response);
       return response.data.bookings; // Assuming Axios response has data in `response.data`
     },
   });
