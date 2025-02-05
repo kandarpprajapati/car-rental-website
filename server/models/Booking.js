@@ -26,8 +26,8 @@ const bookingSchema = new mongoose.Schema({
   spacialRequirement: { type: String },
   paymentMethod: {
     type: String,
-    enum: ["online", "cod"], // Added cash-on-delivery option
-    default: "online",
+    enum: ["Online", "COD"], // Added cash-on-delivery option
+    default: "Online",
   },
   paymentStatus: {
     type: String,

@@ -14,6 +14,7 @@ import { Input } from "../../components/ui/input";
 import { useInitiatePaymentIntent } from "../../hooks/payment/useCreatePaymentIntent";
 import { Button } from "../../components/ui/button";
 import PlaceOrderAlertDialog from "./PlaceOrderAlertDialog";
+import { useCreateCODBooking } from "../../hooks/bookings/useCreateCODBooking";
 
 const CheckOutForm = () => {
   const { formData, updateFormData, getFullFormData } = useFormStore();
@@ -23,6 +24,8 @@ const CheckOutForm = () => {
   const [totalPrice, setTotalPrice] = useState(0);
   const [loading, setLoading] = useState(false); // Add loading state
   const [openAlert, setOpenAlert] = useState(false);
+
+  const { mutateAsync: createCODBooking } = useCreateCODBooking();
 
   const { mutateAsync: paymentInitiateMethod } = useInitiatePaymentIntent();
   const { t, i18n } = useTranslation("translation");
@@ -61,12 +64,12 @@ const CheckOutForm = () => {
     setOpenAlert(true); // Open the alert dialog
   };
 
-  const placeOrder = async (event) => {
-    event.preventDefault();
+  const placeOrder = async (paymentMethod) => {
     setLoading(true); // Set loading state to true
 
     try {
-      const newFormData = getFormData(event.target);
+      const formElement = document.querySelector("form");
+      const newFormData = getFormData(formElement);
 
       const completeFormData = {
         ...getFullFormData(),
@@ -82,6 +85,11 @@ const CheckOutForm = () => {
         "booking_details",
         JSON.stringify({ ...completeFormData, time_checkout: new Date() })
       );
+
+      if (paymentMethod === "cod") {
+        await createCODBooking(completeFormData);
+        return;
+      }
 
       await paymentInitiateMethod({
         totalPrice,

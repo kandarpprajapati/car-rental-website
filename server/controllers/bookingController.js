@@ -216,6 +216,7 @@ const createBookingFromSession = async (bookingDetails, userId) => {
       distancePrice, // Store the distance price (if applicable)
       phone: `${phonecode} ${phone}`, // Store the phone number with the country code
       spacialRequirement: specialRequirements, // Store special requirements
+      paymentMethod: "Online",
       paymentStatus: "paid", // Set payment status to pending (default)
     });
 
@@ -317,10 +318,13 @@ const createBookingFromSession = async (bookingDetails, userId) => {
 const createCODBooking = async (req, res) => {
   const {
     productId,
-    time,
-    date,
+    time, // Array of selected time slots (e.g., ["10:00-11:00", "11:00-12:00"])
+    date, // Booking date (e.g., "2025-01-07")
     helper,
-    options,
+    helperPrice,
+    price,
+    distancePrice,
+    totalPrice,
     specialRequirements,
     phonecode,
     phone,
@@ -353,24 +357,22 @@ const createCODBooking = async (req, res) => {
       return res.status(404).json({ error: "Product not found." });
     }
 
-    const basePrice = product.pricePerHour;
-    const helperCost = helper ? 20 : 0;
-    const totalPrice = basePrice * time.length + helperCost;
-
     const booking = new Booking({
       productId,
       userId,
       time,
-      date: new Date(date),
+      date: new Date(date), // Convert date string to Date object
       totalPrice,
       deliveryFrom,
       deliveryTo,
       helper: helper ? "Yes" : "No",
-      options,
-      phone: `${phonecode} ${phone}`,
-      spacialRequirement: specialRequirements,
-      paymentMethod: "cod", // Marking as cash on delivery
-      paymentStatus: "pending",
+      helperPrice, // Store the helper price
+      vanPrice: price, // Store the base price (before any additions)
+      distancePrice, // Store the distance price (if applicable)
+      phone: `${phonecode} ${phone}`, // Store the phone number with the country code
+      spacialRequirement: specialRequirements, // Store special requirements
+      paymentStatus: "pending", // Set payment status to pending (default)
+      paymentMethod: "COD", // Marking as cash on delivery
     });
 
     await booking.save();

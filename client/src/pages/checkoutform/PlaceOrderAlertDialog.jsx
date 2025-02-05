@@ -28,7 +28,9 @@ const PlaceOrderAlertDialog = ({ open, setOpen, placeOrder }) => {
               </Button>
             </AlertDialog.Cancel>
             <AlertDialog.Action asChild>
-              <Button variant="secondary">{t("checkout.cod")}</Button>
+              <Button variant="secondary" onClick={() => placeOrder("cod")}>
+                {t("checkout.cod")}
+              </Button>
             </AlertDialog.Action>
             <AlertDialog.Action asChild>
               <Button variant="secondary" onClick={placeOrder}>
