@@ -2,9 +2,11 @@ import { useMutation } from "@tanstack/react-query";
 import apiClient from "../../config/apiClient";
 import useFormStore from "../../store/formStore";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 export function useCreateCODBooking() {
   const { resetFormData } = useFormStore();
+  const navigate = useNavigate();
 
   return useMutation({
     mutationFn: async (data) => {
@@ -24,8 +26,10 @@ export function useCreateCODBooking() {
     },
     onSuccess: (data) => {
       console.log("Booking successful:", data);
-      toast.success(data.message);
       resetFormData();
+      localStorage.removeItem("booking_details");
+      toast.success(data.message);
+      navigate("/");
       // You can add any side effects here, like navigating to another page
     },
   });

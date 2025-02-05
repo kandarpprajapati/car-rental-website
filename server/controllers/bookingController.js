@@ -3,6 +3,9 @@ const Booking = require("../models/Booking");
 const XLSX = require("xlsx");
 const fs = require("fs");
 const translate = require("translate-google");
+const sendBookingEmails = require("../utils/sendBookingEmails");
+const generateEmailContent = require("../utils/htmlContentForBookingEmail");
+const { ADMIN_EMAIL } = require("../config/env");
 
 const createBooking = async (req, res) => {
   const {
@@ -161,7 +164,7 @@ const createBookingFromSession = async (bookingDetails, userId) => {
 
   // Check if user is logged in
   if (!userId) {
-    return "Please login again.";
+    return res.status(400).json({ message: "Please login again." });
   }
 
   try {
@@ -176,13 +179,23 @@ const createBookingFromSession = async (bookingDetails, userId) => {
       !deliveryFrom ||
       !deliveryTo
     ) {
-      return "All fields are required.";
+      return res.status(400).json({ message: "All fields are required." });
     }
 
     // Find the product by ID
     const product = await Product.findById(productId);
     if (!product) {
-      return "Product not found.";
+      return res.status(400).json({ message: "Product not found." });
+    }
+
+    const existingBooking = await Booking.findOne({ date, time });
+
+    if (existingBooking) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "A booking already exists for this time and date. Please choose a different time.",
+      });
     }
 
     // Validate that selected times are available
@@ -331,8 +344,8 @@ const createCODBooking = async (req, res) => {
     deliveryFrom,
     deliveryTo,
   } = req.body;
-
   const userId = req.user.userId;
+  const userEmail = req.user.email;
 
   if (!userId) {
     return res.status(400).json({ error: "Please login again." });
@@ -355,6 +368,16 @@ const createCODBooking = async (req, res) => {
     const product = await Product.findById(productId);
     if (!product) {
       return res.status(404).json({ error: "Product not found." });
+    }
+
+    const existingBooking = await Booking.findOne({ date, time });
+
+    if (existingBooking) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "A booking already exists for this time and date. Please choose a different time.",
+      });
     }
 
     const booking = new Booking({
@@ -416,6 +439,27 @@ const createCODBooking = async (req, res) => {
 
     // Save the updated product with the new occupied times
     await product.save();
+
+    // Generate email content for both customer and admin
+    const { customerEmailContent, adminEmailContent } = generateEmailContent(
+      booking,
+      product.name,
+      userEmail
+    );
+
+    // Send email to the customer
+    await sendBookingEmails(
+      userEmail,
+      "Booking Confirmation",
+      customerEmailContent
+    );
+
+    // Send email to the admin
+    await sendBookingEmails(
+      ADMIN_EMAIL, // Ensure ADMIN_EMAIL is defined in your environment variables
+      "New Booking Alert",
+      adminEmailContent
+    );
 
     res.status(201).json({
       message: "COD Booking created successfully!",
@@ -586,6 +630,7 @@ const exportTodayBookingsToExcel = async (req, res) => {
       TotalPrice: `${booking.totalPrice} €`,
       SpecialRequirement: booking.spacialRequirement || "None", // Handle empty fields
       PaymentStatus: booking.paymentStatus,
+      PaymentMethod: booking.paymentMethod,
     }));
 
     // Create a new workbook and add data

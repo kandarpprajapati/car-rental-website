@@ -8,7 +8,9 @@ const { PORT } = require("./config/env");
 (async () => {
   connectDB().then(() => {
     app.listen(PORT, () => {
-      console.log(`Server is running on port ${PORT}`);
+      console.log(
+        `Server is running on port ${PORT} and time is ${new Date()}`
+      );
     });
   });
 })();
